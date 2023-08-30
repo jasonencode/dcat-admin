@@ -9,9 +9,9 @@ use Illuminate\Contracts\Support\Arrayable;
 
 class DialogTree extends AbstractDisplayer
 {
-    protected string $url;
+    protected ?string $url = null;
 
-    protected string $title;
+    protected ?string $title = null;
 
     protected array $area = ['580px', '600px'];
 
@@ -43,7 +43,7 @@ class DialogTree extends AbstractDisplayer
 
     protected array $nodes = [];
 
-    protected $checkAll;
+    protected bool $checkAll;
 
     protected int $rootParentId = 0;
 
@@ -98,7 +98,7 @@ class DialogTree extends AbstractDisplayer
         return $this;
     }
 
-    public function title($title): static
+    public function title(string $title): static
     {
         $this->title = $title;
 
