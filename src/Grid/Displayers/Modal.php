@@ -9,7 +9,7 @@ use Dcat\Admin\Widgets\Modal as WidgetModal;
 
 class Modal extends AbstractDisplayer
 {
-    protected string $title;
+    protected string|null $title = null;
 
     protected bool $xl = false;
 
