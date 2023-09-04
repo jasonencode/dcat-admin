@@ -6,11 +6,11 @@ use Dcat\Admin\Admin;
 
 class Input extends Editable
 {
-    protected $type = 'input';
+    protected ?string $type = 'input';
 
-    protected $view = 'admin::grid.displayer.editinline.input';
+    protected ?string $view = 'admin::grid.displayer.editinline.input';
 
-    public function display($options = [])
+    public function display($options = []): string
     {
         if (! empty($options['mask'])) {
             Admin::requireAssets('@jquery.inputmask');

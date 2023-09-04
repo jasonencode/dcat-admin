@@ -7,7 +7,7 @@ use Dcat\Admin\Support\Helper;
 
 class Limit extends AbstractDisplayer
 {
-    protected function addScript()
+    protected function addScript(): void
     {
         $script = <<<'JS'
 $('.limit-more').click(function () {

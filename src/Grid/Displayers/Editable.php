@@ -4,9 +4,9 @@ namespace Dcat\Admin\Grid\Displayers;
 
 abstract class Editable extends AbstractDisplayer
 {
-    protected $type;
+    protected ?string $type;
 
-    protected $view;
+    protected ?string $view;
 
     protected array $options = [
         // 是否刷新页面
@@ -24,12 +24,12 @@ abstract class Editable extends AbstractDisplayer
         return admin_view($this->view, array_merge($this->variables(), $this->defaultOptions() + $this->options));
     }
 
-    protected function defaultOptions()
+    protected function defaultOptions(): array
     {
         return [];
     }
 
-    public function variables()
+    public function variables(): array
     {
         return [
             'key'     => $this->getKey(),
@@ -57,12 +57,12 @@ abstract class Editable extends AbstractDisplayer
         return $this->column->getOriginal();
     }
 
-    protected function getSelector()
+    protected function getSelector(): string
     {
         return 'grid-editable-'.$this->type;
     }
 
-    protected function getUrl()
+    protected function getUrl(): string
     {
         return $this->resource().'/'.$this->getKey();
     }

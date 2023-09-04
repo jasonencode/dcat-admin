@@ -5,6 +5,7 @@ namespace Dcat\Admin\Form\Field;
 use Dcat\Admin\Exception\UploadException;
 use Dcat\Admin\Traits\HasUploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
@@ -203,14 +204,15 @@ trait UploadField
         $this->prepareFile($file);
 
         if (! is_null($this->storagePermission)) {
-            $result = $this->getStorage()->putFileAs($this->getDirectory(), $file, $this->name, $this->storagePermission);
+            $result = $this->getStorage()
+                ->putFileAs($this->getDirectory(), $file, $this->name, $this->storagePermission);
         } else {
             $result = $this->getStorage()->putFileAs($this->getDirectory(), $file, $this->name);
         }
 
         if ($result) {
             $path = $this->getUploadPath();
-            $url = $this->objectUrl($path);
+            $url  = $this->objectUrl($path);
 
             // 上传成功
             return $this->responseUploaded($this->saveFullUrl ? $url : $path, $url);
@@ -312,7 +314,8 @@ trait UploadField
      */
     protected function generateUniqueName(UploadedFile $file)
     {
-        return md5(uniqid()).'.'.$file->getClientOriginalExtension();
+        $hash = File::hash($file);
+        return $hash.'.'.$file->getClientOriginalExtension();
     }
 
     /**
@@ -323,10 +326,10 @@ trait UploadField
      */
     protected function generateSequenceName(UploadedFile $file)
     {
-        $index = 1;
-        $extension = $file->getClientOriginalExtension();
+        $index        = 1;
+        $extension    = $file->getClientOriginalExtension();
         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $newName = $originalName.'_'.$index.'.'.$extension;
+        $newName      = $originalName.'_'.$index.'.'.$extension;
 
         while ($this->getStorage()->exists("{$this->getDirectory()}/$newName")) {
             $index++;
@@ -388,7 +391,7 @@ trait UploadField
             return $this->destroy();
         }
 
-        $file = array_filter((array) $file);
+        $file     = array_filter((array) $file);
         $original = (array) $this->original;
 
         $this->deleteFile(Arr::except(array_combine($original, $original), $file));
@@ -416,7 +419,7 @@ trait UploadField
                 $storage->delete($path);
             } else {
                 $prefix = $storage->url('');
-                $path = str_replace($prefix, '', $path);
+                $path   = str_replace($prefix, '', $path);
 
                 if ($storage->exists($path)) {
                     $storage->delete($path);

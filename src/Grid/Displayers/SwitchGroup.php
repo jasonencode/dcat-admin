@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 
 class SwitchGroup extends SwitchDisplay
 {
-    public function display($columns = [], $color = '', $refresh = false)
+    public function display($columns = [], $color = '', $refresh = false): string
     {
         if ($columns instanceof Closure) {
             $columns = $columns->call($this->row, $this);

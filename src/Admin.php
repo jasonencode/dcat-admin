@@ -63,14 +63,14 @@ class Admin
         'LEFT_SIDEBAR_MENU_BOTTOM' => 'ADMIN_LEFT_SIDEBAR_MENU_BOTTOM',
     ];
 
-    private static $defaultPjaxContainerId = 'pjax-container';
+    private static string $defaultPjaxContainerId = 'pjax-container';
 
     /**
      * 版本.
      *
      * @return string
      */
-    public static function longVersion()
+    public static function longVersion(): string
     {
         return sprintf('Dcat Admin <comment>version</comment> <info>%s</info>', static::VERSION);
     }
@@ -130,7 +130,7 @@ class Admin
      *
      * @param  string|null  $path
      */
-    public static function translation(?string $path)
+    public static function translation(?string $path): void
     {
         static::context()->translation = $path;
     }
@@ -172,7 +172,7 @@ class Admin
      * @param  bool  $value
      * @return void
      */
-    public static function pjax(bool $value = true)
+    public static function pjax(bool $value = true): void
     {
         static::context()->pjaxContainerId = $value ? static::$defaultPjaxContainerId : false;
     }
@@ -182,7 +182,7 @@ class Admin
      *
      * @return void
      */
-    public static function disablePjax()
+    public static function disablePjax(): void
     {
         static::pjax(false);
     }
@@ -231,9 +231,10 @@ class Admin
     /**
      * 创建数据仓库实例.
      *
-     * @param  string|Repository|Model|Builder  $value
+     * @param $repository
      * @param  array  $args
      * @return Repository
+     * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
     public static function repository($repository, array $args = [])
     {
@@ -268,7 +269,8 @@ class Admin
      * 处理异常.
      *
      * @param  \Throwable  $e
-     * @return mixed
+     * @return array|string|\Symfony\Component\HttpFoundation\Response|null
+     * @throws \Exception
      */
     public static function handleException(\Throwable $e)
     {
@@ -439,8 +441,10 @@ class Admin
     /**
      * 插件管理.
      *
-     * @param  string  $name
+     * @param  string|null  $name
      * @return \Dcat\Admin\Extend\Manager|\Dcat\Admin\Extend\ServiceProvider|null
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public static function extension(?string $name = null)
     {

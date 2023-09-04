@@ -7,9 +7,9 @@ use Dcat\Admin\Admin;
 
 class SwitchDisplay extends AbstractDisplayer
 {
-    protected $color;
+    protected ?string $color;
 
-    public function color($color)
+    public function color($color): void
     {
         $this->color = Admin::color()->get($color);
     }
@@ -22,10 +22,10 @@ class SwitchDisplay extends AbstractDisplayer
             $this->color($color);
         }
 
-        $column = $this->column->getName();
+        $column  = $this->column->getName();
         $checked = $this->value ? 'checked' : '';
-        $color = $this->color ?: Admin::color()->primary();
-        $url = $this->url();
+        $color   = $this->color ?: Admin::color()->primary();
+        $url     = $this->url();
 
         return Admin::view(
             'admin::grid.displayer.switch',

@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid\Displayers;
 
+use Closure;
 use Dcat\Admin\Admin;
 
 /**
@@ -13,7 +14,7 @@ class QRCode extends AbstractDisplayer
         '@qrcode',
     ];
 
-    protected function addScript()
+    protected function addScript(): void
     {
         $script = <<<'JS'
 $('.grid-column-qrcode').on('click', function () {
@@ -38,16 +39,16 @@ JS;
 
         $content = $this->column->getOriginal();
 
-        if ($formatter instanceof \Closure) {
+        if ($formatter instanceof Closure) {
             $content = $formatter->call($this->row, $content);
         }
 
         return <<<HTML
 <a href="javascript:void(0);" 
     class="grid-column-qrcode text-muted" 
-    data-text="{$content}" 
-    data-width="{$width}"
-    data-height="{$height}"
+    data-text="$content" 
+    data-width="$width"
+    data-height="$height"
     data-trigger="trigger" 
     data-html="true" 
     data-toggle='popover' 

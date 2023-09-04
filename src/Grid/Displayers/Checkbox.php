@@ -7,9 +7,9 @@ use Illuminate\Support\Arr;
 
 class Checkbox extends Editable
 {
-    protected $type = 'checkbox';
+    protected ?string $type = 'checkbox';
 
-    protected $view = 'admin::grid.displayer.editinline.checkbox';
+    protected ?string $view = 'admin::grid.displayer.editinline.checkbox';
 
     public function display($options = [], $refresh = false): string
     {

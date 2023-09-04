@@ -6,7 +6,7 @@ use Carbon\Carbon;
 
 class DateFormat extends AbstractDisplayer
 {
-    public function display($format = 'Y-m-d H:i:s'): string
+    public function display(string $format = 'Y-m-d H:i:s'): string
     {
         if (empty($this->value)) {
             return '';

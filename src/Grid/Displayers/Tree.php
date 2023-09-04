@@ -10,7 +10,7 @@ class Tree extends AbstractDisplayer
         '@grid-extension',
     ];
 
-    protected function setupScript()
+    protected function setupScript(): void
     {
         $tableId = $this->grid->getTableId();
 
@@ -52,7 +52,7 @@ JS;
 EOT;
     }
 
-    protected function showNextPage()
+    protected function showNextPage(): bool
     {
         $model = $this->grid->model();
 

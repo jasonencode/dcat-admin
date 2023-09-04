@@ -12,7 +12,7 @@ use Dcat\Admin\Support\Helper;
  */
 class Copyable extends AbstractDisplayer
 {
-    protected function addScript()
+    protected function addScript(): void
     {
         $script = <<<'JS'
 $('.grid-column-copyable').off('click').on('click', function (e) {

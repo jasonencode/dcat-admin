@@ -6,11 +6,11 @@ use Illuminate\Support\Arr;
 
 class Radio extends Editable
 {
-    protected $type = 'radio';
+    protected ?string $type = 'radio';
 
-    protected $view = 'admin::grid.displayer.editinline.radio';
+    protected ?string $view = 'admin::grid.displayer.editinline.radio';
 
-    public function display($options = [], $refresh = false)
+    public function display($options = [], $refresh = false): string
     {
         $options['options'] = $options;
         $options['refresh'] = $refresh;

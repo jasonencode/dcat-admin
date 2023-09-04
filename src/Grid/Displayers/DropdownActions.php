@@ -20,9 +20,9 @@ class DropdownActions extends Actions
 
     /**
      * @param  mixed  $action
-     * @return mixed
+     * @return string
      */
-    protected function prepareAction(&$action)
+    protected function prepareAction(&$action): string
     {
         parent::prepareAction($action);
 
@@ -33,7 +33,7 @@ class DropdownActions extends Actions
      * @param  mixed  $action
      * @return string
      */
-    protected function wrapCustomAction($action)
+    protected function wrapCustomAction($action): string
     {
         $action = Helper::render($action);
 

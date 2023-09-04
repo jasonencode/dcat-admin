@@ -4,9 +4,9 @@ namespace Dcat\Admin\Grid\Displayers;
 
 class Textarea extends Editable
 {
-    protected $type = 'textarea';
+    protected ?string $type = 'textarea';
 
-    protected $view = 'admin::grid.displayer.editinline.textarea';
+    protected ?string $view = 'admin::grid.displayer.editinline.textarea';
 
     public function defaultOptions(): array
     {
