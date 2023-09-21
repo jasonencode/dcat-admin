@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class Expand extends AbstractDisplayer
 {
-    protected ?string $button;
+    protected ?string $button = null;
 
     protected static int $counter = 0;
 

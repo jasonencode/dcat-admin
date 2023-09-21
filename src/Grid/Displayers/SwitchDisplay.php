@@ -7,7 +7,7 @@ use Dcat\Admin\Admin;
 
 class SwitchDisplay extends AbstractDisplayer
 {
-    protected ?string $color;
+    protected ?string $color = null;
 
     public function color($color): void
     {

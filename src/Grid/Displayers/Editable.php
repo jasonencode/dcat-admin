@@ -4,9 +4,9 @@ namespace Dcat\Admin\Grid\Displayers;
 
 abstract class Editable extends AbstractDisplayer
 {
-    protected ?string $type;
+    protected ?string $type = null;
 
-    protected ?string $view;
+    protected ?string $view = null;
 
     protected array $options = [
         // 是否刷新页面
