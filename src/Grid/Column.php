@@ -62,7 +62,7 @@ class Column
     use Grid\Column\HasHeader;
     use Grid\Column\HasDisplayers;
     use Macroable {
-        __call as __macroCall;
+        Macroable::__call as __macroCall;
     }
 
     const SELECT_COLUMN_NAME = '__row_selector__';
