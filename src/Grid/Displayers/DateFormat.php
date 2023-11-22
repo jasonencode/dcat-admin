@@ -11,6 +11,8 @@ class DateFormat extends AbstractDisplayer
         if (empty($this->value)) {
             return '';
         }
-        return Carbon::createFromDate($this->value)->format($format);
+        return Carbon::createFromDate($this->value)
+            ->timezone(config('app.timezone'))
+            ->format($format);
     }
 }
