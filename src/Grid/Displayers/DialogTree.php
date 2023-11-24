@@ -43,7 +43,7 @@ class DialogTree extends AbstractDisplayer
 
     protected array $nodes = [];
 
-    protected bool $checkAll;
+    protected bool $checkAll = false;
 
     protected int $rootParentId = 0;
 
