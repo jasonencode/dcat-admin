@@ -20,7 +20,10 @@
     ],
     "require": {
         "php": "^8.2",
+        "dcat/easy-excel": "^1.1",
+        "dcat/laravel-wherehasin": "^0.8",
         "laravel/framework": "^10.0",
+        "mews/captcha": "^3.3",
         "spatie/eloquent-sortable": "3.*|4.*",
         "doctrine/dbal": "^2.6|^3.0"
     },
