@@ -46,25 +46,6 @@ if (! function_exists('admin_setting_array')) {
     }
 }
 
-if (! function_exists('admin_extension_setting')) {
-    /**
-     * 获取扩展配置参数.
-     *
-     * @param  string  $extension
-     * @param  string|array  $key
-     * @param  mixed  $default
-     * @return mixed
-     */
-    function admin_extension_setting($extension, $key = null, $default = null)
-    {
-        $extension = app($extension);
-
-        if ($extension instanceof Dcat\Admin\Extend\ServiceProvider) {
-            return $extension->config($key, $default);
-        }
-    }
-}
-
 if (! function_exists('admin_section')) {
     /**
      * Get the string contents of a section.
@@ -416,21 +397,6 @@ if (! function_exists('admin_api_route_name')) {
     function admin_api_route_name(?string $route = '')
     {
         return Admin::app()->getCurrentApiRoutePrefix().$route;
-    }
-}
-
-if (! function_exists('admin_extension_path')) {
-    /**
-     * @param  string  $path
-     * @return string
-     */
-    function admin_extension_path(string $path = '')
-    {
-        $dir = rtrim(config('admin.extension.dir'), '/') ?: base_path('dcat-admin-extensions');
-
-        $path = ltrim($path, '/');
-
-        return $path ? $dir.'/'.$path : $dir;
     }
 }
 
