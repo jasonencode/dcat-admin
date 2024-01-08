@@ -283,33 +283,31 @@ return [
     'database'                  => [
 
         // Database connection for following tables.
-        'connection'                => '',
+        'connection'             => '',
 
         // User tables and model.
-        'users_table'               => 'admin_users',
-        'users_model'               => Dcat\Admin\Models\Administrator::class,
+        'users_table'            => 'admin_users',
+        'users_model'            => Dcat\Admin\Models\Administrator::class,
 
         // Role table and model.
-        'roles_table'               => 'admin_roles',
-        'roles_model'               => Dcat\Admin\Models\Role::class,
+        'roles_table'            => 'admin_roles',
+        'roles_model'            => Dcat\Admin\Models\Role::class,
 
         // Permission table and model.
-        'permissions_table'         => 'admin_permissions',
-        'permissions_model'         => Dcat\Admin\Models\Permission::class,
+        'permissions_table'      => 'admin_permissions',
+        'permissions_model'      => Dcat\Admin\Models\Permission::class,
 
         // Menu table and model.
-        'menu_table'                => 'admin_menu',
-        'menu_model'                => Dcat\Admin\Models\Menu::class,
+        'menu_table'             => 'admin_menu',
+        'menu_model'             => Dcat\Admin\Models\Menu::class,
 
         // Pivot table for table above.
-        'role_users_table'          => 'admin_role_users',
-        'role_permissions_table'    => 'admin_role_permissions',
-        'role_menu_table'           => 'admin_role_menu',
-        'permission_menu_table'     => 'admin_permission_menu',
-        'settings_table'            => 'admin_settings',
-        'extensions_table'          => 'admin_extensions',
-        'extension_histories_table' => 'admin_extension_histories',
-        'operation_logs'            => 'admin_operation_logs',
+        'role_users_table'       => 'admin_role_users',
+        'role_permissions_table' => 'admin_role_permissions',
+        'role_menu_table'        => 'admin_role_menu',
+        'permission_menu_table'  => 'admin_permission_menu',
+        'settings_table'         => 'admin_settings',
+        'operation_logs'         => 'admin_operation_logs',
     ],
 
     /*

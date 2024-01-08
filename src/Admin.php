@@ -439,23 +439,6 @@ class Admin
     }
 
     /**
-     * 插件管理.
-     *
-     * @param  string|null  $name
-     * @return \Dcat\Admin\Extend\Manager|\Dcat\Admin\Extend\ServiceProvider|null
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     */
-    public static function extension(?string $name = null)
-    {
-        if ($name) {
-            return app('admin.extend')->get($name);
-        }
-
-        return app('admin.extend');
-    }
-
-    /**
      * 响应并中断后续逻辑.
      *
      * @param  Response|string|array  $response
