@@ -16,16 +16,13 @@ class Setting extends Model
     public function __construct(array $attributes = [])
     {
         $this->init();
-
         parent::__construct($attributes);
     }
 
     protected function init(): void
     {
         $connection = config('admin.database.connection') ?: config('database.default');
-
         $this->setConnection($connection);
-
         $this->setTable(config('admin.database.settings_table') ?: 'admin_settings');
     }
 }

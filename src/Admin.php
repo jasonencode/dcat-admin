@@ -35,30 +35,30 @@ class Admin
 
     const SECTION = [
         // 往 <head> 标签内输入内容
-        'HEAD' => 'ADMIN_HEAD',
+        'HEAD'                     => 'ADMIN_HEAD',
 
         // 往body标签内部输入内容
-        'BODY_INNER_BEFORE' => 'ADMIN_BODY_INNER_BEFORE',
-        'BODY_INNER_AFTER' => 'ADMIN_BODY_INNER_AFTER',
+        'BODY_INNER_BEFORE'        => 'ADMIN_BODY_INNER_BEFORE',
+        'BODY_INNER_AFTER'         => 'ADMIN_BODY_INNER_AFTER',
 
         // 往#app内部输入内容
-        'APP_INNER_BEFORE' => 'ADMIN_APP_INNER_BEFORE',
-        'APP_INNER_AFTER' => 'ADMIN_APP_INNER_AFTER',
+        'APP_INNER_BEFORE'         => 'ADMIN_APP_INNER_BEFORE',
+        'APP_INNER_AFTER'          => 'ADMIN_APP_INNER_AFTER',
 
         // 顶部导航栏用户面板
-        'NAVBAR_USER_PANEL' => 'ADMIN_NAVBAR_USER_PANEL',
-        'NAVBAR_AFTER_USER_PANEL' => 'ADMIN_NAVBAR_AFTER_USER_PANEL',
+        'NAVBAR_USER_PANEL'        => 'ADMIN_NAVBAR_USER_PANEL',
+        'NAVBAR_AFTER_USER_PANEL'  => 'ADMIN_NAVBAR_AFTER_USER_PANEL',
         // 顶部导航栏之前
-        'NAVBAR_BEFORE' => 'ADMIN_NAVBAR_BEFORE',
+        'NAVBAR_BEFORE'            => 'ADMIN_NAVBAR_BEFORE',
         // 顶部导航栏底下
-        'NAVBAR_AFTER' => 'ADMIN_NAVBAR_AFTER',
+        'NAVBAR_AFTER'             => 'ADMIN_NAVBAR_AFTER',
 
         // 侧边栏顶部用户信息面板
-        'LEFT_SIDEBAR_USER_PANEL' => 'ADMIN_LEFT_SIDEBAR_USER_PANEL',
+        'LEFT_SIDEBAR_USER_PANEL'  => 'ADMIN_LEFT_SIDEBAR_USER_PANEL',
         // 菜单栏
-        'LEFT_SIDEBAR_MENU' => 'ADMIN_LEFT_SIDEBAR_MENU',
+        'LEFT_SIDEBAR_MENU'        => 'ADMIN_LEFT_SIDEBAR_MENU',
         // 菜单栏顶部
-        'LEFT_SIDEBAR_MENU_TOP' => 'ADMIN_LEFT_SIDEBAR_MENU_TOP',
+        'LEFT_SIDEBAR_MENU_TOP'    => 'ADMIN_LEFT_SIDEBAR_MENU_TOP',
         // 菜单栏底部
         'LEFT_SIDEBAR_MENU_BOTTOM' => 'ADMIN_LEFT_SIDEBAR_MENU_BOTTOM',
     ];
@@ -545,12 +545,14 @@ class Admin
         $pjaxId = static::getPjaxContainerId();
 
         $jsVariables['pjax_container_selector'] = $pjaxId ? ('#'.$pjaxId) : '';
-        $jsVariables['token'] = csrf_token();
-        $jsVariables['lang'] = ($lang = __('admin.client')) ? array_merge($lang, $jsVariables['lang'] ?? []) : [];
-        $jsVariables['colors'] = static::color()->all();
-        $jsVariables['dark_mode'] = static::isDarkMode();
-        $jsVariables['sidebar_dark'] = config('admin.layout.sidebar_dark') || ($sidebarStyle === 'dark');
-        $jsVariables['sidebar_light_style'] = in_array($sidebarStyle, ['dark', 'light'], true) ? 'sidebar-light-primary' : 'sidebar-primary';
+        $jsVariables['token']                   = csrf_token();
+        $jsVariables['lang']                    = ($lang = __('admin.client')) ? array_merge($lang,
+            $jsVariables['lang'] ?? []) : [];
+        $jsVariables['colors']                  = static::color()->all();
+        $jsVariables['dark_mode']               = static::isDarkMode();
+        $jsVariables['sidebar_dark']            = config('admin.layout.sidebar_dark') || ($sidebarStyle === 'dark');
+        $jsVariables['sidebar_light_style']     = in_array($sidebarStyle, ['dark', 'light'],
+            true) ? 'sidebar-light-primary' : 'sidebar-primary';
 
         return admin_javascript_json($jsVariables);
     }
@@ -583,11 +585,13 @@ class Admin
 
         if (config('admin.auth.enable', true)) {
             app('router')->group($attributes, function ($router) {
-                /* @var \Illuminate\Routing\Router $router */
                 $router->namespace('Dcat\Admin\Http\Controllers')->group(function ($router) {
-                    /* @var \Illuminate\Routing\Router $router */
                     $router->resource('auth/users', 'UserController');
                     $router->resource('auth/menu', 'MenuController', ['except' => ['create', 'show']]);
+                    $router->get('auth/operations', 'OperationController@index')
+                        ->name('operations.index');
+                    $router->delete('auth/operations/{id}', 'OperationController@destroy')
+                        ->name('operations.destroy');
 
                     if (config('admin.permission.enable')) {
                         $router->resource('auth/roles', 'RoleController');
@@ -595,7 +599,8 @@ class Admin
                     }
                 });
 
-                $router->resource('auth/extensions', 'Dcat\Admin\Http\Controllers\ExtensionController', ['only' => ['index', 'store', 'update']]);
+                $router->resource('auth/extensions', 'Dcat\Admin\Http\Controllers\ExtensionController',
+                    ['only' => ['index', 'store', 'update']]);
 
                 $authController = config('admin.auth.controller', AuthController::class);
 
@@ -654,7 +659,6 @@ class Admin
         ];
 
         app('router')->group($attributes, function ($router) {
-            /* @var \Illuminate\Routing\Router $router */
             $router->get('helpers/scaffold', 'Dcat\Admin\Http\Controllers\ScaffoldController@index');
             $router->post('helpers/scaffold', 'Dcat\Admin\Http\Controllers\ScaffoldController@store');
             $router->post('helpers/scaffold/table', 'Dcat\Admin\Http\Controllers\ScaffoldController@table');

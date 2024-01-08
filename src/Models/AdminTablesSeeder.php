@@ -6,11 +6,6 @@ use Illuminate\Database\Seeder;
 
 class AdminTablesSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run(): void
     {
         $createdAt = date('Y-m-d H:i:s');
@@ -106,52 +101,60 @@ class AdminTablesSeeder extends Seeder
         Menu::truncate();
         Menu::insert([
             [
-                'parent_id'     => 0,
-                'order'         => 1,
-                'title'         => 'Index',
-                'icon'          => 'feather icon-bar-chart-2',
-                'uri'           => '/',
-                'created_at'    => $createdAt,
+                'parent_id'  => 0,
+                'order'      => 1,
+                'title'      => 'Index',
+                'icon'       => 'feather icon-bar-chart-2',
+                'uri'        => '/',
+                'created_at' => $createdAt,
             ],
             [
-                'parent_id'     => 0,
-                'order'         => 2,
-                'title'         => 'Admin',
-                'icon'          => 'feather icon-settings',
-                'uri'           => '',
-                'created_at'    => $createdAt,
+                'parent_id'  => 0,
+                'order'      => 2,
+                'title'      => 'Admin',
+                'icon'       => 'feather icon-settings',
+                'uri'        => '',
+                'created_at' => $createdAt,
             ],
             [
-                'parent_id'     => 2,
-                'order'         => 3,
-                'title'         => 'Users',
-                'icon'          => '',
-                'uri'           => 'auth/users',
-                'created_at'    => $createdAt,
+                'parent_id'  => 2,
+                'order'      => 3,
+                'title'      => 'Users',
+                'icon'       => '',
+                'uri'        => 'auth/users',
+                'created_at' => $createdAt,
             ],
             [
-                'parent_id'     => 2,
-                'order'         => 4,
-                'title'         => 'Roles',
-                'icon'          => '',
-                'uri'           => 'auth/roles',
-                'created_at'    => $createdAt,
+                'parent_id'  => 2,
+                'order'      => 4,
+                'title'      => 'Roles',
+                'icon'       => '',
+                'uri'        => 'auth/roles',
+                'created_at' => $createdAt,
             ],
             [
-                'parent_id'     => 2,
-                'order'         => 5,
-                'title'         => 'Permission',
-                'icon'          => '',
-                'uri'           => 'auth/permissions',
-                'created_at'    => $createdAt,
+                'parent_id'  => 2,
+                'order'      => 5,
+                'title'      => 'Permission',
+                'icon'       => '',
+                'uri'        => 'auth/permissions',
+                'created_at' => $createdAt,
             ],
             [
-                'parent_id'     => 2,
-                'order'         => 6,
-                'title'         => 'Menu',
-                'icon'          => '',
-                'uri'           => 'auth/menu',
-                'created_at'    => $createdAt,
+                'parent_id'  => 2,
+                'order'      => 6,
+                'title'      => 'Menu',
+                'icon'       => '',
+                'uri'        => 'auth/menu',
+                'created_at' => $createdAt,
+            ],
+            [
+                'parent_id'  => 2,
+                'order'      => 7,
+                'title'      => '操作日志',
+                'icon'       => '',
+                'uri'        => 'auth/operations',
+                'created_at' => $createdAt,
             ],
         ]);
 

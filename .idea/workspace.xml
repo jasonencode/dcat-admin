@@ -5,8 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="78c2d4cd-abac-4873-8369-14705280d6d6" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/database/migrations/2024_01_08_160000_create_admin_operation_logs_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Http/Controllers/OperationController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Http/Middleware/LogOperation.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Models/Operation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeception.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeception.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dcat-admin.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dcat-admin.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/phpspec.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/phpspec.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/admin.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AdminServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/AdminServiceProvider.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Models/AdminTablesSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/AdminTablesSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Models/Administrator.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Administrator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Models/Extension.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Extension.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Models/ExtensionHistory.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/ExtensionHistory.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Models/Menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Menu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Models/Permission.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Permission.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Models/Role.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Role.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Models/Setting.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Setting.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,6 +137,19 @@
       <path value="$PROJECT_DIR$/vendor/ramsey/uuid" />
       <path value="$PROJECT_DIR$/vendor/ramsey/collection" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php83" />
+      <path value="$PROJECT_DIR$/vendor/laravel/prompts" />
+      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/vendor/carbonphp/carbon-doctrine-types" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/intervention/image" />
+      <path value="$PROJECT_DIR$/vendor/psr/clock" />
+      <path value="$PROJECT_DIR$/vendor/box/spout" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/vendor/dcat/laravel-wherehasin" />
+      <path value="$PROJECT_DIR$/vendor/dcat/easy-excel" />
+      <path value="$PROJECT_DIR$/vendor/mews/captcha" />
+      <path value="$PROJECT_DIR$/vendor/_laravel_idea" />
     </include_path>
   </component>
   <component name="ProjectColorInfo">{
@@ -130,26 +161,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.laravel-idea.update-module-directories&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/jason/Documents/Develop/PHP-Projects/dcat-admin/src/Grid/Displayers&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.laravel-idea.update-module-directories": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/PHP-DEV/dcat-admin/database/migrations",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\PHP-DEV\dcat-admin\database\migrations" />
+      <recent name="D:\PHP-DEV\dcat-admin\src\Http\Controllers" />
+      <recent name="D:\PHP-DEV\dcat-admin\src\Models" />
+      <recent name="D:\PHP-DEV\dcat-admin\src\Http\Middleware" />
       <recent name="$PROJECT_DIR$/src/Grid/Displayers" />
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -197,6 +231,8 @@
       <workItem from="1693816760283" duration="1346000" />
       <workItem from="1695273178934" duration="131000" />
       <workItem from="1703597124057" duration="51000" />
+      <workItem from="1704695131492" duration="460000" />
+      <workItem from="1704695635582" duration="4950000" />
     </task>
     <servers />
   </component>
