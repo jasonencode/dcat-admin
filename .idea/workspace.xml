@@ -8,13 +8,22 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/lang/en/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/en/admin.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/lang/zh_CN/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_CN/admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/zh_CN/extension.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/zh_CN/global.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_CN/global.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/zh_CN/menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_CN/menu.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/lang/zh_TW/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_TW/admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/zh_TW/extension.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/zh_TW/global.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_TW/global.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/zh_TW/menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_TW/menu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Http/Forms/InstallFromLocal.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Layout/Asset.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Layout/Asset.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Layout/Menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Layout/Menu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scaffold/ControllerCreator.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scaffold/FormCreator.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scaffold/GridCreator.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scaffold/LangCreator.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scaffold/MigrationCreator.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scaffold/ModelCreator.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scaffold/RepositoryCreator.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scaffold/ShowCreator.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scaffold/stubs/controller.stub" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scaffold/stubs/create.stub" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scaffold/stubs/model.stub" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scaffold/stubs/repository.stub" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -228,7 +237,7 @@
       <workItem from="1703597124057" duration="51000" />
       <workItem from="1704695131492" duration="460000" />
       <workItem from="1704695635582" duration="7205000" />
-      <workItem from="1704705237614" duration="750000" />
+      <workItem from="1704705237614" duration="1500000" />
     </task>
     <servers />
   </component>
