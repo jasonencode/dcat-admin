@@ -41,24 +41,7 @@ class AdminServiceProvider extends ServiceProvider
         Console\ActionCommand::class,
         Console\MenuCacheCommand::class,
         Console\MinifyCommand::class,
-        Console\ExtensionMakeCommand::class,
-        Console\ExtensionInstallCommand::class,
-        Console\ExtensionUninstallCommand::class,
-        Console\ExtensionRefreshCommand::class,
-        Console\ExtensionRollbackCommand::class,
-        Console\ExtensionEnableCommand::class,
-        Console\ExtensionDiableCommand::class,
-        Console\ExtensionUpdateCommand::class,
         Console\UpdateCommand::class,
-    ];
-
-    /**
-     * 开发环境命令.
-     *
-     * @var array
-     */
-    protected array $devCommands = [
-        Console\Development\LinkCommand::class,
     ];
 
     /**
@@ -95,13 +78,8 @@ class AdminServiceProvider extends ServiceProvider
         $this->loadAdminAuthConfig();
         $this->registerRouteMiddleware();
         $this->registerServices();
-        $this->registerExtensions();
 
         $this->commands($this->commands);
-
-        if (config('app.debug')) {
-            $this->commands($this->devCommands);
-        }
     }
 
     public function boot(): void
@@ -112,7 +90,6 @@ class AdminServiceProvider extends ServiceProvider
         $this->bootApplication();
         $this->registerPublishing();
         $this->compatibleBlade();
-        $this->bootExtensions();
         $this->registerBladeDirective();
     }
 
@@ -240,16 +217,6 @@ class AdminServiceProvider extends ServiceProvider
         $this->app->singleton('admin.web-uploader', WebUploader::class);
         $this->app->singleton(ExceptionHandler::class, config('admin.exception_handler') ?: Handler::class);
         $this->app->singleton('admin.translator', Translator::class);
-    }
-
-    public function registerExtensions(): void
-    {
-        Admin::extension()->register();
-    }
-
-    public function bootExtensions(): void
-    {
-        Admin::extension()->boot();
     }
 
     protected function registerBladeDirective(): void

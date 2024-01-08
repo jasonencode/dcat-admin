@@ -7,11 +7,19 @@
     <list default="true" id="78c2d4cd-abac-4873-8369-14705280d6d6" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2020_09_22_015815_create_admin_extensions_table.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Http/Controllers/ExtensionController.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/Extension.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/ExtensionHistory.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AdminServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/AdminServiceProvider.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Console/Development/LinkCommand.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionDiableCommand.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionEnableCommand.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionInstallCommand.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionMakeCommand.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionRefreshCommand.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionRollbackCommand.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionUninstallCommand.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionUpdateCommand.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Http/Controllers/IconController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Http/Controllers/ScaffoldController.php" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -219,7 +227,7 @@
       <workItem from="1695273178934" duration="131000" />
       <workItem from="1703597124057" duration="51000" />
       <workItem from="1704695131492" duration="460000" />
-      <workItem from="1704695635582" duration="6117000" />
+      <workItem from="1704695635582" duration="6778000" />
     </task>
     <servers />
   </component>

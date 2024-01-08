@@ -16,9 +16,9 @@ use Dcat\Admin\Support\Composer;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Traits\HasAssets;
 use Dcat\Admin\Traits\HasHtml;
-use Dcat\Admin\Traits\HasPermissions;
-use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -78,7 +78,7 @@ class Admin
     /**
      * @return Color
      */
-    public static function color()
+    public static function color(): Color
     {
         return app('admin.color');
     }
@@ -89,7 +89,7 @@ class Admin
      * @param  Closure|null  $builder
      * @return Menu
      */
-    public static function menu(Closure $builder = null)
+    public static function menu(Closure $builder = null): Menu
     {
         $menu = app('admin.menu');
 
@@ -113,10 +113,10 @@ class Admin
     }
 
     /**
-     * @param  null|string  $favicon
+     * @param  string|null  $favicon
      * @return string|void
      */
-    public static function favicon($favicon = null)
+    public static function favicon(?string $favicon = null)
     {
         if ($favicon === null) {
             return static::context()->favicon ?: config('admin.favicon');
@@ -138,17 +138,17 @@ class Admin
     /**
      * 获取登录用户模型.
      *
-     * @return Model|Authenticatable|HasPermissions
+     * @return Model|Authenticatable
      */
-    public static function user()
+    public static function user(): Authenticatable|Model
     {
         return static::guard()->user();
     }
 
     /**
-     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard|GuardHelpers
+     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
      */
-    public static function guard()
+    public static function guard(): Guard|StatefulGuard
     {
         return Auth::guard(config('admin.auth.guard') ?: 'admin');
     }
@@ -157,7 +157,7 @@ class Admin
      * @param  Closure|null  $builder
      * @return Navbar
      */
-    public static function navbar(Closure $builder = null)
+    public static function navbar(Closure $builder = null): Navbar
     {
         $navbar = app('admin.navbar');
 
@@ -190,15 +190,11 @@ class Admin
     /**
      * 获取pjax ID.
      *
-     * @return string|void
+     * @return string
      */
-    public static function getPjaxContainerId()
+    public static function getPjaxContainerId(): string
     {
         $id = static::context()->pjaxContainerId;
-
-        if ($id === false) {
-            return;
-        }
 
         return $id ?: static::$defaultPjaxContainerId;
     }
@@ -209,7 +205,7 @@ class Admin
      * @param  Closure|null  $builder
      * @return SectionManager
      */
-    public static function section(Closure $builder = null)
+    public static function section(Closure $builder = null): SectionManager
     {
         $manager = app('admin.sections');
 
@@ -223,7 +219,7 @@ class Admin
      *
      * @return \Dcat\Admin\Support\Setting
      */
-    public static function setting()
+    public static function setting(): Support\Setting
     {
         return app('admin.setting');
     }
@@ -510,7 +506,7 @@ class Admin
      * @param  array|null  $variables
      * @return string
      */
-    public static function jsVariables(array $variables = null)
+    public static function jsVariables(array $variables = null): string
     {
         $jsVariables = static::context()->jsVariables ?: [];
 
@@ -520,7 +516,7 @@ class Admin
                 $variables
             );
 
-            return;
+            return '';
         }
 
         $sidebarStyle = config('admin.layout.sidebar_style') ?: 'light';
@@ -582,9 +578,6 @@ class Admin
                     }
                 });
 
-                $router->resource('auth/extensions', 'Dcat\Admin\Http\Controllers\ExtensionController',
-                    ['only' => ['index', 'store', 'update']]);
-
                 $authController = config('admin.auth.controller', AuthController::class);
 
                 $router->get('auth/login', $authController.'@getLogin');
@@ -594,8 +587,6 @@ class Admin
                 $router->put('auth/setting', $authController.'@putSetting');
             });
         }
-
-        static::registerHelperRoutes();
     }
 
     /**
@@ -603,7 +594,7 @@ class Admin
      *
      * @return void
      */
-    public static function registerApiRoutes()
+    public static function registerApiRoutes(): void
     {
         $attributes = [
             'prefix'     => admin_base_path('dcat-api'),
@@ -622,30 +613,6 @@ class Admin
             $router->get('render', 'RenderableController@handle')->name('render');
             $router->post('tinymce/upload', 'TinymceController@upload')->name('tinymce.upload');
             $router->post('editor-md/upload', 'EditorMDController@upload')->name('editor-md.upload');
-        });
-    }
-
-    /**
-     * 注册开发工具路由.
-     *
-     * @return void
-     */
-    public static function registerHelperRoutes()
-    {
-        if (! config('admin.helpers.enable', true) || ! config('app.debug')) {
-            return;
-        }
-
-        $attributes = [
-            'prefix'     => config('admin.route.prefix'),
-            'middleware' => config('admin.route.middleware'),
-        ];
-
-        app('router')->group($attributes, function ($router) {
-            $router->get('helpers/scaffold', 'Dcat\Admin\Http\Controllers\ScaffoldController@index');
-            $router->post('helpers/scaffold', 'Dcat\Admin\Http\Controllers\ScaffoldController@store');
-            $router->post('helpers/scaffold/table', 'Dcat\Admin\Http\Controllers\ScaffoldController@table');
-            $router->get('helpers/icons', 'Dcat\Admin\Http\Controllers\IconController@index');
         });
     }
 }
