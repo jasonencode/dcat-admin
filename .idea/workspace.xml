@@ -6,33 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="78c2d4cd-abac-4873-8369-14705280d6d6" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/grid/displayer/extensions/description.blade.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/grid/displayer/extensions/name.blade.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AdminServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/AdminServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/ExportSeedCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Console/ExportSeedCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/stubs/AdminTablesSeeder.stub" beforeDir="false" afterPath="$PROJECT_DIR$/src/Console/stubs/AdminTablesSeeder.stub" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/stubs/config.stub" beforeDir="false" afterPath="$PROJECT_DIR$/src/Console/stubs/config.stub" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/stubs/extension/.gitignore.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/stubs/extension/README.md.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/stubs/extension/composer.json.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/stubs/extension/controller.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/stubs/extension/css.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/stubs/extension/extension.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/stubs/extension/js.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/stubs/extension/routes.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/stubs/extension/setting.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/stubs/extension/version.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/stubs/extension/view.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Http/Actions/Extensions/Disable.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Http/Actions/Extensions/Enable.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Http/Actions/Extensions/InstallFromLocal.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Http/Actions/Extensions/Marketplace.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Http/Actions/Extensions/Uninstall.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Http/Actions/Extensions/Update.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Http/Actions/ImportButton.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Http/Displayers/Extensions/Description.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Http/Displayers/Extensions/Name.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Support/helpers.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Support/helpers.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/lang/en/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/en/admin.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/lang/zh_CN/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_CN/admin.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/lang/zh_CN/extension.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/lang/zh_CN/global.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_CN/global.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/lang/zh_CN/menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_CN/menu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/lang/zh_TW/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_TW/admin.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/lang/zh_TW/extension.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/lang/zh_TW/global.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_TW/global.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/lang/zh_TW/menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_TW/menu.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -246,7 +228,7 @@
       <workItem from="1703597124057" duration="51000" />
       <workItem from="1704695131492" duration="460000" />
       <workItem from="1704695635582" duration="7205000" />
-      <workItem from="1704705237614" duration="486000" />
+      <workItem from="1704705237614" duration="750000" />
     </task>
     <servers />
   </component>

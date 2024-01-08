@@ -29,7 +29,6 @@ return [
         'detail'   => '详细',
         'create'   => '创建',
         'root'     => '顶级',
-        'scaffold' => '代码生成器',
     ],
     'options' => [
         //
