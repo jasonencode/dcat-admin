@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAdminTables extends Migration
-{
+return new class extends Migration {
     public function getConnection()
     {
         return $this->config('database.connection') ?: config('database.default');
@@ -16,12 +15,7 @@ class CreateAdminTables extends Migration
         return config('admin.'.$key);
     }
 
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create($this->config('database.users_table'), function (Blueprint $table) {
             $table->bigIncrements('id');
@@ -58,7 +52,8 @@ class CreateAdminTables extends Migration
             $table->string('title', 50);
             $table->string('icon', 50)->nullable();
             $table->string('uri', 50)->nullable();
-
+            $table->tinyInteger('show')->default(1);
+            $table->string('extension', 50)->default('');
             $table->timestamps();
         });
 
@@ -91,12 +86,7 @@ class CreateAdminTables extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists($this->config('database.users_table'));
         Schema::dropIfExists($this->config('database.roles_table'));
@@ -107,4 +97,4 @@ class CreateAdminTables extends Migration
         Schema::dropIfExists($this->config('database.role_menu_table'));
         Schema::dropIfExists($this->config('database.permission_menu_table'));
     }
-}
+};

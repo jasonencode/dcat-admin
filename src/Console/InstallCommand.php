@@ -26,14 +26,17 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $directory = '';
+    protected string $directory = '';
 
     /**
      * Execute the console command.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function handle()
+    public function handle(): void
     {
         $this->initDatabase();
 
@@ -47,7 +50,7 @@ class InstallCommand extends Command
      *
      * @return void
      */
-    public function initDatabase()
+    public function initDatabase(): void
     {
         $this->call('migrate');
 
@@ -63,7 +66,7 @@ class InstallCommand extends Command
      *
      * @return void
      */
-    protected function setDirectory()
+    protected function setDirectory(): void
     {
         $this->directory = config('admin.directory');
     }
@@ -72,13 +75,16 @@ class InstallCommand extends Command
      * Initialize the admin directory.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    protected function initAdminDirectory()
+    protected function initAdminDirectory(): void
     {
         $this->setDirectory();
 
         if (is_dir($this->directory)) {
-            $this->warn("{$this->directory} directory already exists !");
+            $this->warn("$this->directory directory already exists !");
 
             return;
         }
@@ -101,8 +107,11 @@ class InstallCommand extends Command
      * Create HomeController.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function createHomeController()
+    public function createHomeController(): void
     {
         $homeController = $this->directory.'/Controllers/HomeController.php';
         $contents = $this->getStub('HomeController');
@@ -122,8 +131,11 @@ class InstallCommand extends Command
      * Create AuthController.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function createAuthController()
+    public function createAuthController(): void
     {
         $authController = $this->directory.'/Controllers/AuthController.php';
         $contents = $this->getStub('AuthController');
@@ -141,8 +153,11 @@ class InstallCommand extends Command
 
     /**
      * @return void
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function createMetricCards()
+    public function createMetricCards(): void
     {
         $map = [
             '/Metrics/Examples/NewUsers.php'      => 'metrics/NewUsers',
@@ -168,22 +183,25 @@ class InstallCommand extends Command
     }
 
     /**
-     * @param  string  $name
+     * @param  string|null  $name
      * @return string
      */
-    protected function namespace($name = null)
+    protected function namespace(?string $name = null): string
     {
         $base = str_replace('\\Controllers', '\\', config('admin.route.namespace'));
 
-        return trim($base, '\\').($name ? "\\{$name}" : '');
+        return trim($base, '\\').($name ? "\\$name" : '');
     }
 
     /**
      * Create routes file.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    protected function createBootstrapFile()
+    protected function createBootstrapFile(): void
     {
         $file = $this->directory.'/bootstrap.php';
 
@@ -196,8 +214,11 @@ class InstallCommand extends Command
      * Create routes file.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    protected function createRoutesFile()
+    protected function createRoutesFile(): void
     {
         $file = $this->directory.'/routes.php';
 
@@ -211,8 +232,11 @@ class InstallCommand extends Command
      *
      * @param $name
      * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    protected function getStub($name)
+    protected function getStub($name): string
     {
         return $this->laravel['files']->get(__DIR__."/stubs/$name.stub");
     }
@@ -222,8 +246,8 @@ class InstallCommand extends Command
      *
      * @param  string  $path
      */
-    protected function makeDir($path = '')
+    protected function makeDir(string $path = ''): void
     {
-        $this->laravel['files']->makeDirectory("{$this->directory}/$path", 0755, true, true);
+        $this->laravel['files']->makeDirectory("$this->directory/$path", 0755, true, true);
     }
 }

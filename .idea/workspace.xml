@@ -5,26 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="78c2d4cd-abac-4873-8369-14705280d6d6" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/database/migrations/2024_01_08_160000_create_admin_operation_logs_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Http/Controllers/OperationController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Http/Middleware/LogOperation.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Models/Operation.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeception.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeception.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dcat-admin.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dcat-admin.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/phpspec.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/phpspec.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AdminServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/AdminServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/AdminTablesSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/AdminTablesSeeder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/Administrator.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Administrator.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/Extension.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Extension.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/ExtensionHistory.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/ExtensionHistory.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/Menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Menu.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/Permission.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Permission.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/Role.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Role.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/Setting.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/Setting.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2016_01_04_173148_create_admin_tables.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2016_01_04_173148_create_admin_tables.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2020_09_07_090635_create_admin_settings_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_09_07_090635_create_admin_settings_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2020_09_22_015815_create_admin_extensions_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_09_22_015815_create_admin_extensions_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2020_11_01_083237_update_admin_menu_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_11_01_083237_update_admin_menu_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Console/InstallCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Console/InstallCommand.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -232,7 +218,7 @@
       <workItem from="1695273178934" duration="131000" />
       <workItem from="1703597124057" duration="51000" />
       <workItem from="1704695131492" duration="460000" />
-      <workItem from="1704695635582" duration="4950000" />
+      <workItem from="1704695635582" duration="5970000" />
     </task>
     <servers />
   </component>
