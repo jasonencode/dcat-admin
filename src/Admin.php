@@ -25,6 +25,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class Admin
 {
@@ -245,7 +246,7 @@ class Admin
         if (! $repository instanceof Repository) {
             $class = is_object($repository) ? get_class($repository) : $repository;
 
-            throw new InvalidArgumentException("The class [{$class}] must be a type of [".Repository::class.'].');
+            throw new InvalidArgumentException("The class [$class] must be a type of [".Repository::class.'].');
         }
 
         return $repository;
@@ -268,7 +269,7 @@ class Admin
      * @return array|string|\Symfony\Component\HttpFoundation\Response|null
      * @throws \Exception
      */
-    public static function handleException(\Throwable $e)
+    public static function handleException(Throwable $e)
     {
         return app(ExceptionHandler::class)->handle($e);
     }
@@ -279,7 +280,7 @@ class Admin
      * @param  \Throwable  $e
      * @return mixed
      */
-    public static function reportException(\Throwable $e)
+    public static function reportException(Throwable $e)
     {
         return app(ExceptionHandler::class)->report($e);
     }
@@ -290,7 +291,7 @@ class Admin
      * @param  \Throwable  $e
      * @return mixed
      */
-    public static function renderException(\Throwable $e)
+    public static function renderException(Throwable $e)
     {
         return app(ExceptionHandler::class)->render($e);
     }

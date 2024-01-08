@@ -37,7 +37,6 @@ class FlushAdminState
         $this->forgetServiceInstances();
 
         $provider->registerServices();
-        $provider->registerExtensions();
         $provider->boot();
     }
 

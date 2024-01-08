@@ -8,18 +8,16 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/admin.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AdminServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/AdminServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/Development/LinkCommand.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionDiableCommand.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionEnableCommand.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionInstallCommand.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionMakeCommand.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionRefreshCommand.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionRollbackCommand.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionUninstallCommand.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Console/ExtensionUpdateCommand.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Http/Controllers/IconController.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Http/Controllers/ScaffoldController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Extend/CanImportMenu.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Extend/HasExtension.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Extend/Manager.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Extend/Note.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Extend/ServiceProvider.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Extend/Setting.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Extend/UpdateManager.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Extend/VersionManager.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Http/Repositories/Extension.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Octane/Listeners/FlushAdminState.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Octane/Listeners/FlushAdminState.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,6 +145,9 @@
       <path value="$PROJECT_DIR$/vendor/_laravel_idea" />
     </include_path>
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 6
@@ -169,6 +170,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -227,7 +229,7 @@
       <workItem from="1695273178934" duration="131000" />
       <workItem from="1703597124057" duration="51000" />
       <workItem from="1704695131492" duration="460000" />
-      <workItem from="1704695635582" duration="6778000" />
+      <workItem from="1704695635582" duration="7205000" />
     </task>
     <servers />
   </component>
