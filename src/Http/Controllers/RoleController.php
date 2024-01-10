@@ -9,10 +9,11 @@ use Dcat\Admin\Http\Repositories\Role;
 use Dcat\Admin\Show;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\Tree;
+use Illuminate\Http\Response;
 
 class RoleController extends AdminController
 {
-    public function title()
+    public function title(): string
     {
         return trans('admin.roles');
     }
@@ -142,7 +143,7 @@ class RoleController extends AdminController
         });
     }
 
-    public function destroy($id)
+    public function destroy($id): Response
     {
         $roleModel = config('admin.database.roles_model');
         if (in_array($roleModel::ADMINISTRATOR_ID, Helper::array($id))) {

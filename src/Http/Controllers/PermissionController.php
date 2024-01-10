@@ -11,12 +11,12 @@ use Illuminate\Support\Str;
 
 class PermissionController extends AdminController
 {
-    protected function title()
+    protected function title(): string
     {
         return trans('admin.permissions');
     }
 
-    public function index(Content $content)
+    public function index(Content $content): Content
     {
         return $content
             ->title($this->title())

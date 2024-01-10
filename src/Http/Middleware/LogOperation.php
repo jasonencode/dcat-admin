@@ -51,7 +51,7 @@ class LogOperation
 
             try {
                Operation::create($log);
-            } catch (Exception $exception) {
+            } catch (Exception) {
             }
         }
 

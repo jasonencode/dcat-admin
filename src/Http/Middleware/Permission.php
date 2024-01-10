@@ -23,6 +23,7 @@ class Permission
      * @param  \Closure  $next
      * @param  array  $args
      * @return mixed
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function handle(Request $request, \Closure $next, ...$args)
     {
@@ -54,6 +55,7 @@ class Permission
      *
      * @param  Request  $request
      * @return bool
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function checkRoutePermission(Request $request)
     {

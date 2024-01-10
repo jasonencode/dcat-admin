@@ -216,16 +216,6 @@ class Admin
     }
 
     /**
-     * 配置.
-     *
-     * @return \Dcat\Admin\Support\Setting
-     */
-    public static function setting(): Support\Setting
-    {
-        return app('admin.setting');
-    }
-
-    /**
      * 创建数据仓库实例.
      *
      * @param $repository
@@ -584,8 +574,6 @@ class Admin
                 $router->get('auth/login', $authController.'@getLogin');
                 $router->post('auth/login', $authController.'@postLogin');
                 $router->get('auth/logout', $authController.'@getLogout');
-                $router->get('auth/setting', $authController.'@getSetting');
-                $router->put('auth/setting', $authController.'@putSetting');
             });
         }
     }

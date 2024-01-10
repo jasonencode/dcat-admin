@@ -12,6 +12,7 @@ class HandleActionController
     /**
      * @param  Request  $request
      * @return $this|\Illuminate\Http\JsonResponse
+     * @throws \Dcat\Admin\Exception\AdminException
      */
     public function handle(Request $request)
     {

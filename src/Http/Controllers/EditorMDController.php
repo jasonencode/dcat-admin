@@ -28,7 +28,9 @@ class EditorMDController
     }
 
     /**
-     * @return \Illuminate\Contracts\Filesystem\Filesystem|FilesystemAdapter
+     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     protected function disk()
     {

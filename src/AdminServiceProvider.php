@@ -11,7 +11,6 @@ use Dcat\Admin\Layout\Navbar;
 use Dcat\Admin\Layout\SectionManager;
 use Dcat\Admin\Support\Context;
 use Dcat\Admin\Support\Helper;
-use Dcat\Admin\Support\Setting;
 use Dcat\Admin\Support\Translator;
 use Dcat\Admin\Support\WebUploader;
 use Illuminate\Support\Arr;
@@ -201,9 +200,6 @@ class AdminServiceProvider extends ServiceProvider
         $this->app->singleton('admin.navbar', Navbar::class);
         $this->app->singleton('admin.menu', Menu::class);
         $this->app->singleton('admin.context', Context::class);
-        $this->app->singleton('admin.setting', function () {
-            return Setting::fromDatabase();
-        });
         $this->app->singleton('admin.web-uploader', WebUploader::class);
         $this->app->singleton(ExceptionHandler::class, config('admin.exception_handler') ?: Handler::class);
         $this->app->singleton('admin.translator', Translator::class);

@@ -4,6 +4,8 @@ namespace Dcat\Admin\Http\Middleware;
 
 use Closure;
 use Dcat\Admin\Admin;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,9 +17,9 @@ class Pjax
      *
      * @param  Request  $request
      * @param  Closure  $next
-     * @return Response
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): RedirectResponse|Response
     {
         $response = $next($request);
 
@@ -31,7 +33,7 @@ class Pjax
 
         try {
             $this->setUriHeader($response, $request);
-        } catch (\Exception $exception) {
+        } catch (Exception) {
         }
 
         return $response;
@@ -43,7 +45,7 @@ class Pjax
      * @param  Response  $response
      * @return \Illuminate\Http\RedirectResponse
      */
-    protected function handleErrorResponse(Response $response)
+    protected function handleErrorResponse(Response $response): RedirectResponse
     {
         if (config('app.debug')) {
             throw $response->exception;
@@ -67,7 +69,7 @@ class Pjax
      * @param  Response  $response
      * @param  Request  $request
      */
-    protected function setUriHeader(Response $response, Request $request)
+    protected function setUriHeader(Response $response, Request $request): void
     {
         $response->header(
             'X-PJAX-URL',

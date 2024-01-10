@@ -2,11 +2,12 @@
 
 namespace Dcat\Admin\Http\Middleware;
 
+use Closure;
 use Dcat\Admin\Admin;
 
 class Application
 {
-    public function handle($request, \Closure $next, $app = null)
+    public function handle($request, Closure $next, $app = null)
     {
         if ($app) {
             Admin::app()->switch($app);

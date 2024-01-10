@@ -6,11 +6,12 @@ use Dcat\Admin\Models\Operation;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 
 class OperationController extends AdminController
 {
-    protected $title = '操作日志';
+    protected string $title = '操作日志';
 
     public function grid(): Grid
     {
@@ -38,7 +39,7 @@ class OperationController extends AdminController
             $grid->column('user')
                 ->display(function ($user) {
                     if (! $user) {
-                        return;
+                        return '';
                     }
                     $user = Helper::array($user);
                     return $user['name'] ?? ($user['username'] ?? $user['id']);
@@ -61,7 +62,7 @@ class OperationController extends AdminController
         });
     }
 
-    public function destroy($id)
+    public function destroy($id): Response
     {
         $ids = explode(',', $id);
 
