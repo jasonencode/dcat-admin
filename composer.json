@@ -20,14 +20,16 @@
     ],
     "require": {
         "php": "^8.2",
+        "ext-pcntl": "*",
         "dcat/easy-excel": "^1.1",
         "dcat/laravel-wherehasin": "^0.8",
+        "doctrine/dbal": "^2.6|^3.0",
+        "intervention/image": "^2.7",
         "laravel/framework": "^10.0",
+        "laravel/horizon": "^5.21",
+        "livewire/livewire": "^3.3",
         "mews/captcha": "^3.3",
-        "spatie/eloquent-sortable": "3.*|4.*",
-        "doctrine/dbal": "^2.6|^3.0"
-    },
-    "require-dev": {
+        "spatie/eloquent-sortable": "3.*|4.*"
     },
     "autoload": {
         "psr-4": {
@@ -49,5 +51,8 @@
                 "Dcat\\Admin\\AdminServiceProvider"
             ]
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }
