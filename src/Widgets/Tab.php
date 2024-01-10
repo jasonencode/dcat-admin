@@ -164,7 +164,7 @@ class Tab extends Widget
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $data = array_merge(
             $this->data,

@@ -37,7 +37,7 @@ class Hidden extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         return "<input type='hidden' name='$this->name' value='$this->value'>";
     }

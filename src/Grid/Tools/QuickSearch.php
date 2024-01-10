@@ -101,7 +101,7 @@ class QuickSearch extends AbstractTool
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function render()
+    public function render(): string
     {
         $this->setupScript();
 

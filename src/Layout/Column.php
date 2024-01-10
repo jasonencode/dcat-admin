@@ -92,7 +92,7 @@ class Column implements Renderable
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $html = $this->startColumn();
 

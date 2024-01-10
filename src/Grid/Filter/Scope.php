@@ -76,7 +76,7 @@ class Scope implements Renderable
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $url = request()->fullUrlWithQuery([
             $this->filter->getScopeQueryName() => $this->key,

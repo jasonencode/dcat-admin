@@ -189,7 +189,7 @@ class Panel implements Renderable
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         return $this->doWrap();
     }

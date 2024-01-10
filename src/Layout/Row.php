@@ -66,7 +66,7 @@ class Row implements Renderable
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $html = $this->startRow();
 

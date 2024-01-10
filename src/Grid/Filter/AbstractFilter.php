@@ -623,7 +623,7 @@ abstract class AbstractFilter
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $variables = $this->variables();
 

@@ -339,7 +339,7 @@ HTML;
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $output = $this->renderCustomTools($this->prepends);
 

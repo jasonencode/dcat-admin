@@ -54,9 +54,9 @@ class Row implements Renderable
     /**
      * Render the row.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return string
      */
-    public function render()
+    public function render(): string
     {
         return view('admin::show.row', ['fields' => $this->fields]);
     }

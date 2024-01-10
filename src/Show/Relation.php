@@ -110,7 +110,7 @@ class Relation extends Field
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         return <<<HTML
 <div class="mt-1-5">{$this->build()}</div>

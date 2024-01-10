@@ -29,7 +29,7 @@ abstract class LazyRenderable extends Renderable
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         $this->addStyle();
 

@@ -200,9 +200,9 @@ class Selector
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return string
      */
-    public function render()
+    public function render(): string
     {
         return view('admin::grid.selector', [
             'self'     => $this,

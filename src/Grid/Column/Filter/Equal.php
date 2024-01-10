@@ -105,7 +105,7 @@ class Equal extends Filter
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         return $this->renderInput();
     }

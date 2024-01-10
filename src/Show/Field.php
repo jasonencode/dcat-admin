@@ -713,7 +713,7 @@ HTML;
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         if ($this->showAs->isNotEmpty()) {
             $this->showAs->each(function ($callable) {

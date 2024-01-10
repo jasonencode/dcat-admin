@@ -117,7 +117,7 @@ class ComplexHeader extends Widget
         }
     }
 
-    public function render()
+    public function render(): string
     {
         $headers = implode(' ', $this->html);
 

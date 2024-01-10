@@ -30,7 +30,7 @@ class DateRange extends Field
         return $value;
     }
 
-    public function render()
+    public function render(): string
     {
         $this->options['locale'] = config('app.locale');
 
