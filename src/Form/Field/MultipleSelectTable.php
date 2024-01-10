@@ -41,7 +41,7 @@ class MultipleSelectTable extends SelectTable
         return Helper::array($value, true);
     }
 
-    public function render()
+    public function render(): string
     {
         $this->addVariables(['max' => $this->max]);
 

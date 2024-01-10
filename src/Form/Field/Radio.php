@@ -58,7 +58,7 @@ class Radio extends Field
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         if ($this->options instanceof \Closure) {
             $this->options(

@@ -166,7 +166,7 @@ class Tags extends Field
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         $value = Helper::array($this->value());
 

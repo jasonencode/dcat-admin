@@ -29,7 +29,7 @@ class Textarea extends Field
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         if (is_array($this->value)) {
             $this->value = json_encode($this->value, JSON_PRETTY_PRINT);

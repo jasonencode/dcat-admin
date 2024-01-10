@@ -211,7 +211,7 @@ class Select extends Field
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         $this->addDefaultConfig([
             'allowClear'  => true,

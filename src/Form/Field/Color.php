@@ -41,7 +41,7 @@ class Color extends Text
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function render()
+    public function render(): string
     {
         $this->defaultAttribute('style', 'width: 160px;flex:none');
 

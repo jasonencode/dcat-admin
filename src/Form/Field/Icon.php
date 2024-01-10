@@ -7,7 +7,7 @@ class Icon extends Text
     public static $js = '@fontawesome-iconpicker';
     public static $css = '@fontawesome-iconpicker';
 
-    public function render()
+    public function render(): string
     {
         $this->addScript();
 

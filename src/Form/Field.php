@@ -1313,7 +1313,7 @@ class Field implements Renderable
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
-    public function render()
+    public function render(): string
     {
         if (! $this->shouldRender()) {
             return '';

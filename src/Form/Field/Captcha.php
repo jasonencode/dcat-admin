@@ -31,7 +31,7 @@ class Captcha extends Text
         return $this;
     }
 
-    public function render()
+    public function render(): string
     {
         $this->addVariables(['captchaSrc' => captcha_src()]);
 

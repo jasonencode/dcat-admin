@@ -71,7 +71,7 @@ class Checkbox extends MultipleSelect
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         if ($this->options instanceof \Closure) {
             $this->options(

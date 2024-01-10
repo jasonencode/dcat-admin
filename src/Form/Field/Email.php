@@ -6,7 +6,7 @@ class Email extends Text
 {
     protected $rules = ['nullable', 'email'];
 
-    public function render()
+    public function render(): string
     {
         $this->prepend('<i class="feather icon-mail"></i>')
             ->type('email');

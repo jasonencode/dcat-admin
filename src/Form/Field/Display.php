@@ -14,7 +14,7 @@ class Display extends Field
         $this->callback = $callback;
     }
 
-    public function render()
+    public function render(): string
     {
         if ($this->callback instanceof Closure) {
             $this->value = $this->callback->call($this->values(), $this->value());

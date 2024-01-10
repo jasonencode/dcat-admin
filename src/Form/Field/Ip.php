@@ -15,7 +15,7 @@ class Ip extends Text
         'alias' => 'ip',
     ];
 
-    public function render()
+    public function render(): string
     {
         $this->inputmask($this->options);
 

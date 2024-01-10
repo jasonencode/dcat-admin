@@ -30,7 +30,7 @@ class Date extends Text
         return $value;
     }
 
-    public function render()
+    public function render(): string
     {
         $this->options['format'] = $this->format;
         $this->options['locale'] = config('app.locale');

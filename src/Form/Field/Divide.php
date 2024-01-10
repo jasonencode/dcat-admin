@@ -11,7 +11,7 @@ class Divide extends Field
         $this->label = $label;
     }
 
-    public function render()
+    public function render(): string
     {
         if (! $this->label) {
             return '<hr/>';

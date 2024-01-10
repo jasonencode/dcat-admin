@@ -639,7 +639,7 @@ class Tree implements Renderable
      *
      * @return \Illuminate\Http\JsonResponse|string
      */
-    public function render()
+    public function render(): string
     {
         $this->callResolving();
 

@@ -11,7 +11,7 @@ class Table extends ArrayField
      */
     protected $viewMode = 'table';
 
-    public function render()
+    public function render(): string
     {
         if (! $this->shouldRender()) {
             return '';

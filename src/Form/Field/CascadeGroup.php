@@ -54,7 +54,7 @@ class CascadeGroup extends Field
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         return <<<HTML
 <div class="cascade-group {$this->dependency['class']} {$this->hide}">

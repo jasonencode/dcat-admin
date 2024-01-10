@@ -263,7 +263,7 @@ class Embeds extends Field implements FieldsCollection
      *
      * @return \Illuminate\View\View
      */
-    public function render()
+    public function render(): string
     {
         $this->addVariables(['form' => $this->buildEmbeddedForm()]);
 

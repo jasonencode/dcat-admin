@@ -18,7 +18,7 @@ class Listbox extends MultipleSelect
         return $this;
     }
 
-    public function render()
+    public function render(): string
     {
         $settings = array_merge($this->settings, [
             'infoText'          => trans('admin.listbox.text_total'),

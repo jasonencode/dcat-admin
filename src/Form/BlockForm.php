@@ -112,7 +112,7 @@ class BlockForm extends WidgetForm
         return $this;
     }
 
-    public function render()
+    public function render(): string
     {
         $class = $this->title ? '' : 'pt-1';
 

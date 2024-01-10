@@ -87,7 +87,7 @@ class SwitchField extends Field
         return $value ? 1 : 0;
     }
 
-    public function render()
+    public function render(): string
     {
         if (empty($this->attributes['data-size'])) {
             $this->small();

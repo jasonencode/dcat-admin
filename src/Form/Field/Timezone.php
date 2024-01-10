@@ -8,7 +8,7 @@ class Timezone extends Select
 {
     protected $view = 'admin::form.select';
 
-    public function render()
+    public function render(): string
     {
         $this->options = collect(DateTimeZone::listIdentifiers(DateTimeZone::ALL))->mapWithKeys(function ($timezone) {
             return [$timezone => $timezone];

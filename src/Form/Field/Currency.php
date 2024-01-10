@@ -55,7 +55,7 @@ class Currency extends Text
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         $this->inputmask($this->options);
 

@@ -153,7 +153,7 @@ class File extends Field implements UploadFieldInterface
     /**
      * {@inheritDoc}
      */
-    public function render()
+    public function render(): string
     {
         $this->setDefaultServer();
 
