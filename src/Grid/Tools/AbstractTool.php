@@ -9,7 +9,7 @@ abstract class AbstractTool extends Grid\GridAction
     /**
      * @var string
      */
-    protected $style = 'btn btn-white waves-effect';
+    protected string $style = 'btn btn-white waves-effect';
 
     /**
      * @return string

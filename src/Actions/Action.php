@@ -24,9 +24,9 @@ abstract class Action implements Renderable
     protected array|string $primaryKey;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected string $title;
+    protected ?string $title = null;
 
     /**
      * @var string
