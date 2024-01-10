@@ -24,7 +24,7 @@ class EndWith extends AbstractFilter
 
         $this->value = $value;
 
-        return $this->buildCondition($this->column, $this->type, "%{$this->value}");
+        return $this->buildCondition($this->column, $this->type, "%$this->value");
     }
 
     public function ilike()

@@ -6,14 +6,14 @@ use Dcat\Admin\Tree\RowAction;
 
 class Delete extends RowAction
 {
-    public function html()
+    public function html(): string
     {
         $url = request()->fullUrl();
 
         return <<<HTML
 <a href="javascript:void(0);" 
     data-message="ID - {$this->getKey()}" 
-    data-redirect="{$url}"
+    data-redirect="$url"
     data-url="{$this->resource()}/{$this->getKey()}" data-action="delete"><i class="feather icon-trash"></i>&nbsp;</a>
 HTML;
     }

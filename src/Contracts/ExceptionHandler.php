@@ -2,6 +2,8 @@
 
 namespace Dcat\Admin\Contracts;
 
+use Throwable;
+
 interface ExceptionHandler
 {
     /**
@@ -10,7 +12,7 @@ interface ExceptionHandler
      * @param  \Throwable  $e
      * @return array|string|void
      */
-    public function handle(\Throwable $e);
+    public function handle(Throwable $e);
 
     /**
      * 显示异常信息.
@@ -18,12 +20,12 @@ interface ExceptionHandler
      * @param  \Throwable  $exception
      * @return array|string|void
      */
-    public function render(\Throwable $exception);
+    public function render(Throwable $exception);
 
     /**
      * 上报异常信息.
      *
      * @param  \Throwable  $e
      */
-    public function report(\Throwable $e);
+    public function report(Throwable $e);
 }

@@ -73,7 +73,7 @@ class Color
      * @var array
      */
     protected static $extensions = [
-        'default' => [
+        'default'    => [
             'colors' => [
                 'primary'        => '#586cb1',
                 'primary-darker' => '#4c60a3',
@@ -87,14 +87,14 @@ class Color
                 'link'           => '#62a8ea',
             ],
         ],
-        'blue' => [
+        'blue'       => [
             'colors' => [
                 'primary'        => '#6d8be6',
                 'primary-darker' => '#6d8be6',
                 'link'           => '#6d8be6',
             ],
         ],
-        'green' => [
+        'green'      => [
             'colors' => [
                 'primary'        => '#4e9876',
                 'primary-darker' => '#458769',
@@ -127,64 +127,64 @@ class Color
         'white50' => 'hsla(0,0%,100%,.5)',
 
         // 其他蓝色
-        'blue1' => '#007ee5',
-        'blue2' => '#3d97dd',
+        'blue1'   => '#007ee5',
+        'blue2'   => '#3d97dd',
 
         // 橘色
         'orange1' => '#ffcc80',
         'orange2' => '#F99037',
 
         // 黄色
-        'yellow' => '#edc30e',
+        'yellow'  => '#edc30e',
 
-        'indigo-darker' => '#495abf',
-        'red-darker'    => '#bd4147',
-        'blue-darker'   => '#236bb0',
-        'cyan-darker'   => '#6355ee',
+        'indigo-darker'    => '#495abf',
+        'red-darker'       => '#bd4147',
+        'blue-darker'      => '#236bb0',
+        'cyan-darker'      => '#6355ee',
 
         // 灰色
-        'gray' => '#b9c3cd',
+        'gray'             => '#b9c3cd',
         // 轻灰
-        'light' => '#f7f7f9',
+        'light'            => '#f7f7f9',
 
         // 水鸭色
-        'tear'  => '#01847f',
-        'tear1' => '#00b5b5',
+        'tear'             => '#01847f',
+        'tear1'            => '#00b5b5',
 
         // 深色
-        'dark20' => '#f6fbff',
-        'dark30' => '#f4f7fa',
-        'dark35' => '#e7eef7',
-        'dark40' => '#ebf0f3',
-        'dark50' => '#d3dde5',
-        'dark60' => '#bacad6',
-        'dark70' => '#b3b9bf',
-        'dark80' => '#7c858e',
-        'dark85' => '#5c7089',
-        'dark90' => '#252d37',
+        'dark20'           => '#f6fbff',
+        'dark30'           => '#f4f7fa',
+        'dark35'           => '#e7eef7',
+        'dark40'           => '#ebf0f3',
+        'dark50'           => '#d3dde5',
+        'dark60'           => '#bacad6',
+        'dark70'           => '#b3b9bf',
+        'dark80'           => '#7c858e',
+        'dark85'           => '#5c7089',
+        'dark90'           => '#252d37',
 
         // 文本通用颜色
-        'font' => '#414750',
+        'font'             => '#414750',
 
         // 灰色背景
-        'gray-bg' => '#f1f1f1',
+        'gray-bg'          => '#f1f1f1',
 
         // 边框颜色
-        'border' => '#ebeff2',
+        'border'           => '#ebeff2',
 
         // 表单边框
-        'input-border' => '#d9d9d9',
+        'input-border'     => '#d9d9d9',
 
         // 背景色
-        'background' => '#eff3f8',
+        'background'       => '#eff3f8',
 
         // 深色模式
         // 背景色
-        'dark-mode-bg' => '#2c2c43',
+        'dark-mode-bg'     => '#2c2c43',
         // 深色
-        'dark-mode-color' => '#222233',
+        'dark-mode-color'  => '#222233',
         'dark-mode-color2' => '#1e1e2d',
-        'dark-mode-font' => '##a8a9bb',
+        'dark-mode-font'   => '##a8a9bb',
     ];
 
     /**
@@ -331,7 +331,7 @@ class Color
      * @param  array  $arguments
      * @return string
      */
-    public function __call(string $method, array $arguments = [])
+    public function __call($method, $arguments = [])
     {
         return $this->darken(
             Helper::slug($method),

@@ -7,18 +7,18 @@ use Dcat\Admin\Grid;
 abstract class Event
 {
     /**
-     * @var Grid
+     * @var Grid|null
      */
-    public $grid;
+    public ?Grid $grid = null;
 
-    public $payload = [];
+    public array $payload = [];
 
     public function __construct(array $payload = [])
     {
         $this->payload = $payload;
     }
 
-    public function setGrid(Grid $grid)
+    public function setGrid(Grid $grid): void
     {
         $this->grid = $grid;
     }
