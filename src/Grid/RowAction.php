@@ -21,7 +21,7 @@ abstract class RowAction extends GridAction
      *
      * @return mixed
      */
-    public function getKey()
+    public function getKey(): array|string
     {
         if ($this->row) {
             return $this->row->{$this->parent->getKeyName()};

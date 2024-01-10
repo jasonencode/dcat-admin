@@ -6,7 +6,7 @@ use Dcat\Admin\Grid\BatchAction;
 
 class ActionDivider extends BatchAction
 {
-    public function render()
+    public function render(): string
     {
         return '';
     }

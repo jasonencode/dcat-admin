@@ -699,7 +699,7 @@ class Filter implements Renderable
      *
      * @return \Illuminate\View\View|string
      */
-    public function render()
+    public function render(): string
     {
         $this->grid()->callBuilder();
 

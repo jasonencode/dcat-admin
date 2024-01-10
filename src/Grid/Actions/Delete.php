@@ -9,7 +9,7 @@ class Delete extends RowAction
     /**
      * @return array|null|string
      */
-    public function title()
+    public function title(): string
     {
         if ($this->title) {
             return $this->title;
@@ -18,7 +18,7 @@ class Delete extends RowAction
         return '<i class="feather icon-trash"></i> '.__('admin.delete').' &nbsp;&nbsp;';
     }
 
-    public function render()
+    public function render(): string
     {
         $this->setHtmlAttribute([
             'data-url'      => $this->url(),

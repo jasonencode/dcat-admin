@@ -70,7 +70,7 @@ class PerPageSelector implements Renderable
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         Admin::script($this->script());
 

@@ -69,7 +69,7 @@ class Sorter implements Renderable
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $type = 'desc';
         $icon = 'down';

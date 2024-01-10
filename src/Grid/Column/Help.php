@@ -40,7 +40,7 @@ class Help implements Renderable
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $class = 'grid-column-help-'.Str::random(8);
 

@@ -207,7 +207,7 @@ class Tools implements Renderable
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $value = $this->tools->map(function ($tool) {
             if ($tool instanceof Action && ! $tool->allowed()) {

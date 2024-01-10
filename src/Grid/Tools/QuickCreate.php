@@ -286,7 +286,7 @@ class QuickCreate implements Renderable
      * @param  int  $columnCount
      * @return array|string
      */
-    public function render($columnCount = 0)
+    public function render($columnCount = 0): string
     {
         if ($this->fields->isEmpty()) {
             return '';

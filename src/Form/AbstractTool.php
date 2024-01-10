@@ -41,21 +41,21 @@ abstract class AbstractTool extends Action
     }
 
     /**
-     * @return array|mixed|string|null
+     * @return array|string
      */
-    public function getKey()
+    public function getKey(): array|string
     {
         if ($this->primaryKey) {
             return $this->primaryKey;
         }
 
-        return $this->parent ? $this->parent->getKey() : null;
+        return $this->parent ? $this->parent->getKey() : '';
     }
 
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         if ($this->allowOnlyEditing && ! $this->parent->isEditing()) {
             return '';
@@ -71,7 +71,7 @@ abstract class AbstractTool extends Action
     /**
      * @return void
      */
-    public function setupHtmlAttributes()
+    public function setupHtmlAttributes(): void
     {
         $this->addHtmlClass($this->style);
 
@@ -87,7 +87,7 @@ abstract class AbstractTool extends Action
         $tool = static::make(...$params);
 
         $tool->allowOnlyCreating = true;
-        $tool->allowOnlyEditing = false;
+        $tool->allowOnlyEditing  = false;
 
         return $tool;
     }
@@ -100,7 +100,7 @@ abstract class AbstractTool extends Action
     {
         $tool = static::make(...$params);
 
-        $tool->allowOnlyEditing = true;
+        $tool->allowOnlyEditing  = true;
         $tool->allowOnlyCreating = false;
 
         return $tool;

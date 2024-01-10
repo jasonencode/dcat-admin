@@ -14,7 +14,7 @@ abstract class AbstractTool extends Grid\GridAction
     /**
      * @return string
      */
-    protected function html()
+    protected function html(): string
     {
         $this->appendHtmlAttribute('class', $this->style);
 

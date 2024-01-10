@@ -9,7 +9,7 @@ class Edit extends RowAction
     /**
      * @return array|null|string
      */
-    public function title()
+    public function title(): string
     {
         if ($this->title) {
             return $this->title;

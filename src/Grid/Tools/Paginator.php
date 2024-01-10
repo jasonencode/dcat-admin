@@ -96,7 +96,7 @@ class Paginator implements Renderable
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         return $this->paginationRanger().
             $this->paginationLinks().
