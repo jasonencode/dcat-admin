@@ -12,21 +12,21 @@ use Dcat\Admin\Admin;
  */
 trait LazyWidget
 {
-    protected $payload = [];
+    protected array $payload = [];
 
-    public function payload(array $payload)
+    public function payload(array $payload): static
     {
         $this->payload = array_merge($this->payload, $payload);
 
         return $this;
     }
 
-    public function translation()
+    public function translation(): string
     {
         return empty($this->translation) ? Admin::translator()->getPath() : $this->translation;
     }
 
-    public function getUrl()
+    public function getUrl(): string
     {
         $data = array_merge($this->payload, [
             'renderable' => $this->getRenderableName(),
@@ -36,7 +36,7 @@ trait LazyWidget
         return route(admin_api_route_name('render'), $data);
     }
 
-    protected function getRenderableName()
+    protected function getRenderableName(): string
     {
         return str_replace('\\', '_', static::class);
     }
