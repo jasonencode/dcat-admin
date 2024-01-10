@@ -23,7 +23,7 @@ class RefreshButton implements Renderable
     public function render(): string
     {
         if (! $this->display) {
-            return;
+            return '';
         }
 
         $refresh = trans('admin.refresh');
