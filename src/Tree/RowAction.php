@@ -19,9 +19,9 @@ class RowAction extends Action
     /**
      * 获取主键值.
      *
-     * @return array|mixed|string
+     * @return array|string
      */
-    public function getKey()
+    public function getKey(): array|string
     {
         if ($key = parent::getKey()) {
             return $key;
