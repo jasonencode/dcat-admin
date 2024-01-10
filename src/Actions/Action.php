@@ -21,49 +21,49 @@ abstract class Action implements Renderable
     /**
      * @var array|string
      */
-    protected $primaryKey;
+    protected array|string $primaryKey;
 
     /**
      * @var string
      */
-    protected $title;
+    protected string $title;
 
     /**
      * @var string
      */
-    protected $selector;
+    protected string $selector = '';
 
     /**
      * @var string
      */
-    protected $method = 'POST';
+    protected string $method = 'POST';
 
     /**
      * @var string
      */
-    protected $event = 'click';
+    protected string $event = 'click';
 
     /**
      * @var bool
      */
-    protected $disabled = false;
+    protected bool $disabled = false;
 
     /**
      * @var bool
      */
-    protected $allowHandler = true;
+    protected bool $allowHandler = true;
 
     /**
      * @var array
      */
-    protected $htmlClasses = [];
+    protected array $htmlClasses = [];
 
     /**
      * Action constructor.
      *
-     * @param  string  $title
+     * @param  string|null  $title
      */
-    public function __construct($title = null)
+    public function __construct(?string $title = null)
     {
         if ($title) {
             $this->title = $title;
@@ -76,7 +76,7 @@ abstract class Action implements Renderable
      * @param  bool  $disable
      * @return $this
      */
-    public function disable(bool $disable = true)
+    public function disable(bool $disable = true): static
     {
         $this->disabled = $disable;
 
@@ -86,7 +86,7 @@ abstract class Action implements Renderable
     /**
      * @return bool
      */
-    public function allowed()
+    public function allowed(): bool
     {
         return ! $this->disabled;
     }
@@ -96,7 +96,7 @@ abstract class Action implements Renderable
      *
      * @return array|string
      */
-    public function getKey()
+    public function getKey(): array|string
     {
         return $this->primaryKey;
     }
@@ -107,7 +107,7 @@ abstract class Action implements Renderable
      * @param  mixed  $key
      * @return $this
      */
-    public function setKey($key)
+    public function setKey(mixed $key): static
     {
         $this->primaryKey = $key;
 
@@ -117,7 +117,7 @@ abstract class Action implements Renderable
     /**
      * @return string
      */
-    protected function getElementClass()
+    protected function getElementClass(): string
     {
         return ltrim($this->selector(), '.');
     }
@@ -127,15 +127,15 @@ abstract class Action implements Renderable
      *
      * @return string
      */
-    public function title()
+    public function title(): string
     {
         return $this->title;
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
-    public function selector()
+    public function selector(): string
     {
         return $this->selector ?: ($this->selector = $this->makeSelector());
     }
@@ -143,19 +143,18 @@ abstract class Action implements Renderable
     /**
      * 生成选择器.
      *
-     * @param  string  $prefix
      * @return string
      */
-    public function makeSelector()
+    public function makeSelector(): string
     {
         return '.act-'.Str::random();
     }
 
     /**
-     * @param  string|array  $class
+     * @param  array|string  $class
      * @return $this
      */
-    public function addHtmlClass($class)
+    public function addHtmlClass(array|string $class): static
     {
         $this->htmlClasses = array_merge($this->htmlClasses, (array) $class);
 
@@ -165,16 +164,18 @@ abstract class Action implements Renderable
     /**
      * 需要执行的JS代码.
      *
-     * @return string|void
+     * @return string
      */
-    protected function script()
+    protected function script(): string
     {
+        return <<<JS
+JS;
     }
 
     /**
      * @return string
      */
-    protected function html()
+    protected function html(): string
     {
         $this->defaultHtmlAttribute('href', 'javascript:void(0)');
 
@@ -186,7 +187,7 @@ HTML;
     /**
      * @return void
      */
-    protected function prepareHandler()
+    protected function prepareHandler(): void
     {
         if (
             ! $this->allowHandler
@@ -201,7 +202,7 @@ HTML;
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         if (! $this->allowed()) {
             return '';
@@ -221,7 +222,7 @@ HTML;
     /**
      * @return string
      */
-    protected function formatHtmlClasses()
+    protected function formatHtmlClasses(): string
     {
         return implode(' ', array_unique($this->htmlClasses));
     }
@@ -229,7 +230,7 @@ HTML;
     /**
      * @return void
      */
-    protected function setUpHtmlAttributes()
+    protected function setUpHtmlAttributes(): void
     {
         $this->addHtmlClass($this->getElementClass());
 
@@ -259,7 +260,7 @@ HTML;
      * @param  mixed  ...$params
      * @return $this
      */
-    public static function make(...$params)
+    public static function make(...$params): static
     {
         return new static(...$params);
     }
