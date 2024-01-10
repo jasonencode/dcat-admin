@@ -147,7 +147,7 @@ class Markdown extends Field
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $this->options['path'] = admin_asset('@admin/dcat/plugins/editor-md/lib').'/';
         $this->options['name'] = $this->column;

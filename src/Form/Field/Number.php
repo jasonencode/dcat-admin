@@ -74,7 +74,7 @@ class Number extends Text
         return parent::value($value);
     }
 
-    public function render()
+    public function render(): string
     {
         $this->defaultAttribute('style', 'width: 140px;flex:none');
 
