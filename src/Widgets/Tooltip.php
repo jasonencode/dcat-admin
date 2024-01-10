@@ -139,7 +139,7 @@ JS
         );
     }
 
-    public function render()
+    public function render(): string
     {
         if ($this->built) {
             return;

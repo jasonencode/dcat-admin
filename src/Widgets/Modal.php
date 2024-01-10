@@ -351,7 +351,7 @@ JS
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         $this->addLoadRenderableScript();
         $this->addScript();
