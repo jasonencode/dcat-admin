@@ -13,7 +13,7 @@ class AdminController extends Controller
      *
      * @var string
      */
-    protected string $title;
+    protected string $title = '';
 
     /**
      * Set description for following 4 action pages.
