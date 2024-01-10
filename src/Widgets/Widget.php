@@ -174,7 +174,7 @@ abstract class Widget implements Renderable
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         static::requireAssets();
 

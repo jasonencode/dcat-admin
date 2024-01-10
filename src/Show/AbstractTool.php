@@ -29,19 +29,19 @@ abstract class AbstractTool extends Action
     /**
      * @return array|mixed|string|null
      */
-    public function getKey()
+    public function getKey(): array|string
     {
         if ($this->primaryKey) {
             return $this->primaryKey;
         }
 
-        return $this->parent ? $this->parent->getKey() : null;
+        return $this->parent ? $this->parent->getKey() : '';
     }
 
     /**
      * @return void
      */
-    public function setupHtmlAttributes()
+    public function setupHtmlAttributes(): void
     {
         $this->addHtmlClass($this->style);
 

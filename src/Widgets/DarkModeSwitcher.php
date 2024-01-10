@@ -14,7 +14,7 @@ class DarkModeSwitcher implements Renderable
         $this->defaultDarkMode = is_null($defaultDarkMode) ? Admin::isDarkMode() : $defaultDarkMode;
     }
 
-    public function render()
+    public function render(): string
     {
         $icon = $this->defaultDarkMode ? 'icon-sun' : 'icon-moon';
 

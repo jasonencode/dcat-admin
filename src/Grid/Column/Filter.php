@@ -243,7 +243,7 @@ HMLT;
      */
     public function render(): string
     {
-        //
+        return '';
     }
 
     /**

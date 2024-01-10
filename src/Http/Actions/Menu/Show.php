@@ -21,7 +21,7 @@ class Show extends RowAction
             ->location('auth/menu');
     }
 
-    public function title()
+    public function title(): string
     {
         $icon = $this->getRow()->show ? 'icon-eye-off' : 'icon-eye';
 

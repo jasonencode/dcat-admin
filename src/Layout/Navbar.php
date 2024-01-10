@@ -55,7 +55,7 @@ class Navbar implements Renderable
      * @param  string  $part
      * @return mixed
      */
-    public function render($part = 'right')
+    public function render($part = 'right'): string
     {
         $this->callComposing($part);
 
