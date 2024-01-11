@@ -3,7 +3,7 @@
 namespace Dcat\Admin\Http\Controllers;
 
 use Dcat\Admin\Layout\Content;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 
 class AdminController extends Controller
@@ -130,9 +130,9 @@ class AdminController extends Controller
      * Update the specified resource in storage.
      *
      * @param  int|string  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(int|string $id): Response
+    public function update(int|string $id): JsonResponse
     {
         return $this->form()->update($id);
     }
@@ -140,9 +140,9 @@ class AdminController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(): Response
+    public function store(): JsonResponse
     {
         return $this->form()->store();
     }
@@ -151,9 +151,9 @@ class AdminController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int|string  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(int|string $id): Response
+    public function destroy(int|string $id): JsonResponse
     {
         return $this->form()->destroy($id);
     }
