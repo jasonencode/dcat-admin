@@ -132,8 +132,8 @@ class UserController extends AdminController
 
             $form->text('username', trans('admin.username'))
                 ->required()
-                ->creationRules(['required', "unique:{$connection}.{$userTable}"])
-                ->updateRules(['required', "unique:{$connection}.{$userTable},username,$id"]);
+                ->creationRules(['required', "unique:$connection.$userTable"])
+                ->updateRules(['required', "unique:$connection.$userTable,username,$id"]);
             $form->text('name', trans('admin.name'))->required();
             $form->image('avatar', trans('admin.avatar'))->autoUpload();
 

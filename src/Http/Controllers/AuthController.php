@@ -43,7 +43,7 @@ class AuthController extends Controller
      * Handle a login request.
      *
      * @param  Request  $request
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postLogin(Request $request)
     {
@@ -112,7 +112,7 @@ class AuthController extends Controller
      * Send the response after the user was authenticated.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     protected function sendLoginResponse(Request $request)
     {

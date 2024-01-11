@@ -2,11 +2,11 @@
 
 namespace Dcat\Admin\Http\Auth;
 
+use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Arrayable;
-use Symfony\Component\HttpFoundation\Response;
 
 class Permission
 {
@@ -104,7 +104,7 @@ class Permission
     /**
      * If current user is administrator.
      *
-     * @return mixed
+     * @return bool
      */
     public static function isAdministrator()
     {
@@ -117,7 +117,7 @@ class Permission
      * @param  \Closure  $callback
      * @return void
      */
-    public static function registerErrorHandler(\Closure $callback)
+    public static function registerErrorHandler(Closure $callback)
     {
         static::$errorHandler = $callback;
     }

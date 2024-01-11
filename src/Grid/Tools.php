@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid;
 
+use Closure;
 use Dcat\Admin\Actions\Action;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Tools\AbstractTool;
@@ -187,7 +188,7 @@ class Tools implements Renderable
             return $tool instanceof BatchActions;
         });
 
-        if ($value instanceof \Closure) {
+        if ($value instanceof Closure) {
             $value($batchActions);
 
             return;

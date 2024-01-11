@@ -30,6 +30,7 @@ class SectionManager
      * @param  bool  $append
      * @param  int  $priority
      * @return void
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function inject($section, $content, bool $append = true, int $priority = 10)
     {
@@ -58,6 +59,7 @@ class SectionManager
      * @param  bool  $append
      * @param  int  $priority
      * @return void
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     protected function put(string $section, $content, bool $append = false, int $priority = 10)
     {
@@ -176,13 +178,13 @@ class SectionManager
 
         $result = '';
         foreach ($content as &$item) {
-            $value = Helper::render($item['value'] ?? '', [$options]);
+            $value  = Helper::render($item['value'] ?? '', [$options]);
             $append = $item['append'] ?? false;
 
             if (! $append) {
                 $result = '';
             }
-            $result .= $value;
+            $result            .= $value;
             $options->previous = $result;
         }
 
@@ -196,7 +198,7 @@ class SectionManager
      */
     public function flushSections()
     {
-        $this->sections = [];
+        $this->sections        = [];
         $this->defaultSections = [];
     }
 }

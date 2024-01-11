@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Support;
 
+use Closure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Fluent;
 
@@ -35,7 +36,7 @@ class Context extends Fluent
         return Arr::get($this->attributes, $key, $default);
     }
 
-    public function remember($key, \Closure $callback)
+    public function remember($key, Closure $callback)
     {
         if (($value = $this->get($key)) !== null) {
             return $value;

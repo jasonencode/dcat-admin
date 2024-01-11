@@ -20,33 +20,21 @@ trait HasNestedResource
      */
     protected $routeParameterName;
 
-    /**
-     * {@inheritdoc}
-     */
     public function show($id, Content $content)
     {
         return parent::show($this->getNestedResourceId(), $content);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function edit($id, Content $content)
     {
         return parent::edit($this->getNestedResourceId(), $content);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function update($id)
     {
         return parent::update($this->getNestedResourceId());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function destroy($id)
     {
         return parent::destroy($this->getNestedResourceId());

@@ -23,7 +23,7 @@ trait HasFormResponse
      * 返回字段验证错误信息.
      *
      * @param  array|MessageBag|\Illuminate\Validation\Validator  $validationMessages
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      */
     public function validationErrorsResponse($validationMessages)
     {

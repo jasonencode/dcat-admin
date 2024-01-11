@@ -76,6 +76,7 @@ class Relation extends Field
 
     /**
      * @param  int  $width
+     * @param  int  $_
      * @return $this
      */
     public function width(int $width, int $_ = 2)

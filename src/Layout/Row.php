@@ -86,7 +86,7 @@ class Row implements Renderable
     {
         $noGutters = $this->noGutters ? 'no-gutters' : '';
 
-        return "<div class=\"row {$noGutters}\">";
+        return "<div class=\"row $noGutters\">";
     }
 
     /**

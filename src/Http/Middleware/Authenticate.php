@@ -5,7 +5,6 @@ namespace Dcat\Admin\Http\Middleware;
 use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Support\Helper;
-use Illuminate\Http\Request;
 
 class Authenticate
 {

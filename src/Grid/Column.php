@@ -263,7 +263,7 @@ class Column
      * Set width for column.
      *
      * @param  string  $width
-     * @return $this|string
+     * @return $this
      */
     public function width(?string $width)
     {
@@ -304,7 +304,7 @@ class Column
      *         ->modal()
      *
      */
-    public function if(\Closure $condition = null)
+    public function if(Closure $condition = null)
     {
         $condition = $condition ?: function ($column) {
             return $column->getValue();
@@ -329,8 +329,7 @@ class Column
     /**
      * Get column attributes.
      *
-     * @param  string  $name
-     * @return mixed
+     * @return array
      */
     public function getAttributes()
     {
@@ -381,7 +380,7 @@ class Column
     }
 
     /**
-     * @return Fluent|Model
+     * @return Fluent
      */
     public function getOriginalModel()
     {
@@ -506,7 +505,7 @@ class Column
         foreach ($this->displayCallbacks as $callback) {
             [$callback, $params] = $callback;
 
-            if (! $callback instanceof \Closure) {
+            if (! $callback instanceof Closure) {
                 $value = $callback;
                 continue;
             }
@@ -589,7 +588,7 @@ class Column
      * 把模型转化为数组.
      *
      * @param  array|Model  $row
-     * @return mixed
+     * @return array|\Illuminate\Database\Eloquent\Model
      */
     protected function convertModelToArray(&$row)
     {
@@ -631,6 +630,8 @@ class Column
      * Determine if this column is currently sorted.
      *
      * @return bool
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     protected function isSorted()
     {
@@ -701,7 +702,6 @@ class Column
             $column = $this;
 
             return $this->display(function ($value) use ($abstract, $grid, $column, $arguments) {
-                /** @var AbstractDisplayer $displayer */
                 $displayer = new $abstract($value, $grid, $column, $this);
 
                 return $displayer->display(...$arguments);

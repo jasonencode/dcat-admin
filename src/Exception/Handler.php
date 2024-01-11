@@ -7,6 +7,7 @@ use Dcat\Admin\Support\Helper;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\ViewErrorBag;
+use Throwable;
 
 class Handler implements ExceptionHandler
 {
@@ -14,9 +15,10 @@ class Handler implements ExceptionHandler
      * 处理异常.
      *
      * @param  \Throwable  $e
-     * @return array|string|void
+     * @return string
+     * @throws \Throwable
      */
-    public function handle(\Throwable $e)
+    public function handle(Throwable $e)
     {
         if ($e instanceof HttpResponseException) {
             throw $e;
@@ -31,11 +33,11 @@ class Handler implements ExceptionHandler
      * 显示异常信息.
      *
      * @param  \Throwable  $exception
-     * @return array|string|void
+     * @return string|void
      *
      * @throws \Throwable
      */
-    public function render(\Throwable $exception)
+    public function render(Throwable $exception)
     {
         if (config('app.debug')) {
             throw $exception;
@@ -64,14 +66,14 @@ class Handler implements ExceptionHandler
      *
      * @param  \Throwable  $e
      */
-    public function report(\Throwable $e)
+    public function report(Throwable $e)
     {
         report($e);
     }
 
     /**
      * @param  string  $path
-     * @return mixed
+     * @return array|string|string[]
      */
     protected function replaceBasePath(string $path)
     {

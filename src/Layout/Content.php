@@ -9,6 +9,7 @@ use Dcat\Admin\Traits\HasBuilderEvents;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\ViewErrorBag;
+use Throwable;
 
 class Content implements Renderable
 {
@@ -60,7 +61,7 @@ class Content implements Renderable
      *
      * @param  Closure|null  $callback
      */
-    public function __construct(\Closure $callback = null)
+    public function __construct(Closure $callback = null)
     {
         $this->callResolving();
 
@@ -141,14 +142,15 @@ class Content implements Renderable
     /**
      * Set breadcrumb of content.
      *
+     * @param  array  ...$breadcrumb
+     * @return $this
+     * @throws \Exception
      * @example
      *     $this->breadcrumb('Menu', 'auth/menu', 'fa fa-align-justify');
      *     $this->breadcrumb([
      *         ['text' => 'Menu', 'url' => 'auth/menu', 'icon' => 'fa fa-align-justify']
      *     ]);
      *
-     * @param  array  ...$breadcrumb
-     * @return $this
      */
     public function breadcrumb(...$breadcrumb)
     {
@@ -261,6 +263,7 @@ class Content implements Renderable
      * Build html of content.
      *
      * @return string
+     * @throws \Exception
      */
     public function build()
     {
@@ -272,16 +275,17 @@ class Content implements Renderable
             }
 
             return $html;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->handleException($e);
         }
     }
 
     /**
      * @param  \Throwable  $e
-     * @return mixed|string
+     * @return array|string|\Symfony\Component\HttpFoundation\Response|null
+     * @throws \Exception
      */
-    protected function handleException(\Throwable $e)
+    protected function handleException(Throwable $e)
     {
         $response = Admin::handleException($e);
 
@@ -445,7 +449,9 @@ class Content implements Renderable
             'theme'             => '',
             'footer_type'       => '',
             'body_class'        => [],
-            'sidebar_style'     => ['light' => 'sidebar-light-primary', 'primary' => 'sidebar-primary', 'dark' => 'sidebar-dark-white'],
+            'sidebar_style'     => [
+                'light' => 'sidebar-light-primary', 'primary' => 'sidebar-primary', 'dark' => 'sidebar-dark-white',
+            ],
             'sidebar_collapsed' => [],
             'navbar_color'      => [],
             'navbar_class'      => ['floating' => 'floating-nav', 'sticky' => 'fixed-top', 'hidden' => 'd-none'],
@@ -507,6 +513,7 @@ class Content implements Renderable
      * Render this content.
      *
      * @return string
+     * @throws \Exception
      */
     public function render(): string
     {

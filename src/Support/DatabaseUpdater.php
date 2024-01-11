@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Support;
 
+use Closure;
 use Dcat\Admin\Exception\AdminException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Migrations\Migration;
@@ -20,7 +21,7 @@ class DatabaseUpdater
     /**
      * Sets up a migration or seed file.
      */
-    public function setUp($file, \Closure $callback = null)
+    public function setUp($file, Closure $callback = null)
     {
         $object = $this->resolve($file);
 
@@ -50,7 +51,7 @@ class DatabaseUpdater
     /**
      * Packs down a migration or seed file.
      */
-    public function packDown($file, \Closure $callback = null)
+    public function packDown($file, Closure $callback = null)
     {
         $object = $this->resolve($file);
 
@@ -174,6 +175,9 @@ class DatabaseUpdater
         return trim($namespace).'\\'.trim($class);
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function transaction($callback)
     {
         return DB::connection($this->connection())->transaction($callback);

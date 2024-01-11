@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Show;
 
+use Closure;
 use Dcat\Admin\Show;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Collection;
@@ -40,7 +41,7 @@ class Row implements Renderable
      * @param  \Closure  $callback
      * @param  Show  $show
      */
-    public function __construct(\Closure $callback, Show $show)
+    public function __construct(Closure $callback, Show $show)
     {
         $this->callback = $callback;
 
@@ -62,7 +63,7 @@ class Row implements Renderable
     }
 
     /**
-     * @return Collection|\Dcat\Admin\Show\Field[]
+     * @return Collection
      */
     public function fields()
     {
@@ -102,7 +103,7 @@ class Row implements Renderable
      * Add field.
      *
      * @param $name
-     * @return \Dcat\Admin\Show\Field|Collection
+     * @return \Dcat\Admin\Show\Field
      */
     public function __get($name)
     {

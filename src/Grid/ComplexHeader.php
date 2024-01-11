@@ -121,6 +121,6 @@ class ComplexHeader extends Widget
     {
         $headers = implode(' ', $this->html);
 
-        return "<th {$this->formatHtmlAttributes()}>{$this->label}<span class='grid-column-header'>{$headers}</span></th>";
+        return "<th {$this->formatHtmlAttributes()}>$this->label<span class='grid-column-header'>$headers</span></th>";
     }
 }

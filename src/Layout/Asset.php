@@ -17,112 +17,112 @@ class Asset
         // Dcat Admin静态资源路径别名
         '@admin' => 'vendor/dcat-admin',
 
-        '@adminlte' => [
-            'js' => [
+        '@adminlte'                     => [
+            'js'  => [
                 '@admin/adminlte/adminlte.js',
             ],
             'css' => [
                 '@admin/adminlte/adminlte.css',
             ],
         ],
-        '@nunito' => [
+        '@nunito'                       => [
             //'css' => 'https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,800,800i,900,900i',
             'css' => '@admin/dcat/css/nunito.css',
         ],
-        '@dcat' => [
+        '@dcat'                         => [
             'js'  => '@admin/dcat/js/dcat-app.js',
             'css' => '@admin/dcat/css/dcat-app.css',
         ],
-        '@vendors' => [
+        '@vendors'                      => [
             'js'  => '@admin/dcat/plugins/vendors.min.js',
             'css' => '@admin/dcat/plugins/vendors.min.css',
         ],
-        '@jquery.initialize' => [
+        '@jquery.initialize'            => [
             'js' => '@admin/dcat/plugins/jquery.initialize/jquery.initialize.min.js',
         ],
-        '@datatables' => [
+        '@datatables'                   => [
             'css' => '@admin/dcat/plugins/tables/datatable/datatables.min.css',
         ],
-        '@grid-extension' => [
+        '@grid-extension'               => [
             'js' => '@admin/dcat/extra/grid-extend.js',
         ],
-        '@resource-selector' => [
+        '@resource-selector'            => [
             'js' => '@admin/dcat/extra/resource-selector.js',
         ],
-        '@select-table' => [
+        '@select-table'                 => [
             'js' => '@admin/dcat/extra/select-table.js',
         ],
-        '@layer' => [
+        '@layer'                        => [
             'js' => '@admin/dcat/plugins/layer/layer.js',
         ],
-        '@tinymce' => [
+        '@tinymce'                      => [
             'js' => '@admin/dcat/plugins/tinymce/tinymce.min.js',
         ],
-        '@pjax' => [
+        '@pjax'                         => [
             'js' => '@admin/dcat/plugins/jquery-pjax/jquery.pjax.min.js',
         ],
-        '@toastr' => [
+        '@toastr'                       => [
             'js'  => '@admin/dcat/plugins/extensions/toastr.min.js',
             'css' => '@admin/dcat/plugins/extensions/toastr.css',
         ],
-        '@jquery.nestable' => [
+        '@jquery.nestable'              => [
             'js'  => '@admin/dcat/plugins/nestable/jquery.nestable.min.js',
             'css' => '@admin/dcat/plugins/nestable/nestable.css',
         ],
-        '@validator' => [
+        '@validator'                    => [
             'js' => '@admin/dcat/plugins/bootstrap-validator/validator.min.js',
         ],
-        '@select2' => [
+        '@select2'                      => [
             'js'  => [
                 '@admin/dcat/plugins/select/select2.full.min.js',
                 '@admin/dcat/plugins/select/i18n/{lang}.js',
             ],
             'css' => '@admin/dcat/plugins/select/select2.min.css',
         ],
-        '@bootstrap-datetimepicker' => [
+        '@bootstrap-datetimepicker'     => [
             'js'  => '@admin/dcat/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js',
             'css' => '@admin/dcat/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css',
         ],
-        '@moment' => [
+        '@moment'                       => [
             'js' => [
                 '@admin/dcat/plugins/moment/moment-with-locales.min.js',
             ],
         ],
-        '@moment-timezone' => [
+        '@moment-timezone'              => [
             'js' => [
                 '@admin/dcat/plugins/moment-timezone/moment-timezone-with-data.min.js',
             ],
         ],
-        '@jstree' => [
+        '@jstree'                       => [
             'js'  => '@admin/dcat/plugins/jstree-theme/jstree.min.js',
             'css' => '@admin/dcat/plugins/jstree-theme/themes/proton/style.min.css',
         ],
-        '@switchery' => [
+        '@switchery'                    => [
             'js'  => '@admin/dcat/plugins/switchery/switchery.min.js',
             'css' => '@admin/dcat/plugins/switchery/switchery.min.css',
         ],
-        '@webuploader' => [
-            'js' => [
+        '@webuploader'                  => [
+            'js'  => [
                 '@admin/dcat/plugins/webuploader/webuploader.min.js',
                 '@admin/dcat/extra/upload.js',
             ],
             'css' => '@admin/dcat/extra/upload.css',
         ],
-        '@chartjs' => [
+        '@chartjs'                      => [
             'js' => '@admin/dcat/plugins/chart.js/chart.bundle.min.js',
         ],
-        '@jquery.sparkline' => [
+        '@jquery.sparkline'             => [
             'js' => '@admin/dcat/plugins/jquery.sparkline/jquery.sparkline.min.js',
         ],
         '@jquery.bootstrap-duallistbox' => [
             'js'  => '@admin/dcat/plugins/bootstrap-duallistbox/dist/jquery.bootstrap-duallistbox.min.js',
             'css' => '@admin/dcat/plugins/bootstrap-duallistbox/dist/bootstrap-duallistbox.min.css',
         ],
-        '@number-input' => [
+        '@number-input'                 => [
             'js' => '@admin/dcat/plugins/number-input/bootstrap-number-input.js',
         ],
-        '@ionslider' => [
-            'js' => [
+        '@ionslider'                    => [
+            'js'  => [
                 '@admin/dcat/plugins/ionslider/ion.rangeSlider.min.js',
             ],
             'css' => [
@@ -130,8 +130,8 @@ class Asset
                 '@admin/dcat/plugins/ionslider/ion.rangeSlider.skinNice.css',
             ],
         ],
-        '@editor-md' => [
-            'js' => [
+        '@editor-md'                    => [
+            'js'  => [
                 '@admin/dcat/plugins/editor-md/lib/raphael.min.js',
                 '@admin/dcat/plugins/editor-md/lib/marked.min.js',
                 '@admin/dcat/plugins/editor-md/lib/prettify.min.js',
@@ -146,8 +146,8 @@ class Asset
                 '@admin/dcat/extra/markdown.css',
             ],
         ],
-        '@editor-md-form' => [
-            'js' => [
+        '@editor-md-form'               => [
+            'js'  => [
                 '@admin/dcat/plugins/editor-md/lib/raphael.min.js',
                 '@admin/dcat/plugins/editor-md/editormd.min.js',
             ],
@@ -155,27 +155,27 @@ class Asset
                 '@admin/dcat/plugins/editor-md/css/editormd.min.css',
             ],
         ],
-        '@jquery.inputmask' => [
+        '@jquery.inputmask'             => [
             'js' => '@admin/dcat/plugins/input-mask/jquery.inputmask.bundle.min.js',
         ],
-        '@apex-charts' => [
+        '@apex-charts'                  => [
             'js' => '@admin/dcat/plugins/charts/apexcharts.min.js',
         ],
-        '@fontawesome-iconpicker' => [
-            'js' => '@admin/dcat/plugins/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.js',
+        '@fontawesome-iconpicker'       => [
+            'js'  => '@admin/dcat/plugins/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.js',
             'css' => '@admin/dcat/plugins/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css',
         ],
-        '@color' => [
-            'js' => '@admin/dcat/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js',
+        '@color'                        => [
+            'js'  => '@admin/dcat/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js',
             'css' => '@admin/dcat/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css',
         ],
-        '@qrcode' => [
+        '@qrcode'                       => [
             'js' => '@admin/dcat/plugins/jquery-qrcode/dist/jquery-qrcode.min.js',
         ],
-        '@sortable' => [
+        '@sortable'                     => [
             'js' => '@admin/dcat/plugins/sortable/Sortable.min.js',
         ],
-        '@autocomplete' => [
+        '@autocomplete'                 => [
             'js' => '@admin/dcat/plugins/autocomplete/jquery.autocomplete.min.js',
         ],
     ];
@@ -229,11 +229,11 @@ class Asset
      * @var array
      */
     public $baseCss = [
-        'adminlte'    => '@adminlte',
-        'vendors'     => '@vendors',
-        'toastr'      => '@toastr',
-        'datatables'  => '@datatables',
-        'dcat'        => '@dcat',
+        'adminlte'   => '@adminlte',
+        'vendors'    => '@vendors',
+        'toastr'     => '@toastr',
+        'datatables' => '@datatables',
+        'dcat'       => '@dcat',
     ];
 
     /**
@@ -279,7 +279,7 @@ class Asset
             $this->alias[$n]['css'] = [];
 
             foreach ($before as $css) {
-                $this->alias[$n]['css'][] = str_replace('.css', "-{$color}.css", $css);
+                $this->alias[$n]['css'][] = str_replace('.css', "-$color.css", $css);
             }
         }
     }
@@ -337,7 +337,7 @@ class Asset
         $params += $query;
 
         return [
-            'js' => $this->normalizeAliasPaths($assets['js'] ?? [], $params) ?: null,
+            'js'  => $this->normalizeAliasPaths($assets['js'] ?? [], $params) ?: null,
             'css' => $this->normalizeAliasPaths($assets['css'] ?? [], $params) ?: null,
         ];
     }
@@ -426,6 +426,7 @@ class Asset
      * 设置需要载入的基础css脚本.
      *
      * @param  array  $css
+     * @param  bool  $merge
      */
     public function baseCss(array $css, bool $merge = false)
     {
@@ -747,7 +748,7 @@ class Asset
      */
     public function scriptToHtml()
     {
-        $script = implode(";\n", array_unique($this->script));
+        $script       = implode(";\n", array_unique($this->script));
         $directScript = implode(";\n", array_unique($this->directScript));
 
         return <<<HTML

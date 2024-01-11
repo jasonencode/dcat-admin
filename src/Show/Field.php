@@ -643,7 +643,6 @@ HTML;
         }
 
         if ($abstract instanceof AbstractField) {
-            /** @var AbstractField $extend */
             $extend = $abstract;
         }
 

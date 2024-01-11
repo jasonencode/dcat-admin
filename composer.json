@@ -21,6 +21,7 @@
     "require": {
         "php": "^8.2",
         "ext-pcntl": "*",
+        "ext-zip": "*",
         "dcat/easy-excel": "^1.1",
         "dcat/laravel-wherehasin": "^0.8",
         "doctrine/dbal": "^2.6|^3.0",

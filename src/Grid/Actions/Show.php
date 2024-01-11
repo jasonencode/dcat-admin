@@ -7,7 +7,7 @@ use Dcat\Admin\Grid\RowAction;
 class Show extends RowAction
 {
     /**
-     * @return array|null|string
+     * @return string
      */
     public function title(): string
     {

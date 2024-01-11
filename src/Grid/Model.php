@@ -129,8 +129,9 @@ class Model
     /**
      * Create a new grid model instance.
      *
-     * @param  Repository|\Illuminate\Database\Eloquent\Model  $repository
      * @param  Request  $request
+     * @param  null  $repository
+     * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
     public function __construct(Request $request, $repository = null)
     {
@@ -273,6 +274,7 @@ class Model
 
     /**
      * @param  int  $perPage
+     * @return \Dcat\Admin\Grid\Model
      */
     public function setPerPage(int $perPage)
     {
@@ -357,7 +359,7 @@ class Model
     /**
      * Get constraints.
      *
-     * @return array|bool
+     * @return array
      */
     public function getConstraints()
     {
@@ -379,6 +381,7 @@ class Model
      * Build.
      *
      * @return Collection
+     * @throws \Exception
      */
     public function buildData()
     {
@@ -516,6 +519,7 @@ class Model
 
     /**
      * @param  int  $currentPage
+     * @return \Dcat\Admin\Grid\Model
      */
     public function setCurrentPage(int $currentPage)
     {
@@ -726,7 +730,7 @@ class Model
      */
     public function reset()
     {
-        $this->data = null;
+        $this->data  = null;
         $this->model = null;
         $this->initQueries();
     }

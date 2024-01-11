@@ -100,14 +100,14 @@ class HandleFormController
         $formClass = $request->get(Form::REQUEST_NAME);
 
         if (! class_exists($formClass)) {
-            throw new AdminException("Form [{$formClass}] does not exist.");
+            throw new AdminException("Form [$formClass] does not exist.");
         }
 
         /** @var Form $form */
         $form = app($formClass);
 
         if (! method_exists($form, 'handle')) {
-            throw new AdminException("Form method {$formClass}::handle() does not exist.");
+            throw new AdminException("Form method $formClass::handle() does not exist.");
         }
 
         return $form;

@@ -2,11 +2,12 @@
 
 namespace Dcat\Admin\Http\Actions\Menu;
 
+use Dcat\Admin\Actions\Response;
 use Dcat\Admin\Tree\RowAction;
 
 class Show extends RowAction
 {
-    public function handle()
+    public function handle(): Response
     {
         $key = $this->getKey();
 

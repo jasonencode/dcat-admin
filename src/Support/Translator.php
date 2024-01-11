@@ -55,7 +55,7 @@ class Translator
      */
     public function transField(?string $field, $locale = null)
     {
-        return $this->trans("{$this->getPath()}.fields.{$field}", [], $locale);
+        return $this->trans("{$this->getPath()}.fields.$field", [], $locale);
     }
 
     /**
@@ -70,7 +70,7 @@ class Translator
     {
         $label = $label ?: admin_controller_name();
 
-        return $this->trans("{$this->getPath()}.labels.{$label}", $replace, $locale);
+        return $this->trans("{$this->getPath()}.labels.$label", $replace, $locale);
     }
 
     /**

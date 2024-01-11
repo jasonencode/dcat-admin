@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Layout;
 
+use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Support\Helper;
@@ -31,7 +32,7 @@ class Column implements Renderable
     {
         $width = $this->normalizeWidth($width);
 
-        if ($content instanceof \Closure) {
+        if ($content instanceof Closure) {
             call_user_func($content, $this);
         } else {
             $this->append($content);
@@ -76,7 +77,7 @@ class Column implements Renderable
      */
     public function row($content)
     {
-        if (! $content instanceof \Closure) {
+        if (! $content instanceof Closure) {
             $row = new Row($content);
         } else {
             $row = new Row();
@@ -120,7 +121,7 @@ class Column implements Renderable
             return $value == 0 ? "col-$key" : "col-$key-$value";
         })->implode(' ');
 
-        return "<div class=\"{$classnName}\">";
+        return "<div class=\"$classnName\">";
     }
 
     /**

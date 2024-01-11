@@ -16,7 +16,7 @@ function (data, target, action) {
     var key = {$this->getSelectedKeysScript()}
     
     if (key.length === 0) {
-        Dcat.warning('{$warning}');
+        Dcat.warning('$warning');
         return false;
     }
     

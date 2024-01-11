@@ -6,7 +6,6 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Form\Field\File;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Support\WebUploader;
-use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 
 trait HasUploadedFile
@@ -24,7 +23,7 @@ trait HasUploadedFile
     /**
      * 获取上传文件.
      *
-     * @return \Symfony\Component\HttpFoundation\File\UploadedFile|void
+     * @return \Symfony\Component\HttpFoundation\File\UploadedFile
      */
     public function file()
     {
@@ -35,7 +34,7 @@ trait HasUploadedFile
      * 获取文件管理仓库.
      *
      * @param  string|null  $disk
-     * @return \Illuminate\Contracts\Filesystem\Filesystem|FilesystemAdapter
+     * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
     public function disk(string $disk = null)
     {
@@ -55,9 +54,10 @@ trait HasUploadedFile
     /**
      * 删除文件.
      *
-     * @param  \Illuminate\Contracts\Filesystem\Filesystem|FilesystemAdapter  $disk
-     * @param  string|null  $path
+     * @param  null  $disk
+     * @param  null  $path
      * @return bool
+     * @throws \Exception
      */
     public function deleteFile($disk = null, $path = null)
     {
@@ -69,9 +69,10 @@ trait HasUploadedFile
     /**
      * 删除文件并响应返回值.
      *
-     * @param  \Illuminate\Contracts\Filesystem\Filesystem|FilesystemAdapter  $disk
-     * @param string|null
-     * @return \Illuminate\Http\JsonResponse
+     * @param  null  $disk
+     * @param  null  $path
+     * @return \Dcat\Admin\Http\JsonResponse
+     * @throws \Exception
      */
     public function deleteFileAndResponse($disk = null, $path = null)
     {
@@ -85,7 +86,7 @@ trait HasUploadedFile
      *
      * @param  string  $path  文件完整路径
      * @param  string  $url
-     * @return mixed
+     * @return \Dcat\Admin\Http\JsonResponse
      */
     public function responseUploaded(string $path, string $url)
     {
@@ -101,7 +102,7 @@ trait HasUploadedFile
      * 响应验证失败信息.
      *
      * @param  mixed  $message
-     * @return mixed
+     * @return \Dcat\Admin\Http\JsonResponse
      */
     public function responseValidationMessage($message)
     {
@@ -112,8 +113,7 @@ trait HasUploadedFile
      * 响应失败信息.
      *
      * @param $error
-     * @param $code
-     * @return mixed
+     * @return \Dcat\Admin\Http\JsonResponse
      */
     public function responseErrorMessage($error)
     {
@@ -123,7 +123,7 @@ trait HasUploadedFile
     /**
      * 文件删除成功.
      *
-     * @return mixed
+     * @return \Dcat\Admin\Http\JsonResponse
      */
     public function responseDeleted()
     {
@@ -134,7 +134,7 @@ trait HasUploadedFile
      * 文件删除失败.
      *
      * @param  string  $message
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Dcat\Admin\Http\JsonResponse
      */
     public function responseDeleteFailed($message = '')
     {

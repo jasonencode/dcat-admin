@@ -37,7 +37,7 @@ trait HasHtmlAttributes
         if (is_array($result)) {
             $result[] = $value;
         } else {
-            $result = "{$result} {$value}";
+            $result = "$result $value";
         }
 
         return $this->setHtmlAttribute($key, $result);

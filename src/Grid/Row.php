@@ -93,6 +93,7 @@ class Row implements Arrayable
      * Set attributes.
      *
      * @param  array  $attributes
+     * @return \Dcat\Admin\Grid\Row
      */
     public function setAttributes(array $attributes)
     {
@@ -157,7 +158,7 @@ class Row implements Arrayable
      *
      * @param  string  $name
      * @param  mixed  $value
-     * @return $this|mixed
+     * @return $this
      */
     public function column($name, $value = null)
     {
@@ -188,7 +189,7 @@ class Row implements Arrayable
      * Output column value.
      *
      * @param  mixed  $value
-     * @return mixed|string
+     * @return bool|float|\Illuminate\Support\Carbon|int|string|null
      */
     protected function output($value)
     {
@@ -209,7 +210,8 @@ class Row implements Arrayable
         }
 
         if (! is_null($value) && ! is_scalar($value)) {
-            return sprintf('<pre class="dump">%s</pre>', json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            return sprintf('<pre class="dump">%s</pre>',
+                json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         }
 
         return $value;
