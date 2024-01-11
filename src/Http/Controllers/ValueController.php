@@ -10,6 +10,7 @@ class ValueController
     /**
      * @param  Request  $request
      * @return mixed
+     * @throws \Exception
      */
     public function handle(Request $request)
     {
@@ -43,13 +44,13 @@ class ValueController
         }
 
         if (! class_exists($key)) {
-            throw new Exception("Class [{$key}] does not exist.");
+            throw new Exception("Class [$key] does not exist.");
         }
 
         $instance = app($key);
 
         if (! method_exists($instance, 'handle')) {
-            throw new Exception("The method '{$key}::handle()' does not exist.");
+            throw new Exception("The method '$key::handle()' does not exist.");
         }
 
         return $instance;

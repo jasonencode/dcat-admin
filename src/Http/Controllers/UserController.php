@@ -10,7 +10,7 @@ use Dcat\Admin\Models\Administrator as AdministratorModel;
 use Dcat\Admin\Show;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\Tree;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends AdminController
 {
@@ -30,8 +30,8 @@ class UserController extends AdminController
                 $grid->column('roles')->pluck('name')->label('primary', 3);
 
                 $permissionModel = config('admin.database.permissions_model');
-                $roleModel = config('admin.database.roles_model');
-                $nodes = (new $permissionModel())->allNodes();
+                $roleModel       = config('admin.database.roles_model');
+                $nodes           = (new $permissionModel())->allNodes();
                 $grid->column('permissions')
                     ->if(function () {
                         return ! $this->roles->isEmpty();
@@ -89,9 +89,9 @@ class UserController extends AdminController
                     $roles = $this->roles->toArray();
 
                     $permissionModel = config('admin.database.permissions_model');
-                    $roleModel = config('admin.database.roles_model');
+                    $roleModel       = config('admin.database.roles_model');
                     $permissionModel = new $permissionModel();
-                    $nodes = $permissionModel->allNodes();
+                    $nodes           = $permissionModel->allNodes();
 
                     $tree = Tree::make($nodes);
 
@@ -184,7 +184,7 @@ class UserController extends AdminController
         });
     }
 
-    public function destroy($id): Response
+    public function destroy($id): JsonResponse
     {
         if (in_array(AdministratorModel::DEFAULT_ID, Helper::array($id))) {
             Permission::error();

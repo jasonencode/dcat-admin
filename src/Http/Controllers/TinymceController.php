@@ -19,7 +19,7 @@ class TinymceController
         $dir = date('Y/m/d');
         $disk->putFileAs($dir, $file, $newName);
 
-        return ['location' => $disk->url("{$dir}/$newName")];
+        return ['location' => $disk->url("$dir/$newName")];
     }
 
     protected function generateNewName(UploadedFile $file)
