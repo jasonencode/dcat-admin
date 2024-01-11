@@ -94,9 +94,9 @@ abstract class Action implements Renderable
     /**
      * Get primary key value of action.
      *
-     * @return array|string
+     * @return mixed
      */
-    public function getKey(): array|string
+    public function getKey(): mixed
     {
         return $this->primaryKey;
     }
