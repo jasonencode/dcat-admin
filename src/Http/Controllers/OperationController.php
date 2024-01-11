@@ -2,11 +2,10 @@
 
 namespace Dcat\Admin\Http\Controllers;
 
-use Dcat\Admin\Models\Operation;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Http\JsonResponse;
+use Dcat\Admin\Models\Operation;
 use Dcat\Admin\Support\Helper;
-use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 
 class OperationController extends AdminController
@@ -62,7 +61,15 @@ class OperationController extends AdminController
         });
     }
 
-    public function destroy($id): Response
+    /**
+     * Notes   :
+     *
+     * @Date   : 2024/1/11 11:57
+     * @Author : <Jason.C>
+     * @param  int|string  $id
+     * @return \Dcat\Admin\Http\JsonResponse
+     */
+    public function destroy(int|string $id): JsonResponse
     {
         $ids = explode(',', $id);
 
