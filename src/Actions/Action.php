@@ -19,9 +19,9 @@ abstract class Action implements Renderable
     use HasActionHandler;
 
     /**
-     * @var array|string
+     * @var mixed
      */
-    protected array|string $primaryKey = '';
+    protected mixed $primaryKey = null;
 
     /**
      * @var string
