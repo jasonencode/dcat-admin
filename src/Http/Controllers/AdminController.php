@@ -2,8 +2,8 @@
 
 namespace Dcat\Admin\Http\Controllers;
 
-use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Layout\Content;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 
 class AdminController extends Controller

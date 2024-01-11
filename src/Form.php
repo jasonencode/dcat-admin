@@ -572,7 +572,7 @@ class Form implements Renderable
                 return $this->sendResponse($response);
             }
 
-            $status = $result ? true : false;
+            $status = (bool) $result;
             $message = $result ? trans('admin.delete_succeeded') : trans('admin.delete_failed');
         } catch (\Throwable $exception) {
             $response = $this->handleException($exception);

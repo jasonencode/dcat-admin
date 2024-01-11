@@ -2,10 +2,11 @@
 
 namespace Dcat\Admin\Http\Controllers;
 
+use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
-use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Models\Operation;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 
 class OperationController extends AdminController
@@ -61,23 +62,22 @@ class OperationController extends AdminController
         });
     }
 
+    public function form(): Form
+    {
+        return Form::make(Operation::class, function (Form $form) {
+        });
+    }
+
     /**
      * Notes   :
      *
      * @Date   : 2024/1/11 11:57
      * @Author : <Jason.C>
      * @param  int|string  $id
-     * @return \Dcat\Admin\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(int|string $id): JsonResponse
     {
-        $ids = explode(',', $id);
-
-        Operation::destroy(array_filter($ids));
-
-        return JsonResponse::make()
-            ->success(trans('admin.delete_succeeded'))
-            ->refresh()
-            ->send();
+        return $this->form()->destroy($id);
     }
 }
