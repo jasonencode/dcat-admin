@@ -6,24 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="78c2d4cd-abac-4873-8369-14705280d6d6" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/en/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/en/admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/zh_CN/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_CN/admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/zh_TW/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh_TW/admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Http/Forms/InstallFromLocal.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Layout/Asset.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Layout/Asset.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Layout/Menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Layout/Menu.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Scaffold/ControllerCreator.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Scaffold/FormCreator.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Scaffold/GridCreator.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Scaffold/LangCreator.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Scaffold/MigrationCreator.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Scaffold/ModelCreator.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Scaffold/RepositoryCreator.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Scaffold/ShowCreator.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Scaffold/stubs/controller.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Scaffold/stubs/create.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Scaffold/stubs/model.stub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Scaffold/stubs/repository.stub" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/partials/sidebar.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/partials/sidebar.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,7 +153,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.laravel-idea.update-module-directories": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "1c703f44",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "D:/PHP-DEV/dcat-admin/database/migrations",
     "node.js.detected.package.eslint": "true",

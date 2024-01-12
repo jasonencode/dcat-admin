@@ -139,9 +139,9 @@ class Admin
     /**
      * 获取登录用户模型.
      *
-     * @return Model|Authenticatable
+     * @return Model|Authenticatable|null
      */
-    public static function user(): Authenticatable|Model
+    public static function user(): Authenticatable|Model|null
     {
         return static::guard()->user();
     }
