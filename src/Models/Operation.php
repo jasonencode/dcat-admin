@@ -2,11 +2,14 @@
 
 namespace Dcat\Admin\Models;
 
+use Dcat\Admin\Traits\HasDateTimeFormatter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Operation extends Model
 {
+    use HasDateTimeFormatter;
+
     public static array $methods = [
         'GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH',
         'LINK', 'UNLINK', 'COPY', 'HEAD', 'PURGE',

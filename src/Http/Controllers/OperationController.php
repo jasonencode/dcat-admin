@@ -17,6 +17,9 @@ class OperationController extends AdminController
     {
         return Grid::make(Operation::class, function (Grid $grid) {
             $grid->model()->orderBy('id', 'DESC');
+
+            $grid->disableBatchDelete(false);
+
             $grid->disableCreateButton();
             $grid->disableQuickEditButton();
             $grid->disableEditButton();
