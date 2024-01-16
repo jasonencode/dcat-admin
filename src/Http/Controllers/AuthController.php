@@ -3,6 +3,8 @@
 namespace Dcat\Admin\Http\Controllers;
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Form;
+use Dcat\Admin\Http\Repositories\Administrator;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Traits\HasFormResponse;
 use Illuminate\Auth\GuardHelpers;
@@ -23,10 +25,10 @@ class AuthController extends Controller
     /**
      * @var string
      */
-    protected $redirectTo;
+    protected string $redirectTo = '';
 
     /**
-     * Show the login page.
+     * 显示登录页面
      *
      * @return Content|\Illuminate\Http\RedirectResponse
      */
@@ -40,7 +42,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle a login request.
+     * 登录逻辑
      *
      * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
@@ -50,10 +52,9 @@ class AuthController extends Controller
         $credentials = $request->only([$this->username(), 'password']);
         $remember    = (bool) $request->input('remember', false);
 
-        /** @var \Illuminate\Validation\Validator $validator */
         $validator = Validator::make($credentials, [
             $this->username() => 'required',
-            'password'        => 'required',
+            'password'        => 'required|min:5',
         ]);
 
         if ($validator->fails()) {
@@ -145,5 +146,97 @@ class AuthController extends Controller
     protected function guard()
     {
         return Admin::guard();
+    }
+
+    public function getSetting(Content $content)
+    {
+        $form = $this->settingForm();
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableList();
+        });
+
+        return $content
+            ->title(trans('admin.user_setting'))
+            ->body($form->edit(Admin::user()->getKey()));
+    }
+
+    public function putSetting()
+    {
+        $form = $this->settingForm();
+
+        if (! $this->validateCredentialsWhenUpdatingPassword()) {
+            $form->responseValidationMessages('old_password', trans('admin.old_password_error'));
+        }
+
+        return $form->update(Admin::user()->getKey());
+    }
+
+    protected function validateCredentialsWhenUpdatingPassword()
+    {
+        $user = Admin::user();
+
+        $oldPassword = request('old_password');
+        $newPassword = request('password');
+
+        if ((! $newPassword) || ($newPassword === $user->getAuthPassword())) {
+            return true;
+        }
+
+        if (! $oldPassword) {
+            return false;
+        }
+
+        return $this->guard()
+            ->getProvider()
+            ->validateCredentials($user, ['password' => $oldPassword]);
+    }
+
+    protected function settingForm()
+    {
+        return new Form(new Administrator(), function (Form $form) {
+            $form->action(admin_url('auth/setting'));
+
+            $form->disableCreatingCheck();
+            $form->disableEditingCheck();
+            $form->disableViewCheck();
+
+            $form->tools(function (Form\Tools $tools) {
+                $tools->disableView();
+                $tools->disableDelete();
+            });
+
+            $form->display('username', trans('admin.username'));
+            $form->text('name', trans('admin.name'))
+                ->required();
+            $form->image('avatar', trans('admin.avatar'))
+                ->autoUpload();
+
+            $form->password('old_password', trans('admin.old_password'));
+
+            $form->password('password', trans('admin.password'))
+                ->minLength(5)
+                ->maxLength(20);
+            $form->password('password_confirmation', trans('admin.password_confirmation'))
+                ->same('password');
+
+            $form->ignore(['password_confirmation', 'old_password']);
+
+            $form->saving(function (Form $form) {
+                if ($form->password && $form->model()->password != $form->password) {
+                    $form->password = bcrypt($form->password);
+                }
+
+                if (! $form->password) {
+                    $form->deleteInput('password');
+                }
+            });
+
+            $form->saved(function (Form $form) {
+                return $form
+                    ->response()
+                    ->success(trans('admin.update_succeeded'))
+                    ->redirect('auth/setting');
+            });
+        });
     }
 }

@@ -3,6 +3,7 @@
 namespace Dcat\Admin;
 
 use Closure;
+use Composer\Autoload\ClassLoader;
 use Dcat\Admin\Contracts\ExceptionHandler;
 use Dcat\Admin\Contracts\Repository;
 use Dcat\Admin\Exception\InvalidArgumentException;
@@ -11,17 +12,19 @@ use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Layout\Menu;
 use Dcat\Admin\Layout\Navbar;
 use Dcat\Admin\Layout\SectionManager;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Repositories\EloquentRepository;
 use Dcat\Admin\Support\Composer;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Traits\HasAssets;
 use Dcat\Admin\Traits\HasHtml;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Symfony\Component\HttpFoundation\Response;
@@ -139,17 +142,17 @@ class Admin
     /**
      * 获取登录用户模型.
      *
-     * @return \Illuminate\Contracts\Auth\Authenticatable|\Illuminate\Database\Eloquent\Model|null
+     * @return \Illuminate\Contracts\Auth\Authenticatable|Administrator|null
      */
-    public static function user(): Authenticatable|Model|null
+    public static function user(): Authenticatable|Administrator|null
     {
         return static::guard()->user();
     }
 
     /**
-     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
      */
-    public static function guard(): Guard|StatefulGuard
+    public static function guard(): StatefulGuard
     {
         return Auth::guard(config('admin.auth.guard') ?: 'admin');
     }
@@ -223,7 +226,7 @@ class Admin
      * @return Repository
      * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
-    public static function repository($repository, array $args = [])
+    public static function repository($repository, array $args = []): Repository
     {
         if (is_string($repository)) {
             $repository = new $repository($args);
@@ -247,7 +250,7 @@ class Admin
      *
      * @return Application
      */
-    public static function app()
+    public static function app(): Application
     {
         return app('admin.app');
     }
@@ -259,7 +262,7 @@ class Admin
      * @return array|string|\Symfony\Component\HttpFoundation\Response|null
      * @throws \Exception
      */
-    public static function handleException(Throwable $e)
+    public static function handleException(Throwable $e): array|string|Response|null
     {
         return app(ExceptionHandler::class)->handle($e);
     }
@@ -270,7 +273,7 @@ class Admin
      * @param  \Throwable  $e
      * @return mixed
      */
-    public static function reportException(Throwable $e)
+    public static function reportException(Throwable $e): mixed
     {
         return app(ExceptionHandler::class)->report($e);
     }
@@ -281,7 +284,7 @@ class Admin
      * @param  \Throwable  $e
      * @return mixed
      */
-    public static function renderException(Throwable $e)
+    public static function renderException(Throwable $e): mixed
     {
         return app(ExceptionHandler::class)->render($e);
     }
@@ -289,7 +292,7 @@ class Admin
     /**
      * @param  callable  $callback
      */
-    public static function booting($callback)
+    public static function booting(callable $callback): void
     {
         Event::listen('admin:booting', $callback);
     }
@@ -297,7 +300,7 @@ class Admin
     /**
      * @param  callable  $callback
      */
-    public static function booted($callback)
+    public static function booted(callable $callback): void
     {
         Event::listen('admin:booted', $callback);
     }
@@ -305,7 +308,7 @@ class Admin
     /**
      * @return void
      */
-    public static function callBooting()
+    public static function callBooting(): void
     {
         Event::dispatch('admin:booting');
     }
@@ -313,7 +316,7 @@ class Admin
     /**
      * @return void
      */
-    public static function callBooted()
+    public static function callBooted(): void
     {
         Event::dispatch('admin:booted');
     }
@@ -323,7 +326,7 @@ class Admin
      *
      * @return \Dcat\Admin\Support\Context
      */
-    public static function context()
+    public static function context(): Support\Context
     {
         return app('admin.context');
     }
@@ -333,7 +336,7 @@ class Admin
      *
      * @return \Dcat\Admin\Support\Translator
      */
-    public static function translator()
+    public static function translator(): Support\Translator
     {
         return app('admin.translator');
     }
@@ -342,7 +345,7 @@ class Admin
      * @param  array|string  $name
      * @return void
      */
-    public static function addIgnoreQueryName($name)
+    public static function addIgnoreQueryName(array|string $name): void
     {
         $context = static::context();
 
@@ -354,7 +357,7 @@ class Admin
     /**
      * @return array
      */
-    public static function getIgnoreQueryNames()
+    public static function getIgnoreQueryNames(): array
     {
         return static::context()->ignoreQueries ?? [];
     }
@@ -362,9 +365,9 @@ class Admin
     /**
      * 中断默认的渲染逻辑.
      *
-     * @param  string|\Illuminate\Contracts\Support\Renderable|\Closure  $value
+     * @param  \Illuminate\Contracts\Support\Renderable|\Closure|string|null  $value
      */
-    public static function prevent($value)
+    public static function prevent(Renderable|Closure|string|null $value): void
     {
         if ($value !== null) {
             static::context()->add('contents', $value);
@@ -374,7 +377,7 @@ class Admin
     /**
      * @return bool
      */
-    public static function shouldPrevent()
+    public static function shouldPrevent(): bool
     {
         return count(static::context()->getArray('contents')) > 0;
     }
@@ -420,7 +423,7 @@ class Admin
      * @param  array  $data
      * @return JsonResponse
      */
-    public static function json(array $data = [])
+    public static function json(array $data = []): JsonResponse
     {
         return JsonResponse::make($data);
     }
@@ -428,11 +431,11 @@ class Admin
     /**
      * 响应并中断后续逻辑.
      *
-     * @param  Response|string|array  $response
+     * @param  array|string|Response  $response
      *
      * @throws HttpResponseException
      */
-    public static function exit($response = '')
+    public static function exit(array|string|Response $response = '')
     {
         if (is_array($response)) {
             $response = response()->json($response);
@@ -448,7 +451,7 @@ class Admin
      *
      * @return \Composer\Autoload\ClassLoader
      */
-    public static function classLoader()
+    public static function classLoader(): ClassLoader
     {
         return Composer::loader();
     }
@@ -458,7 +461,7 @@ class Admin
      *
      * @param  array  $mix
      */
-    public static function mixMiddlewareGroup(array $mix = [])
+    public static function mixMiddlewareGroup(array $mix = []): void
     {
         $router = app('router');
 
@@ -530,7 +533,7 @@ class Admin
     /**
      * @return bool
      */
-    public static function isDarkMode()
+    public static function isDarkMode(): bool
     {
         $bodyClass = config('admin.layout.body_class');
 
@@ -546,7 +549,7 @@ class Admin
      *
      * @return void
      */
-    public static function routes()
+    public static function routes(): void
     {
         $attributes = [
             'prefix'     => config('admin.route.prefix'),
@@ -554,7 +557,7 @@ class Admin
         ];
 
         if (config('admin.auth.enable', true)) {
-            app('router')->group($attributes, function ($router) {
+            app('router')->group($attributes, function (Router $router) {
                 $router->namespace('Dcat\Admin\Http\Controllers')->group(function ($router) {
                     $router->resource('auth/users', 'UserController');
                     $router->resource('auth/menu', 'MenuController', ['except' => ['create', 'show']]);
@@ -574,6 +577,8 @@ class Admin
                 $router->get('auth/login', $authController.'@getLogin');
                 $router->post('auth/login', $authController.'@postLogin');
                 $router->get('auth/logout', $authController.'@getLogout');
+                $router->get('auth/setting', $authController.'@getSetting');
+                $router->put('auth/setting', $authController.'@putSetting');
             });
         }
     }
@@ -586,14 +591,13 @@ class Admin
     public static function registerApiRoutes(): void
     {
         $attributes = [
-            'prefix'     => admin_base_path('dcat-api'),
+            'prefix'     => admin_base_path('jason-api'),
             'middleware' => config('admin.route.middleware'),
             'namespace'  => 'Dcat\Admin\Http\Controllers',
-            'as'         => 'dcat-api.',
+            'as'         => 'jason-api.',
         ];
 
-        app('router')->group($attributes, function ($router) {
-            /* @var \Illuminate\Routing\Router $router */
+        app('router')->group($attributes, function (Router $router) {
             $router->post('action', 'HandleActionController@handle')->name('action');
             $router->post('form', 'HandleFormController@handle')->name('form');
             $router->post('form/upload', 'HandleFormController@uploadFile')->name('form.upload');
