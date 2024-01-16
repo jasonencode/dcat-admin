@@ -28,6 +28,11 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
 
     const DEFAULT_ID = 1;
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     protected $fillable = ['username', 'password', 'name', 'avatar'];
 
     /**
