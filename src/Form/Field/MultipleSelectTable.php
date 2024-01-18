@@ -15,7 +15,7 @@ class MultipleSelectTable extends SelectTable
     /**
      * @var int
      */
-    protected $max = 0;
+    protected int $max = 0;
 
     /**
      * 设置最大选择数量.
@@ -23,7 +23,7 @@ class MultipleSelectTable extends SelectTable
      * @param  int  $max
      * @return $this
      */
-    public function max(int $max)
+    public function max(int $max): static
     {
         $this->max = $max;
 
@@ -34,11 +34,11 @@ class MultipleSelectTable extends SelectTable
      * 转化为数组格式保存.
      *
      * @param  mixed  $value
-     * @return array|mixed
+     * @return array
      */
-    public function prepareInputValue($value)
+    public function prepareInputValue($value): array
     {
-        return Helper::array($value, true);
+        return Helper::array($value);
     }
 
     public function render(): string

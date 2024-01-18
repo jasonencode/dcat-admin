@@ -14,7 +14,7 @@ trait Sizeable
      *
      * @return $this
      */
-    public function small()
+    public function small(): static
     {
         return $this->size('sm');
     }
@@ -24,19 +24,19 @@ trait Sizeable
      *
      * @return $this
      */
-    public function large()
+    public function large(): static
     {
         return $this->size('lg');
     }
 
-    public function size(?string $size)
+    public function size(?string $size): static
     {
         $this->size = $size;
 
         return $this;
     }
 
-    protected function initSize()
+    protected function initSize(): void
     {
         if ($this->size) {
             $this->addElementClass('form-control-'.$this->size);

@@ -251,16 +251,8 @@ return [
     |
     */
     'upload'                    => [
-
         // Disk in `config/filesystem.php`.
         'disk'      => config('filesystems.default'),
-
-        // Image and file upload path under the disk above.
-        'directory' => [
-            'image' => 'images',
-            'file'  => 'files',
-        ],
-
     ],
 
     /*

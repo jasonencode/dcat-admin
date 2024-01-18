@@ -13,7 +13,7 @@ class Checkbox extends MultipleSelect
 
     protected $style = 'primary';
 
-    protected $cascadeEvent = 'change';
+    protected string $cascadeEvent = 'change';
 
     protected $canCheckAll = false;
 

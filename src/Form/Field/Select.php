@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
 use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Support\Helper;
@@ -14,27 +15,28 @@ class Select extends Field
     use CanLoadFields;
     use Sizeable;
 
-    protected $cascadeEvent = 'change';
+    protected string $cascadeEvent = 'change';
 
     /**
      * @var array
      */
-    protected $groups = [];
+    protected array $groups = [];
 
     /**
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * Set options.
      *
-     * @param  array|\Closure|string  $options
-     * @return $this|mixed
+     * @param  array  $options
+     * @return $this|\Dcat\Admin\Form\Field\Checkbox
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function options($options = [])
     {
-        if ($options instanceof \Closure) {
+        if ($options instanceof Closure) {
             $this->options = $options;
 
             return $this;
@@ -76,7 +78,7 @@ class Select extends Field
      * @param  array  $groups
      * @return $this
      */
-    public function groups(array $groups)
+    public function groups(array $groups): static
     {
         $this->groups = $groups;
 
@@ -90,6 +92,7 @@ class Select extends Field
      * @param  string  $idField
      * @param  string  $textField
      * @return $this
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function model($model, string $idField = 'id', string $textField = 'name')
     {
@@ -167,8 +170,8 @@ class Select extends Field
      * Load options from ajax results.
      *
      * @param  string  $url
-     * @param $idField
-     * @param $textField
+     * @param  string  $idField
+     * @param  string  $textField
      * @return $this
      */
     public function ajax(string $url, string $idField = 'id', string $textField = 'text')
@@ -191,7 +194,7 @@ class Select extends Field
      * @param  mixed  $val
      * @return $this
      */
-    public function config(string $key, $val)
+    public function config(string $key, mixed $val)
     {
         $this->config[$key] = $val;
 
@@ -203,7 +206,7 @@ class Select extends Field
      *
      * @return $this
      */
-    public function disableClearButton()
+    public function disableClearButton(): static
     {
         return $this->config('allowClear', false);
     }
@@ -237,9 +240,9 @@ class Select extends Field
         return parent::render();
     }
 
-    protected function formatOptions()
+    protected function formatOptions(): void
     {
-        if ($this->options instanceof \Closure) {
+        if ($this->options instanceof Closure) {
             $this->options = $this->options->bindTo($this->values());
 
             $this->options(call_user_func($this->options, $this->value(), $this));

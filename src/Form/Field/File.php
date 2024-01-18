@@ -18,7 +18,7 @@ class File extends Field implements UploadFieldInterface
      * @var array
      */
     protected $options = [
-        'events' => [],
+        'events'   => [],
         'override' => false,
     ];
 
@@ -29,19 +29,11 @@ class File extends Field implements UploadFieldInterface
         $this->setUpDefaultOptions();
     }
 
-    public function setElementName($name)
+    public function setElementName($name): File
     {
         $this->mergeOptions(['elementName' => $name]);
 
         return parent::setElementName($name);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function defaultDirectory()
-    {
-        return config('admin.upload.directory.file');
     }
 
     /**
@@ -64,14 +56,14 @@ class File extends Field implements UploadFieldInterface
         $value = Arr::get($input, $this->column);
         $value = array_filter(is_array($value) ? $value : explode(',', $value));
 
-        $rules = $attributes = [];
+        $rules      = $attributes = [];
         $requiredIf = null;
 
         $fileLimit = $this->options['fileNumLimit'] ?? 1;
-        if (!empty($value) && $fileLimit > 1){
-            $rules[$this->column][] = function($atribute,$value,$fail)use($fileLimit){
+        if (! empty($value) && $fileLimit > 1) {
+            $rules[$this->column][] = function ($atribute, $value, $fail) use ($fileLimit) {
                 $value = array_filter(is_array($value) ? $value : explode(',', $value));
-                if (count($value) > $fileLimit ) {
+                if (count($value) > $fileLimit) {
                     $fail(trans('admin.uploader.max_file_limit', ['attribute' => $this->label, 'max' => $fileLimit]));
                 }
             };
@@ -82,7 +74,7 @@ class File extends Field implements UploadFieldInterface
             return false;
         }
 
-        $rules[$this->column] = $requiredIf ?: 'required';
+        $rules[$this->column]      = $requiredIf ?: 'required';
         $attributes[$this->column] = $this->label;
 
         return Validator::make($input, $rules, $this->getValidationMessages(), $attributes);
@@ -91,21 +83,22 @@ class File extends Field implements UploadFieldInterface
     /**
      * {@inheritDoc}
      */
-    protected function prepareInputValue($file)
+    protected function prepareInputValue($value)
     {
         if (request()->has(static::FILE_DELETE_FLAG)) {
-            return $this->destroy();
+            $this->destroy();
+            return $value;
         }
 
-        $this->destroyIfChanged($file);
+        $this->destroyIfChanged($value);
 
-        return $file;
+        return $value;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setRelation(array $options = [])
+    public function setRelation(array $options = []): File|Field|static
     {
         $this->options['formData']['_relation'] = [$options['relation'], $options['key'] ?? null];
 
@@ -115,7 +108,7 @@ class File extends Field implements UploadFieldInterface
     /**
      * {@inheritDoc}
      */
-    public function disable(bool $value = true)
+    public function disable(bool $value = true): File|Field|static
     {
         $this->options['disabled'] = $value;
 
@@ -129,8 +122,9 @@ class File extends Field implements UploadFieldInterface
 
     /**
      * @return array
+     * @throws \Exception
      */
-    protected function initialPreviewConfig()
+    protected function initialPreviewConfig(): array
     {
         $previews = [];
 
@@ -145,7 +139,7 @@ class File extends Field implements UploadFieldInterface
         return $previews;
     }
 
-    protected function forceOptions()
+    protected function forceOptions(): void
     {
         $this->options['fileNumLimit'] = 1;
     }
@@ -166,7 +160,7 @@ class File extends Field implements UploadFieldInterface
 
         $this->addVariables([
             'fileType'      => $this->options['isImage'] ? '' : 'file',
-            'showUploadBtn' => ($this->options['autoUpload'] ?? false) ? false : true,
+            'showUploadBtn' => ! (($this->options['autoUpload'] ?? false)),
             'options'       => JavaScript::format($this->options),
         ]);
 
@@ -176,7 +170,7 @@ class File extends Field implements UploadFieldInterface
     /**
      * @return void
      */
-    protected function formatValue()
+    protected function formatValue(): void
     {
         if ($this->value !== null) {
             $this->value = implode(',', Helper::array($this->value));
@@ -195,7 +189,7 @@ class File extends Field implements UploadFieldInterface
      * @param  bool  $once
      * @return $this
      */
-    public function on(string $event, string $script, bool $once = false)
+    public function on(string $event, string $script, bool $once = false): static
     {
         $script = JavaScript::make($script);
 
@@ -213,17 +207,17 @@ class File extends Field implements UploadFieldInterface
      * @param  string  $script
      * @return $this
      */
-    public function once(string $event, string $script)
+    public function once(string $event, string $script): static
     {
         return $this->on($event, $script, true);
     }
 
     /**
      * @param  Field  $field
-     * @param  string|array  $fieldRules
+     * @param  array|string  $fieldRules
      * @return void
      */
-    public static function deleteRules(Field $field, &$fieldRules)
+    public static function deleteRules(Field $field, array|string &$fieldRules): void
     {
         if ($field instanceof self) {
             $fieldRules = is_string($fieldRules) ? explode('|', $fieldRules) : $fieldRules;
@@ -232,7 +226,7 @@ class File extends Field implements UploadFieldInterface
         }
     }
 
-    public function override(bool $override = true)
+    public function override(bool $override = true): static
     {
         $this->options['override'] = $override;
 

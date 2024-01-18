@@ -13,6 +13,6 @@ class MultipleSelect extends Select
 
     protected function prepareInputValue($value)
     {
-        return Helper::array($value, true);
+        return Helper::array($value);
     }
 }

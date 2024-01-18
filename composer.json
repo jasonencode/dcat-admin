@@ -20,6 +20,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "ext-fileinfo": "*",
         "ext-pcntl": "*",
         "ext-zip": "*",
         "dcat/easy-excel": "^1.1",

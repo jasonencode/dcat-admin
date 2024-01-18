@@ -11,7 +11,7 @@ class Textarea extends Field
      *
      * @var int
      */
-    protected $rows = 5;
+    protected int $rows = 5;
 
     /**
      * Set rows of textarea.
@@ -19,7 +19,7 @@ class Textarea extends Field
      * @param  int  $rows
      * @return $this
      */
-    public function rows($rows = 5)
+    public function rows(int $rows = 5): static
     {
         $this->rows = $rows;
 

@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class Button extends Field
 {
-    protected $class = 'btn-primary';
+    protected string $class = 'btn-primary';
 
     public function __construct($label)
     {
@@ -16,12 +16,12 @@ class Button extends Field
         $this->addVariables(['buttonClass' => $this->class]);
     }
 
-    public function class(string $class)
+    public function class(string $class): static
     {
         return $this->addVariables(['buttonClass' => $class]);
     }
 
-    public function on($event, $callback)
+    public function on($event, $callback): static
     {
         $this->script = <<<JS
 $('{$this->getElementClassSelector()}').on('$event', function() {

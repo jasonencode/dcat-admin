@@ -41,10 +41,10 @@ class MultipleImage extends Image
     /**
      * Prepare for saving.
      *
-     * @param  string|array  $file
+     * @param  string|array  $value
      * @return array
      */
-    protected function prepareInputValue($file)
+    protected function prepareInputValue($value)
     {
         if ($path = request(static::FILE_DELETE_FLAG)) {
             $this->deleteFile($path);
@@ -52,14 +52,14 @@ class MultipleImage extends Image
             return array_values(array_diff($this->original, [$path]));
         }
 
-        $file = Helper::array($file, true);
+        $value = Helper::array($value, true);
 
-        $this->destroyIfChanged($file);
+        $this->destroyIfChanged($value);
 
-        return $file;
+        return $value;
     }
 
-    protected function forceOptions()
+    protected function forceOptions(): void
     {
     }
 }

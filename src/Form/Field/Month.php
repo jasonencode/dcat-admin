@@ -4,5 +4,5 @@ namespace Dcat\Admin\Form\Field;
 
 class Month extends Date
 {
-    protected $format = 'MM';
+    protected string $format = 'MM';
 }

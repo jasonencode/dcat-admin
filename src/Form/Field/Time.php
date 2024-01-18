@@ -4,7 +4,7 @@ namespace Dcat\Admin\Form\Field;
 
 class Time extends Date
 {
-    protected $format = 'HH:mm:ss';
+    protected string $format = 'HH:mm:ss';
 
     public function render(): string
     {

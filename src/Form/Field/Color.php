@@ -11,7 +11,7 @@ class Color extends Text
      *
      * @return $this
      */
-    public function hex()
+    public function hex(): static
     {
         return $this->mergeOptions(['format' => 'hex']);
     }
@@ -21,7 +21,7 @@ class Color extends Text
      *
      * @return $this
      */
-    public function rgb()
+    public function rgb(): static
     {
         return $this->mergeOptions(['format' => 'rgb']);
     }
@@ -31,7 +31,7 @@ class Color extends Text
      *
      * @return $this
      */
-    public function rgba()
+    public function rgba(): static
     {
         return $this->mergeOptions(['format' => 'rgba']);
     }
@@ -39,7 +39,7 @@ class Color extends Text
     /**
      * Render this filed.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return string
      */
     public function render(): string
     {

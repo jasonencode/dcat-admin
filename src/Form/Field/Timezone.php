@@ -10,7 +10,7 @@ class Timezone extends Select
 
     public function render(): string
     {
-        $this->options = collect(DateTimeZone::listIdentifiers(DateTimeZone::ALL))->mapWithKeys(function ($timezone) {
+        $this->options = collect(DateTimeZone::listIdentifiers())->mapWithKeys(function ($timezone) {
             return [$timezone => $timezone];
         })->toArray();
 
