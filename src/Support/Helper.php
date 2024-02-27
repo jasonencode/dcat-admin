@@ -2,6 +2,8 @@
 
 namespace Dcat\Admin\Support;
 
+use ArrayAccess;
+use Closure;
 use Dcat\Admin\Grid;
 use Dcat\Laravel\Database\WhereHasInServiceProvider;
 use Illuminate\Contracts\Support\Arrayable;
@@ -14,7 +16,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use ReflectionClass;
 use Symfony\Component\Process\Process;
+use Throwable;
 
 class Helper
 {
@@ -49,7 +53,7 @@ class Helper
             return [];
         }
 
-        if ($value instanceof \Closure) {
+        if ($value instanceof Closure) {
             $value = $value();
         }
 
@@ -63,7 +67,7 @@ class Helper
 
             try {
                 $array = json_decode($value, true);
-            } catch (\Throwable $e) {
+            } catch (Throwable) {
             }
 
             $value = is_array($array) ? $array : explode(',', $value);
@@ -90,7 +94,7 @@ class Helper
             return $value;
         }
 
-        if ($value instanceof \Closure) {
+        if ($value instanceof Closure) {
             $newThis && ($value = $value->bindTo($newThis));
 
             $value = $value(...(array) $params);
@@ -335,7 +339,7 @@ class Helper
     /**
      * @param  string  $name
      * @param  string  $symbol
-     * @return mixed
+     * @return array|string|string[]
      */
     public static function slug(string $name, string $symbol = '-')
     {
@@ -381,7 +385,7 @@ class Helper
 
             $pre = is_string($k) ? "'$k' => " : "$k => ";
 
-            $txt .= str_repeat(' ', $level * 4)."{$pre}{$t},\n";
+            $txt .= str_repeat(' ', $level * 4)."$pre$t,\n";
         }
 
         return $txt.str_repeat(' ', ($level - 1) * 4).$end;
@@ -541,7 +545,7 @@ class Helper
 
         foreach (static::$fileTypes as $type => $regex) {
             if (preg_match("/^($regex)$/i", $extension) !== 0) {
-                return "fa fa-file-{$type}-o";
+                return "fa fa-file-$type-o";
             }
         }
 
@@ -565,11 +569,11 @@ class Helper
     /**
      * 判断是否是IE浏览器.
      *
-     * @return false|int
+     * @return bool
      */
     public static function isIEBrowser()
     {
-        return (bool) preg_match('/Mozilla\/5\.0 \(Windows NT 10\.0; WOW64; Trident\/7\.0; rv:[0-9\.]*\) like Gecko/i', $_SERVER['HTTP_USER_AGENT'] ?? '');
+        return (bool) preg_match('/Mozilla\/5\.0 \(Windows NT 10\.0; WOW64; Trident\/7\.0; rv:[0-9.]*\) like Gecko/i', $_SERVER['HTTP_USER_AGENT'] ?? '');
     }
 
     /**
@@ -593,6 +597,8 @@ class Helper
 
     /**
      * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public static function getPreviousUrl()
     {
@@ -694,9 +700,9 @@ class Helper
 
         try {
             if (class_exists($class)) {
-                return (new \ReflectionClass($class))->getFileName();
+                return (new ReflectionClass($class))->getFileName();
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         $class = trim($class, '\\');
@@ -778,9 +784,9 @@ class Helper
      * 设置查询条件.
      *
      * @param  mixed  $model
-     * @param  string  $column
+     * @param  string|null  $column
      * @param  string  $query
-     * @param mixed array $params
+     * @param  mixed  $params  array $params
      * @return void
      */
     public static function withQueryCondition($model, ?string $column, string $query, array $params)
@@ -819,7 +825,7 @@ class Helper
 
         $model->$method(implode('.', $column), function ($relation) use ($relColumn, $params, $query) {
             $table = $relation->getModel()->getTable();
-            $relation->$query("{$table}.{$relColumn}", ...$params);
+            $relation->$query("$table.$relColumn", ...$params);
         });
     }
 
@@ -896,12 +902,11 @@ class Helper
         }
 
         $keys = explode('.', $key);
-        $default = null;
 
         while (count($keys) > 1) {
             $key = array_shift($keys);
 
-            if (! isset($array[$key]) || (! is_array($array[$key]) && ! $array[$key] instanceof \ArrayAccess)) {
+            if (! isset($array[$key]) || (! is_array($array[$key]) && ! $array[$key] instanceof ArrayAccess)) {
                 $array[$key] = [];
             }
 
@@ -992,7 +997,7 @@ class Helper
         }
 
         if ($request->pjax()) {
-            return response("<script>location.href = '{$to}';</script>");
+            return response("<script>location.href = '$to';</script>");
         }
 
         $redirectCodes = [201, 301, 302, 303, 307, 308];

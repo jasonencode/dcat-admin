@@ -53,7 +53,7 @@ class Html extends Field
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         if ($this->html instanceof \Closure) {
             $this->html = Helper::render(

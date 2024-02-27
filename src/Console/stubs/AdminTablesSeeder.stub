@@ -36,16 +36,6 @@ class DummyClass extends Seeder
 			ArraySetting
 		);
 
-		ClassExtension::truncate();
-		ClassExtension::insert(
-			ArrayExtension
-		);
-
-		ClassExtensionHistory::truncate();
-		ClassExtensionHistory::insert(
-			ArrayExtHistory
-		);
-
         // pivot tables
         DB::table('TablePermissionMenu')->truncate();
 		DB::table('TablePermissionMenu')->insert(

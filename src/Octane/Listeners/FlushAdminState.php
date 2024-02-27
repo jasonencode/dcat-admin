@@ -30,14 +30,13 @@ class FlushAdminState
         $this->app = $container;
     }
 
-    public function handle($event): void
+    public function handle(): void
     {
         $provider = new AdminServiceProvider($this->app);
 
         $this->forgetServiceInstances();
 
         $provider->registerServices();
-        $provider->registerExtensions();
         $provider->boot();
     }
 

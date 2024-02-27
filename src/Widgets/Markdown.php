@@ -54,7 +54,7 @@ class Markdown extends Widget
         return Helper::render($this->content);
     }
 
-    public function render()
+    public function render(): string
     {
         $this->addVariables([
             'id'      => $this->id(),

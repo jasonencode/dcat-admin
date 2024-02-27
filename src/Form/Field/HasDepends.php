@@ -11,7 +11,7 @@ trait HasDepends
      * @param  bool  $clear
      * @return $this
      */
-    public function depends($fields = [], bool $clear = true)
+    public function depends(array|string $fields = [], bool $clear = true): static
     {
         $fields = array_map(function ($field) {
             return $this->formatName($field);
@@ -19,8 +19,8 @@ trait HasDepends
 
         return $this->addVariables([
             'depends' => [
-                'fields' => json_encode($fields, \JSON_UNESCAPED_UNICODE),
-                'clear' => $clear,
+                'fields' => json_encode($fields, JSON_UNESCAPED_UNICODE),
+                'clear'  => $clear,
             ],
         ]);
     }

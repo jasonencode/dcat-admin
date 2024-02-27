@@ -198,7 +198,7 @@ class Row implements Renderable
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function render()
+    public function render(): string
     {
         return view('admin::form.row', ['fields' => $this->fields]);
     }

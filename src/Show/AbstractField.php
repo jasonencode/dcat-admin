@@ -58,7 +58,7 @@ abstract class AbstractField implements Renderable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    abstract public function render();
+    abstract public function render(): string;
 }

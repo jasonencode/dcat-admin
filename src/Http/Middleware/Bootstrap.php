@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Http\Middleware;
 
+use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\DarkModeSwitcher;
@@ -9,7 +10,7 @@ use Illuminate\Http\Request;
 
 class Bootstrap
 {
-    public function handle(Request $request, \Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         $this->includeBootstrapFile();
         $this->addScript();
@@ -23,7 +24,7 @@ class Bootstrap
         return $response;
     }
 
-    protected function setUpDarkMode()
+    protected function setUpDarkMode(): void
     {
         if (
             config('admin.layout.dark_mode_switch')
@@ -55,7 +56,7 @@ class Bootstrap
     }
 
     /**
-     * @param  \Illuminate\Http\Request
+     * @param  \Illuminate\Http\Request  $request
      * @return void
      */
     protected function storeCurrentUrl(Request $request)

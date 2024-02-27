@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid\Tools;
 
+use Closure;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Http\Request;
@@ -40,8 +41,8 @@ class Selector
      */
     public function __construct(Grid $grid)
     {
-        $this->grid = $grid;
-        $this->request = request();
+        $this->grid      = $grid;
+        $this->request   = request();
         $this->selectors = new Collection();
     }
 
@@ -52,7 +53,7 @@ class Selector
      * @param  null|\Closure  $query
      * @return $this
      */
-    public function select(string $column, $label, $options = [], ?\Closure $query = null)
+    public function select(string $column, $label, $options = [], ?Closure $query = null)
     {
         return $this->addSelector($column, $label, $options, $query);
     }
@@ -64,7 +65,7 @@ class Selector
      * @param  null|\Closure  $query
      * @return $this
      */
-    public function selectOne(string $column, $label, $options = [], ?\Closure $query = null)
+    public function selectOne(string $column, $label, $options = [], ?Closure $query = null)
     {
         return $this->addSelector($column, $label, $options, $query, 'one');
     }
@@ -77,15 +78,15 @@ class Selector
      * @param  string  $type
      * @return $this
      */
-    protected function addSelector(string $column, $label, $options = [], ?\Closure $query = null, $type = 'many')
+    protected function addSelector(string $column, $label, $options = [], ?Closure $query = null, $type = 'many')
     {
         if (is_array($label)) {
-            if ($options instanceof \Closure) {
+            if ($options instanceof Closure) {
                 $query = $options;
             }
 
             $options = $label;
-            $label = admin_trans_field($column);
+            $label   = admin_trans_field($column);
         }
 
         $this->selectors[$column] = compact(
@@ -125,6 +126,8 @@ class Selector
 
     /**
      * @return array
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function parseSelected()
     {
@@ -162,6 +165,8 @@ class Selector
      * @param  mixed  $value
      * @param  bool  $add
      * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function url($column, $value = null, $add = false)
     {
@@ -171,9 +176,9 @@ class Selector
 
         $query[$this->grid->model()->getPageName()] = null;
 
-        $selected = $this->parseSelected();
-        $options = Arr::get($selected, $column, []);
-        $queryName = "{$this->getQueryName()}.{$column}";
+        $selected  = $this->parseSelected();
+        $options   = Arr::get($selected, $column, []);
+        $queryName = "{$this->getQueryName()}.$column";
 
         if (is_null($value)) {
             Arr::forget($query, $queryName);
@@ -200,9 +205,11 @@ class Selector
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function render()
+    public function render(): string
     {
         return view('admin::grid.selector', [
             'self'     => $this,

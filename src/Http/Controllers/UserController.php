@@ -10,10 +10,11 @@ use Dcat\Admin\Models\Administrator as AdministratorModel;
 use Dcat\Admin\Show;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\Tree;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends AdminController
 {
-    public function title()
+    public function title(): string
     {
         return trans('admin.administrator');
     }
@@ -29,8 +30,8 @@ class UserController extends AdminController
                 $grid->column('roles')->pluck('name')->label('primary', 3);
 
                 $permissionModel = config('admin.database.permissions_model');
-                $roleModel = config('admin.database.roles_model');
-                $nodes = (new $permissionModel())->allNodes();
+                $roleModel       = config('admin.database.roles_model');
+                $nodes           = (new $permissionModel())->allNodes();
                 $grid->column('permissions')
                     ->if(function () {
                         return ! $this->roles->isEmpty();
@@ -88,9 +89,9 @@ class UserController extends AdminController
                     $roles = $this->roles->toArray();
 
                     $permissionModel = config('admin.database.permissions_model');
-                    $roleModel = config('admin.database.roles_model');
+                    $roleModel       = config('admin.database.roles_model');
                     $permissionModel = new $permissionModel();
-                    $nodes = $permissionModel->allNodes();
+                    $nodes           = $permissionModel->allNodes();
 
                     $tree = Tree::make($nodes);
 
@@ -131,8 +132,8 @@ class UserController extends AdminController
 
             $form->text('username', trans('admin.username'))
                 ->required()
-                ->creationRules(['required', "unique:{$connection}.{$userTable}"])
-                ->updateRules(['required', "unique:{$connection}.{$userTable},username,$id"]);
+                ->creationRules(['required', "unique:$connection.$userTable"])
+                ->updateRules(['required', "unique:$connection.$userTable,username,$id"]);
             $form->text('name', trans('admin.name'))->required();
             $form->image('avatar', trans('admin.avatar'))->autoUpload();
 
@@ -183,7 +184,7 @@ class UserController extends AdminController
         });
     }
 
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         if (in_array(AdministratorModel::DEFAULT_ID, Helper::array($id))) {
             Permission::error();

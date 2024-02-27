@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Http\Middleware;
 
+use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Http\Auth\Permission as Checker;
@@ -23,8 +24,9 @@ class Permission
      * @param  \Closure  $next
      * @param  array  $args
      * @return mixed
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
-    public function handle(Request $request, \Closure $next, ...$args)
+    public function handle(Request $request, Closure $next, ...$args)
     {
         $user = Admin::user();
 
@@ -54,6 +56,7 @@ class Permission
      *
      * @param  Request  $request
      * @return bool
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function checkRoutePermission(Request $request)
     {

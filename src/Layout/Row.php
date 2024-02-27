@@ -66,7 +66,7 @@ class Row implements Renderable
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $html = $this->startRow();
 
@@ -86,7 +86,7 @@ class Row implements Renderable
     {
         $noGutters = $this->noGutters ? 'no-gutters' : '';
 
-        return "<div class=\"row {$noGutters}\">";
+        return "<div class=\"row $noGutters\">";
     }
 
     /**

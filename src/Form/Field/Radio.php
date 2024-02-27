@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\Radio as WidgetRadio;
@@ -12,19 +13,19 @@ class Radio extends Field
     use CanLoadFields;
     use Sizeable;
 
-    protected $style = 'primary';
+    protected string $style = 'primary';
 
-    protected $cascadeEvent = 'change';
+    protected string $cascadeEvent = 'change';
 
-    protected $inline = true;
+    protected bool $inline = true;
 
     /**
      * @param  array|\Closure|string  $options
      * @return $this
      */
-    public function options($options = [])
+    public function options($options = []): static
     {
-        if ($options instanceof \Closure) {
+        if ($options instanceof Closure) {
             $this->options = $options;
 
             return $this;
@@ -35,7 +36,7 @@ class Radio extends Field
         return $this;
     }
 
-    public function inline(bool $inline)
+    public function inline(bool $inline): static
     {
         $this->inline = $inline;
 
@@ -48,7 +49,7 @@ class Radio extends Field
      * @param  string  $style
      * @return $this
      */
-    public function style(string $style)
+    public function style(string $style): static
     {
         $this->style = $style;
 
@@ -58,9 +59,9 @@ class Radio extends Field
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
-        if ($this->options instanceof \Closure) {
+        if ($this->options instanceof Closure) {
             $this->options(
                 $this->options->call($this->values(), $this->value(), $this)
             );

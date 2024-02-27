@@ -9,10 +9,11 @@ use Dcat\Admin\Http\Repositories\Role;
 use Dcat\Admin\Show;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\Tree;
+use Illuminate\Http\JsonResponse;
 
 class RoleController extends AdminController
 {
-    public function title()
+    public function title(): string
     {
         return trans('admin.roles');
     }
@@ -91,8 +92,8 @@ class RoleController extends AdminController
 
             $form->text('slug', trans('admin.slug'))
                 ->required()
-                ->creationRules(['required', "unique:{$connection}.{$roleTable}"])
-                ->updateRules(['required', "unique:{$connection}.{$roleTable},slug,$id"]);
+                ->creationRules(['required', "unique:$connection.$roleTable"])
+                ->updateRules(['required', "unique:$connection.$roleTable,slug,$id"]);
 
             $form->text('name', trans('admin.name'))->required();
 
@@ -142,7 +143,7 @@ class RoleController extends AdminController
         });
     }
 
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         $roleModel = config('admin.database.roles_model');
         if (in_array($roleModel::ADMINISTRATOR_ID, Helper::array($id))) {

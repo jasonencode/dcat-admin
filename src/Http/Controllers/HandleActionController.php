@@ -12,6 +12,7 @@ class HandleActionController
     /**
      * @param  Request  $request
      * @return $this|\Illuminate\Http\JsonResponse
+     * @throws \Dcat\Admin\Exception\AdminException
      */
     public function handle(Request $request)
     {
@@ -43,14 +44,14 @@ class HandleActionController
         $actionClass = str_replace('_', '\\', $request->get('_action'));
 
         if (! class_exists($actionClass)) {
-            throw new AdminException("Action [{$actionClass}] does not exist.");
+            throw new AdminException("Action [$actionClass] does not exist.");
         }
 
         /** @var Action $action */
         $action = app($actionClass);
 
         if (! method_exists($action, 'handle')) {
-            throw new AdminException("Action method {$actionClass}::handle() does not exist.");
+            throw new AdminException("Action method $actionClass::handle() does not exist.");
         }
 
         return $action;

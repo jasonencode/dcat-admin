@@ -27,7 +27,7 @@ trait InteractsWithRenderApi
      */
     public function onLoad(string $script)
     {
-        $this->loadScript .= ";{$script}";
+        $this->loadScript .= ";$script";
 
         return $this;
     }
@@ -53,13 +53,13 @@ trait InteractsWithRenderApi
         $url = $this->renderable->getUrl();
 
         return <<<JS
-target.on('{$this->target}:load', function () {
-    Dcat.helpers.asyncRender('{$url}', function (html) {
+target.on('$this->target:load', function () {
+    Dcat.helpers.asyncRender('$url', function (html) {
         body.html(html);
         
         {$this->loadScript}
         
-        target.trigger('{$this->target}:loaded');
+        target.trigger('$this->target:loaded');
     });
 });
 JS;

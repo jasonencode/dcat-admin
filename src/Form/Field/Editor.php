@@ -143,7 +143,7 @@ class Editor extends Field
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $this->addVariables([
             'options' => $this->formatOptions(),

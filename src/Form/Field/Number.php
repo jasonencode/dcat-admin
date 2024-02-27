@@ -19,7 +19,7 @@ class Number extends Text
      * @param  int  $value
      * @return $this
      */
-    public function min($value)
+    public function min(int $value): static
     {
         $this->attribute('min', $value);
 
@@ -32,7 +32,7 @@ class Number extends Text
      * @param  int  $value
      * @return $this
      */
-    public function max($value)
+    public function max(int $value): static
     {
         $this->attribute('max', $value);
 
@@ -45,7 +45,7 @@ class Number extends Text
      * @param  bool  $value
      * @return $this
      */
-    public function disable(bool $value = true)
+    public function disable(bool $value = true): static
     {
         parent::disable($value);
 
@@ -74,7 +74,7 @@ class Number extends Text
         return parent::value($value);
     }
 
-    public function render()
+    public function render(): string
     {
         $this->defaultAttribute('style', 'width: 140px;flex:none');
 

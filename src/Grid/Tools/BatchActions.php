@@ -135,7 +135,7 @@ class BatchActions extends AbstractTool
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         if (! $this->enableDelete) {
             $this->actions->forget('_delete_');

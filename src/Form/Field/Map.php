@@ -126,7 +126,7 @@ class Map extends Field
         return [$class, static::NORMAL_CLASS];
     }
 
-    public function render()
+    public function render(): string
     {
         $this->addVariables(['height' => $this->height]);
 

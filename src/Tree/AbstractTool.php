@@ -29,7 +29,7 @@ abstract class AbstractTool extends Action
     /**
      * @return void
      */
-    public function setupHtmlAttributes()
+    public function setupHtmlAttributes(): void
     {
         $this->addHtmlClass($this->style);
 

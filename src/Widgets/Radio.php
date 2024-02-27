@@ -164,7 +164,7 @@ class Radio extends Widget
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $this->setHtmlAttribute('type', $this->type);
 

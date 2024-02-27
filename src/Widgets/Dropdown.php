@@ -233,7 +233,7 @@ class Dropdown extends Widget
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $this->addVariables([
             'options'   => $this->renderOptions(),

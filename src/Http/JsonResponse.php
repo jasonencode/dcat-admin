@@ -9,6 +9,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 /**
  * Class JsonResponse.
@@ -29,16 +30,15 @@ use Illuminate\Validation\ValidationException;
  * @method $this dataIf($condition, array $data)
  * @method $this optionsIf($condition, array $data)
  * @method $this withValidationIf($condition, $errors)
- * @method $this withExceptionIf($condition, \Throwable $e)
+ * @method $this withExceptionIf($condition, Throwable $e)
  */
 class JsonResponse implements Arrayable
 {
-    protected $status = true;
-    protected $statusCode = 200;
-    protected $exception;
-    protected $data = [];
-    protected $html;
-    protected $options = [];
+    protected bool   $status     = true;
+    protected int    $statusCode = 200;
+    protected array  $data       = [];
+    protected string $html       = '';
+    protected array  $options    = [];
 
     public function __construct(array $data = [])
     {
@@ -51,7 +51,7 @@ class JsonResponse implements Arrayable
      * @param  bool  $status
      * @return $this
      */
-    public function status(bool $status)
+    public function status(bool $status): static
     {
         $this->status = $status;
 
@@ -64,7 +64,7 @@ class JsonResponse implements Arrayable
      * @param  int  $statusCode
      * @return $this
      */
-    public function statusCode(int $statusCode)
+    public function statusCode(int $statusCode): static
     {
         $this->statusCode = $statusCode;
 
@@ -74,10 +74,10 @@ class JsonResponse implements Arrayable
     /**
      * 设置提示信息.
      *
-     * @param  string  $message
+     * @param  string|null  $message
      * @return $this
      */
-    public function message(?string $message)
+    public function message(?string $message): static
     {
         $this->data['message'] = $message;
 
@@ -87,10 +87,10 @@ class JsonResponse implements Arrayable
     /**
      * 显示 成功 提示弹窗.
      *
-     * @param  string  $message
+     * @param  string|null  $message
      * @return $this
      */
-    public function success(?string $message)
+    public function success(?string $message): static
     {
         $this->status(true);
 
@@ -98,19 +98,19 @@ class JsonResponse implements Arrayable
     }
 
     /**
-     * @param  string  $message
+     * @param  string|null  $message
      * @return $this
      */
-    public function info(?string $message)
+    public function info(?string $message): static
     {
         return $this->show('info', $message);
     }
 
     /**
-     * @param  string  $message
+     * @param  string|null  $message
      * @return $this
      */
-    public function warning(?string $message)
+    public function warning(?string $message): static
     {
         return $this->show('warning', $message);
     }
@@ -118,11 +118,10 @@ class JsonResponse implements Arrayable
     /**
      * 显示 错误 信息弹窗.
      *
-     * @param  string  $message
-     * @param  bool  $alert
+     * @param  string|null  $message
      * @return $this
      */
-    public function error(?string $message)
+    public function error(?string $message): static
     {
         $this->status(false);
 
@@ -135,7 +134,7 @@ class JsonResponse implements Arrayable
      * @param $seconds
      * @return $this
      */
-    public function timeout($seconds)
+    public function timeout($seconds): static
     {
         return $this->data(['timeout' => $seconds]);
     }
@@ -146,7 +145,7 @@ class JsonResponse implements Arrayable
      * @param  bool  $alert
      * @return $this
      */
-    public function alert(bool $alert = true)
+    public function alert(bool $alert = true): static
     {
         return $this->data(['alert' => $alert]);
     }
@@ -154,10 +153,10 @@ class JsonResponse implements Arrayable
     /**
      * 显示弹窗描述信息.
      *
-     * @param  string  $detail
+     * @param  string|null  $detail
      * @return $this
      */
-    public function detail(?string $detail)
+    public function detail(?string $detail): static
     {
         return $this->data(['detail' => $detail]);
     }
@@ -165,11 +164,11 @@ class JsonResponse implements Arrayable
     /**
      * 显示弹窗信息.
      *
-     * @param  string  $type
-     * @param  string  $message
+     * @param  string|null  $type
+     * @param  string|null  $message
      * @return $this
      */
-    protected function show(?string $type, ?string $message = null)
+    protected function show(?string $type, ?string $message = null): static
     {
         if ($message) {
             $this->message($message);
@@ -181,10 +180,10 @@ class JsonResponse implements Arrayable
     /**
      * 跳转.
      *
-     * @param  string  $url
+     * @param  string|null  $url
      * @return $this
      */
-    public function redirect(?string $url)
+    public function redirect(?string $url): static
     {
         return $this->then(['action' => 'redirect', 'value' => admin_url($url)]);
     }
@@ -193,7 +192,7 @@ class JsonResponse implements Arrayable
      * @param  string|null  $url
      * @return $this
      */
-    public function redirectToIntended(?string $url)
+    public function redirectToIntended(?string $url): static
     {
         $path = session()->pull('url.intended');
 
@@ -203,10 +202,10 @@ class JsonResponse implements Arrayable
     /**
      * Location 跳转.
      *
-     * @param  string  $location  不传则刷新当前页面
+     * @param  string|null  $location  不传则刷新当前页面
      * @return $this
      */
-    public function location(?string $location = null)
+    public function location(?string $location = null): static
     {
         return $this->then(['action' => 'location', 'value' => $location ? admin_url($location) : null]);
     }
@@ -215,7 +214,7 @@ class JsonResponse implements Arrayable
      * @param  string|null  $url
      * @return $this
      */
-    public function locationToIntended(?string $url)
+    public function locationToIntended(?string $url): static
     {
         $path = session()->pull('url.intended');
 
@@ -228,7 +227,7 @@ class JsonResponse implements Arrayable
      * @param  string  $url
      * @return $this
      */
-    public function download($url)
+    public function download(string $url): static
     {
         return $this->then(['action' => 'download', 'value' => admin_url($url)]);
     }
@@ -238,7 +237,7 @@ class JsonResponse implements Arrayable
      *
      * @return $this
      */
-    public function refresh()
+    public function refresh(): static
     {
         return $this->then(['action' => 'refresh', 'value' => true]);
     }
@@ -249,7 +248,7 @@ class JsonResponse implements Arrayable
      * @param  string  $script
      * @return $this
      */
-    public function script($script)
+    public function script(string $script): static
     {
         return $this->then(['action' => 'script', 'value' => $script]);
     }
@@ -258,7 +257,7 @@ class JsonResponse implements Arrayable
      * @param  array  $value
      * @return $this
      */
-    protected function then(array $value)
+    protected function then(array $value): static
     {
         $this->data['then'] = $value;
 
@@ -271,7 +270,7 @@ class JsonResponse implements Arrayable
      * @param  array  $value
      * @return $this
      */
-    public function data(array $value)
+    public function data(array $value): static
     {
         $this->data = array_merge($this->data, $value);
 
@@ -284,7 +283,7 @@ class JsonResponse implements Arrayable
      * @param  string  $html
      * @return $this
      */
-    public function html($html)
+    public function html(string $html): static
     {
         $this->html = $html;
 
@@ -297,7 +296,7 @@ class JsonResponse implements Arrayable
      * @param  array  $options
      * @return $this
      */
-    public function options(array $options)
+    public function options(array $options): static
     {
         $this->options = array_merge($this->options, $options);
 
@@ -310,7 +309,7 @@ class JsonResponse implements Arrayable
      * @param $errors
      * @return $this
      */
-    public function withValidation($errors)
+    public function withValidation($errors): static
     {
         if ($errors instanceof Validator) {
             $errors = $errors->errors();
@@ -332,7 +331,7 @@ class JsonResponse implements Arrayable
      * @param  \Throwable  $exception
      * @return $this
      */
-    public function withException(\Throwable $exception)
+    public function withException(Throwable $exception): static
     {
         if ($exception instanceof ValidationException) {
             return $this->withValidation($exception->errors());
@@ -348,11 +347,11 @@ class JsonResponse implements Arrayable
     /**
      * Flash a piece of data to the session.
      *
-     * @param  string|array  $key
-     * @param  mixed  $value
+     * @param  array|string  $key
+     * @param  mixed|null  $value
      * @return $this
      */
-    public function with($key, $value = null)
+    public function with(array|string $key, mixed $value = null): static
     {
         $key = is_array($key) ? $key : [$key => $value];
 
@@ -366,7 +365,7 @@ class JsonResponse implements Arrayable
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $data = ['status' => $this->status, 'data' => $this->data];
 
@@ -380,11 +379,14 @@ class JsonResponse implements Arrayable
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function send()
+    public function send(): \Illuminate\Http\JsonResponse
     {
         return response()->json($this->toArray(), $this->statusCode);
     }
 
+    /**
+     * @throws \Dcat\Admin\Exception\AdminException
+     */
     public function __call($method, $arguments)
     {
         if (Str::endsWith($method, 'If')) {

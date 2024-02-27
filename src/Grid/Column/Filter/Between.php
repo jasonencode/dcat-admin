@@ -148,10 +148,10 @@ JS
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         if (! $this->shouldDisplay()) {
-            return;
+            return '';
         }
 
         $script = <<<'JS'

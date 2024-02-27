@@ -13,7 +13,7 @@ class Checkbox extends MultipleSelect
 
     protected $style = 'primary';
 
-    protected $cascadeEvent = 'change';
+    protected string $cascadeEvent = 'change';
 
     protected $canCheckAll = false;
 
@@ -71,7 +71,7 @@ class Checkbox extends MultipleSelect
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         if ($this->options instanceof \Closure) {
             $this->options(

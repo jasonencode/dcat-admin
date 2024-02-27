@@ -4,9 +4,6 @@ namespace Dcat\Admin;
 
 use Dcat\Admin\Contracts\ExceptionHandler;
 use Dcat\Admin\Exception\Handler;
-use Dcat\Admin\Extend\Manager;
-use Dcat\Admin\Extend\UpdateManager;
-use Dcat\Admin\Extend\VersionManager;
 use Dcat\Admin\Layout\Asset;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Layout\Menu;
@@ -14,19 +11,20 @@ use Dcat\Admin\Layout\Navbar;
 use Dcat\Admin\Layout\SectionManager;
 use Dcat\Admin\Support\Context;
 use Dcat\Admin\Support\Helper;
-use Dcat\Admin\Support\Setting;
 use Dcat\Admin\Support\Translator;
 use Dcat\Admin\Support\WebUploader;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use ReflectionClass;
 
 class AdminServiceProvider extends ServiceProvider
 {
     /**
      * @var array
      */
-    protected $commands = [
+    protected array $commands = [
         Console\AdminCommand::class,
         Console\InstallCommand::class,
         Console\PublishCommand::class,
@@ -39,31 +37,13 @@ class AdminServiceProvider extends ServiceProvider
         Console\ActionCommand::class,
         Console\MenuCacheCommand::class,
         Console\MinifyCommand::class,
-        Console\AppCommand::class,
-        Console\ExtensionMakeCommand::class,
-        Console\ExtensionInstallCommand::class,
-        Console\ExtensionUninstallCommand::class,
-        Console\ExtensionRefreshCommand::class,
-        Console\ExtensionRollbackCommand::class,
-        Console\ExtensionEnableCommand::class,
-        Console\ExtensionDiableCommand::class,
-        Console\ExtensionUpdateCommand::class,
         Console\UpdateCommand::class,
     ];
 
     /**
-     * 开发环境命令.
-     *
      * @var array
      */
-    protected $devCommands = [
-        Console\Development\LinkCommand::class,
-    ];
-
-    /**
-     * @var array
-     */
-    protected $routeMiddleware = [
+    protected array $routeMiddleware = [
         'admin.auth'       => Http\Middleware\Authenticate::class,
         'admin.pjax'       => Http\Middleware\Pjax::class,
         'admin.permission' => Http\Middleware\Permission::class,
@@ -71,12 +51,13 @@ class AdminServiceProvider extends ServiceProvider
         'admin.session'    => Http\Middleware\Session::class,
         'admin.upload'     => Http\Middleware\WebUploader::class,
         'admin.app'        => Http\Middleware\Application::class,
+        'admin.operation'  => Http\Middleware\LogOperation::class,
     ];
 
     /**
      * @var array
      */
-    protected $middlewareGroups = [
+    protected array $middlewareGroups = [
         'admin' => [
             'admin.auth',
             'admin.pjax',
@@ -87,22 +68,17 @@ class AdminServiceProvider extends ServiceProvider
         ],
     ];
 
-    public function register()
+    public function register(): void
     {
         $this->aliasAdmin();
         $this->loadAdminAuthConfig();
         $this->registerRouteMiddleware();
         $this->registerServices();
-        $this->registerExtensions();
 
         $this->commands($this->commands);
-
-        if (config('app.debug')) {
-            $this->commands($this->devCommands);
-        }
     }
 
-    public function boot()
+    public function boot(): void
     {
         $this->registerDefaultSections();
         $this->registerViews();
@@ -110,18 +86,17 @@ class AdminServiceProvider extends ServiceProvider
         $this->bootApplication();
         $this->registerPublishing();
         $this->compatibleBlade();
-        $this->bootExtensions();
         $this->registerBladeDirective();
     }
 
-    protected function aliasAdmin()
+    protected function aliasAdmin(): void
     {
         if (! class_exists(\Admin::class)) {
             class_alias(Admin::class, \Admin::class);
         }
     }
 
-    protected function registerViews()
+    protected function registerViews(): void
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'admin');
     }
@@ -131,10 +106,10 @@ class AdminServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function ensureHttps()
+    protected function ensureHttps(): void
     {
         if (config('admin.https') || config('admin.secure')) {
-            \URL::forceScheme('https');
+            URL::forceScheme('https');
             $this->app['request']->server->set('HTTPS', true);
         }
     }
@@ -142,7 +117,7 @@ class AdminServiceProvider extends ServiceProvider
     /**
      * 路由注册.
      */
-    protected function bootApplication()
+    protected function bootApplication(): void
     {
         Admin::app()->boot();
     }
@@ -152,9 +127,9 @@ class AdminServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function compatibleBlade()
+    protected function compatibleBlade(): void
     {
-        $bladeReflectionClass = new \ReflectionClass('\Illuminate\View\Compilers\BladeCompiler');
+        $bladeReflectionClass = new ReflectionClass('\Illuminate\View\Compilers\BladeCompiler');
         if ($bladeReflectionClass->hasMethod('withoutDoubleEncoding')) {
             Blade::withoutDoubleEncoding();
         }
@@ -165,13 +140,16 @@ class AdminServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerPublishing()
+    protected function registerPublishing(): void
     {
         if ($this->app->runningInConsole()) {
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
             $this->publishes([__DIR__.'/../config' => config_path()], 'dcat-admin-config');
             $this->publishes([__DIR__.'/../resources/lang' => $this->app->langPath()], 'dcat-admin-lang');
-            $this->publishes([__DIR__.'/../database/migrations' => database_path('migrations')], 'dcat-admin-migrations');
-            $this->publishes([__DIR__.'/../resources/dist' => public_path(Admin::asset()->getRealPath('@admin'))], 'dcat-admin-assets');
+            $this->publishes([__DIR__.'/../database/migrations' => database_path('migrations')],
+                'dcat-admin-migrations');
+            $this->publishes([__DIR__.'/../resources/dist' => public_path(Admin::asset()->getRealPath('@admin'))],
+                'dcat-admin-assets');
         }
     }
 
@@ -180,7 +158,7 @@ class AdminServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function loadAdminAuthConfig()
+    protected function loadAdminAuthConfig(): void
     {
         config(Arr::dot(config('admin.auth', []), 'auth.'));
 
@@ -194,7 +172,7 @@ class AdminServiceProvider extends ServiceProvider
     /**
      * 默认 section 注册.
      */
-    protected function registerDefaultSections()
+    protected function registerDefaultSections(): void
     {
         Content::composing(function () {
             if (! admin_has_default_section(Admin::SECTION['NAVBAR_USER_PANEL'])) {
@@ -214,41 +192,21 @@ class AdminServiceProvider extends ServiceProvider
         }, true);
     }
 
-    public function registerServices()
+    public function registerServices(): void
     {
         $this->app->singleton('admin.app', Application::class);
         $this->app->singleton('admin.asset', Asset::class);
         $this->app->singleton('admin.color', Color::class);
         $this->app->singleton('admin.sections', SectionManager::class);
-        $this->app->singleton('admin.extend', Manager::class);
-        $this->app->singleton('admin.extend.update', function () {
-            return new UpdateManager(app('admin.extend'));
-        });
-        $this->app->singleton('admin.extend.version', function () {
-            return new VersionManager(app('admin.extend'));
-        });
         $this->app->singleton('admin.navbar', Navbar::class);
         $this->app->singleton('admin.menu', Menu::class);
         $this->app->singleton('admin.context', Context::class);
-        $this->app->singleton('admin.setting', function () {
-            return Setting::fromDatabase();
-        });
         $this->app->singleton('admin.web-uploader', WebUploader::class);
         $this->app->singleton(ExceptionHandler::class, config('admin.exception_handler') ?: Handler::class);
         $this->app->singleton('admin.translator', Translator::class);
     }
 
-    public function registerExtensions()
-    {
-        Admin::extension()->register();
-    }
-
-    public function bootExtensions()
-    {
-        Admin::extension()->boot();
-    }
-
-    protected function registerBladeDirective()
+    protected function registerBladeDirective(): void
     {
         Blade::directive('primary', function ($amt = 0) {
             return <<<PHP
@@ -261,8 +219,9 @@ PHP;
      * 路由中间件注册.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function registerRouteMiddleware()
+    protected function registerRouteMiddleware(): void
     {
         $router = $this->app->make('router');
 

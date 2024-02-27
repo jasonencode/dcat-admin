@@ -6,7 +6,7 @@ class Url extends Text
 {
     protected $rules = ['nullable', 'url'];
 
-    public function render()
+    public function render(): string
     {
         $this->prepend('<i class="fa fa-internet-explorer fa-fw"></i>')
             ->defaultAttribute('type', 'url');

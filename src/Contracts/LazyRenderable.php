@@ -9,12 +9,12 @@ interface LazyRenderable
      *
      * @return string
      */
-    public function getUrl();
+    public function getUrl(): string;
 
     /**
      * 渲染组件.
      *
-     * @return mixed
+     * @return string
      */
-    public function render();
+    public function render(): string;
 }

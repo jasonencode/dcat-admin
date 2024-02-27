@@ -14,12 +14,12 @@ use Dcat\Admin\Widgets\Form as WidgetForm;
 
 class MenuController extends AdminController
 {
-    public function title()
+    public function title(): string
     {
         return trans('admin.menu');
     }
 
-    public function index(Content $content)
+    public function index(Content $content): Content
     {
         return $content
             ->title($this->title())

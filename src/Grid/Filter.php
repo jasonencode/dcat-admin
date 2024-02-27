@@ -76,7 +76,7 @@ class Filter implements Renderable
     use HasVariables;
 
     const MODE_RIGHT_SIDE = 'right-side';
-    const MODE_PANEL = 'panel';
+    const MODE_PANEL      = 'panel';
 
     /**
      * @var array
@@ -699,7 +699,7 @@ class Filter implements Renderable
      *
      * @return \Illuminate\View\View|string
      */
-    public function render()
+    public function render(): string
     {
         $this->grid()->callBuilder();
 
@@ -773,6 +773,7 @@ class Filter implements Renderable
      * @param  string  $method
      * @param  array  $arguments
      * @return AbstractFilter|$this
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function __call($method, $arguments)
     {

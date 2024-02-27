@@ -2,11 +2,12 @@
 
 namespace Dcat\Admin\Http\Actions\Menu;
 
+use Dcat\Admin\Actions\Response;
 use Dcat\Admin\Tree\RowAction;
 
 class Show extends RowAction
 {
-    public function handle()
+    public function handle(): Response
     {
         $key = $this->getKey();
 
@@ -21,7 +22,7 @@ class Show extends RowAction
             ->location('auth/menu');
     }
 
-    public function title()
+    public function title(): string
     {
         $icon = $this->getRow()->show ? 'icon-eye-off' : 'icon-eye';
 

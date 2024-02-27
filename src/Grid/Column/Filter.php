@@ -241,9 +241,9 @@ HMLT;
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
-        //
+        return '';
     }
 
     /**

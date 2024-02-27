@@ -133,7 +133,7 @@ class Table extends Widget
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $vars = [
             'headers'    => $this->headers,

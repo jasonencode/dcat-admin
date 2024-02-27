@@ -45,8 +45,6 @@ class ExportSeedCommand extends Command
             'ClassPermission'       => $this->getTableName('admin.database.permissions_model'),
             'ClassRole'             => $this->getTableName('admin.database.roles_model'),
             'ClassSetting'          => 'Models\Setting',
-            'ClassExtension'        => 'Models\Extension',
-            'ClassExtensionHistory' => 'Models\ExtensionHistory',
 
             'TablePermissionMenu'  => $this->getTableName('admin.database.permission_menu_table'),
             'TableRoleMenu'        => $this->getTableName('admin.database.role_menu_table'),

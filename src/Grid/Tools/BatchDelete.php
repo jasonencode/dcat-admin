@@ -11,7 +11,7 @@ class BatchDelete extends BatchAction
         $this->title = $title;
     }
 
-    public function render()
+    public function render(): string
     {
         $redirect = request()->fullUrl();
 

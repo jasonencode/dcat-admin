@@ -29,7 +29,6 @@ return [
         'detail'   => '詳細',
         'create'   => '創建',
         'root'     => 'root',
-        'scaffold' => '代碼生成器',
     ],
 
     'options' => [

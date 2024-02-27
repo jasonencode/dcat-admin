@@ -16,37 +16,27 @@ trait ImageField
      *
      * @var array
      */
-    protected $interventionCalls = [];
+    protected array $interventionCalls = [];
 
     /**
      * Thumbnail settings.
      *
      * @var array
      */
-    protected $thumbnails = [];
+    protected array $thumbnails = [];
 
-    protected static $interventionAlias = [
+    protected static array $interventionAlias = [
         'filling' => 'fill',
     ];
-
-    /**
-     * Default directory for file to upload.
-     *
-     * @return mixed
-     */
-    public function defaultDirectory()
-    {
-        return config('admin.upload.directory.image');
-    }
 
     /**
      * Execute Intervention calls.
      *
      * @param  string  $target
      * @param  string  $mime
-     * @return mixed
+     * @return string
      */
-    public function callInterventionMethods($target, $mime)
+    public function callInterventionMethods(string $target, string $mime): string
     {
         if (! empty($this->interventionCalls)) {
             $image = ImageManagerStatic::make($target);
@@ -92,12 +82,12 @@ trait ImageField
     }
 
     /**
-     * @param  string|array  $name
-     * @param  int  $width
-     * @param  int  $height
+     * @param  array|string  $name
+     * @param  int|null  $width
+     * @param  int|null  $height
      * @return $this
      */
-    public function thumbnail($name, int $width = null, int $height = null)
+    public function thumbnail(array|string $name, int $width = null, int $height = null): static
     {
         if (func_num_args() == 1 && is_array($name)) {
             foreach ($name as $key => $size) {
@@ -115,11 +105,12 @@ trait ImageField
     /**
      * Destroy original thumbnail files.
      *
-     * @param  string|array  $file
+     * @param  null  $file
      * @param  bool  $force
      * @return void.
+     * @throws \Exception
      */
-    public function destroyThumbnail($file = null, bool $force = false)
+    public function destroyThumbnail($file = null, bool $force = false): void
     {
         if ($this->retainable && ! $force) {
             return;
@@ -139,13 +130,8 @@ trait ImageField
         }
 
         foreach ($this->thumbnails as $name => $_) {
-            // We need to get extension type ( .jpeg , .png ...)
             $ext = pathinfo($file, PATHINFO_EXTENSION);
-
-            // We remove extension from file name so we can append thumbnail type
             $path = Str::replaceLast('.'.$ext, '', $file);
-
-            // We merge original name + thumbnail name + extension
             $path = $path.'-'.$name.'.'.$ext;
 
             if ($this->getStorage()->exists($path)) {
@@ -159,32 +145,25 @@ trait ImageField
      *
      * @param  UploadedFile  $file
      * @return $this
+     * @throws \Exception
      */
-    protected function uploadAndDeleteOriginalThumbnail(UploadedFile $file)
+    protected function uploadAndDeleteOriginalThumbnail(UploadedFile $file): static
     {
         foreach ($this->thumbnails as $name => $size) {
-            // We need to get extension type ( .jpeg , .png ...)
-            $ext = pathinfo($this->name, PATHINFO_EXTENSION);
-
-            // We remove extension from file name so we can append thumbnail type
-            $path = Str::replaceLast('.'.$ext, '', $this->name);
-
-            // We merge original name + thumbnail name + extension
-            $path = $path.'-'.$name.'.'.$ext;
-
-            /** @var \Intervention\Image\Image $image */
-            $image = InterventionImage::make($file);
-
+            $ext    = pathinfo($this->name, PATHINFO_EXTENSION);
+            $path   = Str::replaceLast('.'.$ext, '', $this->name);
+            $path   = $path.'-'.$name.'.'.$ext;
+            $image  = InterventionImage::make($file);
             $action = $size[2] ?? 'resize';
-            // Resize image with aspect ratio
             $image->$action($size[0], $size[1], function (Constraint $constraint) {
                 $constraint->aspectRatio();
             });
 
             if (! is_null($this->storagePermission)) {
-                $this->getStorage()->put("{$this->getDirectory()}/{$path}", $image->encode()->stream(), $this->storagePermission);
+                $this->getStorage()->put("{$this->getDirectory()}/$path", $image->encode()->stream(),
+                    $this->storagePermission);
             } else {
-                $this->getStorage()->put("{$this->getDirectory()}/{$path}", $image->encode()->stream());
+                $this->getStorage()->put("{$this->getDirectory()}/$path", $image->encode()->stream());
             }
         }
 

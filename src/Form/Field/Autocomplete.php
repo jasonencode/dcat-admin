@@ -115,7 +115,7 @@ class Autocomplete extends Text
         return $this->addVariables(['ajax' => compact('url', 'valueField', 'groupField')]);
     }
 
-    public function render()
+    public function render(): string
     {
         $this->formatGroupOptions();
 

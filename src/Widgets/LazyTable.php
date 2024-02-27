@@ -142,7 +142,7 @@ $this.trigger('table:load');
 JS;
     }
 
-    public function render()
+    public function render(): string
     {
         if ($this->simple !== null) {
             $this->renderable->simple($this->simple);

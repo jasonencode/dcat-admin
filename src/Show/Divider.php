@@ -4,7 +4,7 @@ namespace Dcat\Admin\Show;
 
 class Divider extends Field
 {
-    public function render()
+    public function render(): string
     {
         return '<div class="col-sm-12"><hr style="margin-top:15px;"/></div>';
     }

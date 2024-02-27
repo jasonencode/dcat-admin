@@ -23,9 +23,9 @@ class Text extends Field
     /**
      * Render this filed.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return string
      */
-    public function render()
+    public function render(): string
     {
         $this->initPlainInput();
         $this->initSize();

@@ -8,40 +8,9 @@ use Illuminate\Support\Facades\Lang;
 
 class Menu
 {
-    protected static $helperNodes = [
-        [
-            'id'        => 1,
-            'title'     => 'Helpers',
-            'icon'      => 'fa fa-keyboard-o',
-            'uri'       => '',
-            'parent_id' => 0,
-        ],
-        [
-            'id'        => 2,
-            'title'     => 'Extensions',
-            'icon'      => '',
-            'uri'       => 'auth/extensions',
-            'parent_id' => 1,
-        ],
-        [
-            'id'        => 3,
-            'title'     => 'Scaffold',
-            'icon'      => '',
-            'uri'       => 'helpers/scaffold',
-            'parent_id' => 1,
-        ],
-        [
-            'id'        => 4,
-            'title'     => 'Icons',
-            'icon'      => '',
-            'uri'       => 'helpers/icons',
-            'parent_id' => 1,
-        ],
-    ];
+    protected string $view = 'admin::partials.menu';
 
-    protected $view = 'admin::partials.menu';
-
-    public function register()
+    public function register(): void
     {
         if (! admin_has_default_section(Admin::SECTION['LEFT_SIDEBAR_MENU'])) {
             admin_inject_default_section(Admin::SECTION['LEFT_SIDEBAR_MENU'], function () {
@@ -49,10 +18,6 @@ class Menu
 
                 return $this->toHtml((new $menuModel())->allNodes()->toArray());
             });
-        }
-
-        if (config('app.debug') && config('admin.helpers.enable', true)) {
-            $this->add(static::$helperNodes, 20);
         }
     }
 
@@ -62,6 +27,7 @@ class Menu
      * @param  array  $nodes
      * @param  int  $priority
      * @return void
+     * @throws \Throwable
      */
     public function add(array $nodes = [], int $priority = 10)
     {
@@ -158,7 +124,6 @@ class Menu
     {
         if (
             ! $this->checkPermission($item)
-            || ! $this->checkExtension($item)
             || ! $this->userCanSeeMenu($item)
         ) {
             return false;
@@ -170,27 +135,6 @@ class Menu
         }
 
         return true;
-    }
-
-    /**
-     * 判断扩展是否启用.
-     *
-     * @param $item
-     * @return bool
-     */
-    protected function checkExtension($item)
-    {
-        $extension = $item['extension'] ?? null;
-
-        if (! $extension) {
-            return true;
-        }
-
-        if (! $extension = Admin::extension($extension)) {
-            return false;
-        }
-
-        return $extension->enabled();
     }
 
     /**

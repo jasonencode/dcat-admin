@@ -28,7 +28,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
     /**
      * 获取主键名称.
      *
-     * @return string|array
+     * @return string
      */
     public function getKeyName()
     {
@@ -226,7 +226,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
     /**
      * 设置数据查询回调.
      *
-     * @param  \Closure|null  $query
+     * @param $queryCallback
      * @return $this
      */
     public function withQuery($queryCallback)

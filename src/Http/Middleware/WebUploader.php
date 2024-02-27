@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Http\Middleware;
 
+use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Support\WebUploader as Uploader;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ use Illuminate\Http\Request;
  */
 class WebUploader
 {
-    public function handle(Request $request, \Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         /* @var Uploader $webUploader */
         $webUploader = app('admin.web-uploader');
@@ -23,7 +24,7 @@ class WebUploader
         }
 
         try {
-            if (! $file = $webUploader->getUploadedFile()) {
+            if (! $webUploader->getUploadedFile()) {
                 // 分块未上传完毕，返回已合并成功信息
                 return Admin::json(['merge' => 1])->send();
             }

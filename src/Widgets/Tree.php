@@ -107,7 +107,7 @@ class Tree extends Widget
         return $this;
     }
 
-    public function render()
+    public function render(): string
     {
         $this->id($this->id);
         $this->class('jstree-wrapper');

@@ -4,7 +4,7 @@ namespace Dcat\Admin\Form\Field;
 
 class Currency extends Text
 {
-    protected $symbol = '$';
+    protected string $symbol = '$';
 
     /**
      * @see https://github.com/RobinHerbots/Inputmask#options
@@ -25,7 +25,7 @@ class Currency extends Text
      * @param  string  $symbol
      * @return $this
      */
-    public function symbol($symbol)
+    public function symbol(string $symbol): static
     {
         $this->symbol = $symbol;
 
@@ -38,7 +38,7 @@ class Currency extends Text
      * @param  int  $digits
      * @return $this
      */
-    public function digits($digits)
+    public function digits(int $digits): static
     {
         return $this->mergeOptions(compact('digits'));
     }
@@ -47,7 +47,7 @@ class Currency extends Text
      * @param  mixed  $value
      * @return mixed
      */
-    protected function prepareInputValue($value)
+    protected function prepareInputValue($value): mixed
     {
         return is_string($value) ? str_replace(',', '', $value) : $value;
     }
@@ -55,7 +55,7 @@ class Currency extends Text
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         $this->inputmask($this->options);
 

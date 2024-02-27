@@ -13,7 +13,7 @@ class Mobile extends Text
         'mask' => '99999999999',
     ];
 
-    public function render()
+    public function render(): string
     {
         $this->inputmask($this->options);
 

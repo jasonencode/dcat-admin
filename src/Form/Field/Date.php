@@ -12,9 +12,9 @@ class Date extends Text
         '@bootstrap-datetimepicker',
     ];
 
-    protected $format = 'YYYY-MM-DD';
+    protected string $format = 'YYYY-MM-DD';
 
-    public function format($format)
+    public function format($format): static
     {
         $this->format = $format;
 
@@ -30,7 +30,7 @@ class Date extends Text
         return $value;
     }
 
-    public function render()
+    public function render(): string
     {
         $this->options['format'] = $this->format;
         $this->options['locale'] = config('app.locale');
@@ -40,7 +40,7 @@ class Date extends Text
 
         $this->script = <<<JS
 Dcat.init('{$this->getElementClassSelector()}', function (self) {
-    self.datetimepicker({$options});
+    self.datetimepicker($options)
 });
 JS;
 

@@ -188,7 +188,7 @@ class SelectTable extends Field
             ]);
     }
 
-    public function render()
+    public function render(): string
     {
         $this->setUpTable();
         $this->formatOptions();

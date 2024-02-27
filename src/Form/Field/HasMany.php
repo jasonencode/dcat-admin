@@ -549,11 +549,11 @@ class HasMany extends Field
     /**
      * Render the `HasMany` field.
      *
-     * @return \Illuminate\View\View|string
+     * @return string
      *
      * @throws \Exception
      */
-    public function render()
+    public function render(): string
     {
         if (! $this->shouldRender()) {
             return '';

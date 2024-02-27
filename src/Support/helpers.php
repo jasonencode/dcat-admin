@@ -1,80 +1,30 @@
 <?php
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Color;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\Response;
-
-if (! function_exists('admin_setting')) {
-    /**
-     * 获取或保存配置参数.
-     *
-     * @param  string|array  $key
-     * @param  mixed  $default
-     * @return \Dcat\Admin\Support\Setting|mixed
-     */
-    function admin_setting($key = null, $default = null)
-    {
-        if ($key === null) {
-            return app('admin.setting');
-        }
-
-        if (is_array($key)) {
-            app('admin.setting')->save($key);
-
-            return;
-        }
-
-        return app('admin.setting')->get($key, $default);
-    }
-}
-
-if (! function_exists('admin_setting_array')) {
-    /**
-     * 获取配置参数并转化为数组格式.
-     *
-     * @param  string  $key
-     * @param  mixed  $default
-     * @return \Dcat\Admin\Support\Setting|mixed
-     */
-    function admin_setting_array(?string $key, $default = [])
-    {
-        return app('admin.setting')->getArray($key, $default);
-    }
-}
-
-if (! function_exists('admin_extension_setting')) {
-    /**
-     * 获取扩展配置参数.
-     *
-     * @param  string  $extension
-     * @param  string|array  $key
-     * @param  mixed  $default
-     * @return mixed
-     */
-    function admin_extension_setting($extension, $key = null, $default = null)
-    {
-        $extension = app($extension);
-
-        if ($extension instanceof Dcat\Admin\Extend\ServiceProvider) {
-            return $extension->config($key, $default);
-        }
-    }
-}
 
 if (! function_exists('admin_section')) {
     /**
      * Get the string contents of a section.
      *
      * @param  string  $section
-     * @param  mixed  $default
+     * @param  mixed|null  $default
      * @param  array  $options
      * @return mixed
      */
-    function admin_section(string $section, $default = null, array $options = [])
+    function admin_section(string $section, mixed $default = null, array $options = []): mixed
     {
         return app('admin.sections')->yieldContent($section, $default, $options);
     }
@@ -87,7 +37,7 @@ if (! function_exists('admin_has_section')) {
      * @param  string  $section
      * @return mixed
      */
-    function admin_has_section(string $section)
+    function admin_has_section(string $section): mixed
     {
         return app('admin.sections')->hasSection($section);
     }
@@ -98,11 +48,11 @@ if (! function_exists('admin_inject_section')) {
      * Injecting content into a section.
      *
      * @param  string  $section
-     * @param  mixed  $content
+     * @param  mixed|null  $content
      * @param  bool  $append
      * @param  int  $priority
      */
-    function admin_inject_section(string $section, $content = null, bool $append = true, int $priority = 10)
+    function admin_inject_section(string $section, mixed $content = null, bool $append = true, int $priority = 10): void
     {
         app('admin.sections')->inject($section, $content, $append, $priority);
     }
@@ -114,11 +64,11 @@ if (! function_exists('admin_inject_section_if')) {
      *
      * @param  mixed  $condition
      * @param  string  $section
-     * @param  mixed  $content
+     * @param  mixed|null  $content
      * @param  bool  $append
      * @param  int  $priority
      */
-    function admin_inject_section_if($condition, $section, $content = null, bool $append = false, int $priority = 10)
+    function admin_inject_section_if(mixed $condition, string $section, mixed $content = null, bool $append = false, int $priority = 10): void
     {
         if ($condition) {
             app('admin.sections')->inject($section, $content, $append, $priority);
@@ -133,7 +83,7 @@ if (! function_exists('admin_has_default_section')) {
      * @param  string  $section
      * @return mixed
      */
-    function admin_has_default_section(string $section)
+    function admin_has_default_section(string $section): mixed
     {
         return app('admin.sections')->hasDefaultSection($section);
     }
@@ -144,9 +94,9 @@ if (! function_exists('admin_inject_default_section')) {
      * Injecting content into a section.
      *
      * @param  string  $section
-     * @param  string|Renderable|Htmlable|callable  $content
+     * @param  callable|string|Htmlable|Renderable  $content
      */
-    function admin_inject_default_section(string $section, $content)
+    function admin_inject_default_section(string $section, callable|Renderable|Htmlable|string $content): void
     {
         app('admin.sections')->injectDefault($section, $content);
     }
@@ -160,7 +110,7 @@ if (! function_exists('admin_trans_field')) {
      * @param  null  $locale
      * @return array|\Illuminate\Contracts\Translation\Translator|null|string
      */
-    function admin_trans_field($field, $locale = null)
+    function admin_trans_field($field, $locale = null): array|string|Translator|null
     {
         return app('admin.translator')->transField($field, $locale);
     }
@@ -175,7 +125,7 @@ if (! function_exists('admin_trans_label')) {
      * @param  null  $locale
      * @return array|\Illuminate\Contracts\Translation\Translator|null|string
      */
-    function admin_trans_label($label = null, $replace = [], $locale = null)
+    function admin_trans_label($label = null, array $replace = [], $locale = null): array|string|Translator|null
     {
         return app('admin.translator')->transLabel($label, $replace, $locale);
     }
@@ -185,16 +135,17 @@ if (! function_exists('admin_trans_option')) {
     /**
      * Translate the field name.
      *
+     * @param $optionValue
      * @param $field
      * @param  array  $replace
      * @param  null  $locale
      * @return array|\Illuminate\Contracts\Translation\Translator|null|string
      */
-    function admin_trans_option($optionValue, $field, $replace = [], $locale = null)
+    function admin_trans_option($optionValue, $field, array $replace = [], $locale = null): array|string|Translator|null
     {
         $slug = admin_controller_slug();
 
-        return admin_trans("{$slug}.options.{$field}.{$optionValue}", $replace, $locale);
+        return admin_trans("$slug.options.$field.$optionValue", $replace, $locale);
     }
 }
 
@@ -204,10 +155,10 @@ if (! function_exists('admin_trans')) {
      *
      * @param  string  $key
      * @param  array  $replace
-     * @param  string  $locale
+     * @param  string|null  $locale
      * @return \Illuminate\Contracts\Translation\Translator|string|array|null
      */
-    function admin_trans($key, $replace = [], $locale = null)
+    function admin_trans(string $key, array $replace = [], string $locale = null): array|string|Translator|null
     {
         return app('admin.translator')->trans($key, $replace, $locale);
     }
@@ -217,7 +168,7 @@ if (! function_exists('admin_controller_slug')) {
     /**
      * @return string
      */
-    function admin_controller_slug()
+    function admin_controller_slug(): string
     {
         static $slug = [];
 
@@ -233,7 +184,7 @@ if (! function_exists('admin_controller_name')) {
      *
      * @return string
      */
-    function admin_controller_name()
+    function admin_controller_name(): string
     {
         return Helper::getControllerName();
     }
@@ -246,7 +197,7 @@ if (! function_exists('admin_path')) {
      * @param  string  $path
      * @return string
      */
-    function admin_path($path = '')
+    function admin_path(string $path = ''): string
     {
         return ucfirst(config('admin.directory')).($path ? DIRECTORY_SEPARATOR.$path : $path);
     }
@@ -258,10 +209,10 @@ if (! function_exists('admin_url')) {
      *
      * @param  string  $path
      * @param  mixed  $parameters
-     * @param  bool  $secure
+     * @param  bool|null  $secure
      * @return string
      */
-    function admin_url($path = '', $parameters = [], $secure = null)
+    function admin_url(string $path = '', mixed $parameters = [], bool $secure = null): string
     {
         if (url()->isValidUrl($path)) {
             return $path;
@@ -280,7 +231,7 @@ if (! function_exists('admin_base_path')) {
      * @param  string  $path
      * @return string
      */
-    function admin_base_path($path = '')
+    function admin_base_path(string $path = ''): string
     {
         $prefix = '/'.trim(config('admin.route.prefix'), '/');
 
@@ -288,7 +239,7 @@ if (! function_exists('admin_base_path')) {
 
         $path = trim($path, '/');
 
-        if (is_null($path) || strlen($path) == 0) {
+        if (empty($path) || strlen($path) == 0) {
             return $prefix ?: '/';
         }
 
@@ -304,7 +255,7 @@ if (! function_exists('admin_toastr')) {
      * @param  string  $type
      * @param  array  $options
      */
-    function admin_toastr($message = '', $type = 'success', $options = [])
+    function admin_toastr(string $message = '', string $type = 'success', array $options = []): void
     {
         $toastr = new MessageBag(get_defined_vars());
 
@@ -319,7 +270,7 @@ if (! function_exists('admin_success')) {
      * @param  string  $title
      * @param  string  $message
      */
-    function admin_success($title, $message = '')
+    function admin_success(string $title, string $message = ''): void
     {
         admin_info($title, $message, 'success');
     }
@@ -332,7 +283,7 @@ if (! function_exists('admin_error')) {
      * @param  string  $title
      * @param  string  $message
      */
-    function admin_error($title, $message = '')
+    function admin_error(string $title, string $message = ''): void
     {
         admin_info($title, $message, 'error');
     }
@@ -345,7 +296,7 @@ if (! function_exists('admin_warning')) {
      * @param  string  $title
      * @param  string  $message
      */
-    function admin_warning($title, $message = '')
+    function admin_warning(string $title, string $message = ''): void
     {
         admin_info($title, $message, 'warning');
     }
@@ -359,7 +310,7 @@ if (! function_exists('admin_info')) {
      * @param  string  $message
      * @param  string  $type
      */
-    function admin_info($title, $message = '', $type = 'info')
+    function admin_info(string $title, string $message = '', string $type = 'info'): void
     {
         $message = new MessageBag(get_defined_vars());
 
@@ -372,7 +323,7 @@ if (! function_exists('admin_asset')) {
      * @param $path
      * @return string
      */
-    function admin_asset($path)
+    function admin_asset($path): string
     {
         return Admin::asset()->url($path);
     }
@@ -387,7 +338,7 @@ if (! function_exists('admin_route')) {
      * @param  bool  $absolute
      * @return string
      */
-    function admin_route(?string $route, array $params = [], $absolute = true)
+    function admin_route(?string $route, array $params = [], bool $absolute = true): string
     {
         return Admin::app()->getRoute($route, $params, $absolute);
     }
@@ -400,7 +351,7 @@ if (! function_exists('admin_route_name')) {
      * @param  string|null  $route
      * @return string
      */
-    function admin_route_name(?string $route)
+    function admin_route_name(?string $route): string
     {
         return Admin::app()->getRoutePrefix().$route;
     }
@@ -410,27 +361,12 @@ if (! function_exists('admin_api_route_name')) {
     /**
      * 获取api的路由别名.
      *
-     * @param  string  $route
+     * @param  string|null  $route
      * @return string
      */
-    function admin_api_route_name(?string $route = '')
+    function admin_api_route_name(?string $route = ''): string
     {
         return Admin::app()->getCurrentApiRoutePrefix().$route;
-    }
-}
-
-if (! function_exists('admin_extension_path')) {
-    /**
-     * @param  string  $path
-     * @return string
-     */
-    function admin_extension_path(string $path = '')
-    {
-        $dir = rtrim(config('admin.extension.dir'), '/') ?: base_path('dcat-admin-extensions');
-
-        $path = ltrim($path, '/');
-
-        return $path ? $dir.'/'.$path : $dir;
     }
 }
 
@@ -439,7 +375,7 @@ if (! function_exists('admin_color')) {
      * @param  string|null  $color
      * @return string|\Dcat\Admin\Color
      */
-    function admin_color(?string $color = null)
+    function admin_color(?string $color = null): string|Color
     {
         if ($color === null) {
             return Admin::color();
@@ -457,7 +393,7 @@ if (! function_exists('admin_view')) {
      *
      * @throws \Throwable
      */
-    function admin_view($view, array $data = [])
+    function admin_view(string $view, array $data = []): string
     {
         return Admin::view($view, $data);
     }
@@ -465,11 +401,11 @@ if (! function_exists('admin_view')) {
 
 if (! function_exists('admin_script')) {
     /**
-     * @param  string  $js
+     * @param $script
      * @param  bool  $direct
      * @return void
      */
-    function admin_script($script, bool $direct = false)
+    function admin_script($script, bool $direct = false): void
     {
         Admin::script($script, $direct);
     }
@@ -480,7 +416,7 @@ if (! function_exists('admin_style')) {
      * @param  string  $style
      * @return void
      */
-    function admin_style($style)
+    function admin_style(string $style): void
     {
         Admin::style($style);
     }
@@ -488,10 +424,10 @@ if (! function_exists('admin_style')) {
 
 if (! function_exists('admin_js')) {
     /**
-     * @param  string|array  $js
+     * @param  array|string  $js
      * @return void
      */
-    function admin_js($js)
+    function admin_js(array|string $js): void
     {
         Admin::js($js);
     }
@@ -499,10 +435,10 @@ if (! function_exists('admin_js')) {
 
 if (! function_exists('admin_css')) {
     /**
-     * @param  string|array  $css
+     * @param  array|string  $css
      * @return void
      */
-    function admin_css($css)
+    function admin_css(array|string $css): void
     {
         Admin::css($css);
     }
@@ -510,10 +446,10 @@ if (! function_exists('admin_css')) {
 
 if (! function_exists('admin_require_assets')) {
     /**
-     * @param  string|array  $asset
+     * @param  array|string  $asset
      * @return void
      */
-    function admin_require_assets($asset)
+    function admin_require_assets(array|string $asset): void
     {
         Admin::requireAssets($asset);
     }
@@ -526,7 +462,7 @@ if (! function_exists('admin_javascript')) {
      * @param  string  $scripts
      * @return string
      */
-    function admin_javascript(string $scripts)
+    function admin_javascript(string $scripts): string
     {
         return Dcat\Admin\Support\JavaScript::make($scripts);
     }
@@ -534,10 +470,10 @@ if (! function_exists('admin_javascript')) {
 
 if (! function_exists('admin_javascript_json')) {
     /**
-     * @param  array|object  $data
+     * @param  object|array  $data
      * @return string
      */
-    function admin_javascript_json($data)
+    function admin_javascript_json(object|array $data): string
     {
         return Dcat\Admin\Support\JavaScript::format($data);
     }
@@ -547,11 +483,11 @@ if (! function_exists('admin_exit')) {
     /**
      * 响应数据并中断后续逻辑.
      *
-     * @param  Response|string|array  $response
+     * @param  array|string|Response  $response
      *
      * @throws \Illuminate\Http\Exceptions\HttpResponseException
      */
-    function admin_exit($response = '')
+    function admin_exit(array|string|Response $response = ''): void
     {
         Admin::exit($response);
     }
@@ -563,11 +499,14 @@ if (! function_exists('admin_redirect')) {
      *
      * @param  string  $to
      * @param  int  $statusCode
-     * @param  Request  $request
+     * @param  \Illuminate\Http\Request|null  $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
      */
-    function admin_redirect($to, int $statusCode = 302, Request $request = null)
-    {
+    function admin_redirect(
+        string $to,
+        int $statusCode = 302,
+        Request $request = null
+    ): \Illuminate\Http\Response|JsonResponse|Redirector|Application|RedirectResponse|ResponseFactory {
         return Helper::redirect($to, $statusCode, $request);
     }
 }
@@ -576,15 +515,15 @@ if (! function_exists('format_byte')) {
     /**
      * 文件单位换算.
      *
-     * @param $input
+     * @param  int|float  $input
      * @param  int  $dec
      * @return string
      */
-    function format_byte($input, $dec = 0)
+    function format_byte(int|float $input, int $dec = 0): string
     {
         $prefix_arr = ['B', 'KB', 'MB', 'GB', 'TB'];
-        $value = round($input, $dec);
-        $i = 0;
+        $value      = round($input, $dec);
+        $i          = 0;
         while ($value > 1024) {
             $value /= 1024;
             $i++;

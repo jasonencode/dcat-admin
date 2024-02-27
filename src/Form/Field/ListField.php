@@ -147,7 +147,7 @@ class ListField extends Field
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         $value = $this->value();
 

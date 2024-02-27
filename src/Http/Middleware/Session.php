@@ -2,11 +2,12 @@
 
 namespace Dcat\Admin\Http\Middleware;
 
+use Closure;
 use Illuminate\Http\Request;
 
 class Session
 {
-    public function handle(Request $request, \Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         if (! config('admin.route.enable_session_middleware') && ! config('admin.multi_app')) {
             return $next($request);

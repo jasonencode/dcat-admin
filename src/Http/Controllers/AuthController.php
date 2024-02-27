@@ -11,7 +11,6 @@ use Illuminate\Auth\GuardHelpers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -21,15 +20,15 @@ class AuthController extends Controller
     /**
      * @var string
      */
-    protected $view = 'admin::pages.login';
+    protected string $view = 'admin::pages.login';
 
     /**
      * @var string
      */
-    protected $redirectTo;
+    protected string $redirectTo = '';
 
     /**
-     * Show the login page.
+     * 显示登录页面
      *
      * @return Content|\Illuminate\Http\RedirectResponse
      */
@@ -43,20 +42,19 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle a login request.
+     * 登录逻辑
      *
      * @param  Request  $request
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postLogin(Request $request)
     {
         $credentials = $request->only([$this->username(), 'password']);
-        $remember = (bool) $request->input('remember', false);
+        $remember    = (bool) $request->input('remember', false);
 
-        /** @var \Illuminate\Validation\Validator $validator */
         $validator = Validator::make($credentials, [
-            $this->username()   => 'required',
-            'password'          => 'required',
+            $this->username() => 'required',
+            'password'        => 'required|min:5',
         ]);
 
         if ($validator->fails()) {
@@ -75,7 +73,7 @@ class AuthController extends Controller
     /**
      * User logout.
      *
-     * @return Redirect|string
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
      */
     public function getLogout(Request $request)
     {
@@ -92,124 +90,7 @@ class AuthController extends Controller
     }
 
     /**
-     * User setting page.
-     *
-     * @param  Content  $content
-     * @return Content
-     */
-    public function getSetting(Content $content)
-    {
-        $form = $this->settingForm();
-        $form->tools(
-            function (Form\Tools $tools) {
-                $tools->disableList();
-            }
-        );
-
-        return $content
-            ->title(trans('admin.user_setting'))
-            ->body($form->edit(Admin::user()->getKey()));
-    }
-
-    /**
-     * Update user setting.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function putSetting()
-    {
-        $form = $this->settingForm();
-
-        if (! $this->validateCredentialsWhenUpdatingPassword()) {
-            $form->responseValidationMessages('old_password', trans('admin.old_password_error'));
-        }
-
-        return $form->update(Admin::user()->getKey());
-    }
-
-    protected function validateCredentialsWhenUpdatingPassword()
-    {
-        $user = Admin::user();
-
-        $oldPassword = \request('old_password');
-        $newPassword = \request('password');
-
-        if (
-            (! $newPassword)
-            || ($newPassword === $user->getAuthPassword())
-        ) {
-            return true;
-        }
-
-        if (! $oldPassword) {
-            return false;
-        }
-
-        return $this->guard()
-            ->getProvider()
-            ->validateCredentials($user, ['password' => $oldPassword]);
-    }
-
-    /**
-     * Model-form for user setting.
-     *
-     * @return Form
-     */
-    protected function settingForm()
-    {
-        return new Form(new Administrator(), function (Form $form) {
-            $form->action(admin_url('auth/setting'));
-
-            $form->disableCreatingCheck();
-            $form->disableEditingCheck();
-            $form->disableViewCheck();
-
-            $form->tools(function (Form\Tools $tools) {
-                $tools->disableView();
-                $tools->disableDelete();
-            });
-
-            $form->display('username', trans('admin.username'));
-            $form->text('name', trans('admin.name'))->required();
-            $form->image('avatar', trans('admin.avatar'))->autoUpload();
-
-            $form->password('old_password', trans('admin.old_password'));
-
-            $form->password('password', trans('admin.password'))
-                ->minLength(5)
-                ->maxLength(20)
-                ->customFormat(function ($v) {
-                    if ($v == $this->password) {
-                        return;
-                    }
-
-                    return $v;
-                });
-            $form->password('password_confirmation', trans('admin.password_confirmation'))->same('password');
-
-            $form->ignore(['password_confirmation', 'old_password']);
-
-            $form->saving(function (Form $form) {
-                if ($form->password && $form->model()->password != $form->password) {
-                    $form->password = bcrypt($form->password);
-                }
-
-                if (! $form->password) {
-                    $form->deleteInput('password');
-                }
-            });
-
-            $form->saved(function (Form $form) {
-                return $form
-                    ->response()
-                    ->success(trans('admin.update_succeeded'))
-                    ->redirect('auth/setting');
-            });
-        });
-    }
-
-    /**
-     * @return string|\Symfony\Component\Translation\TranslatorInterface
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|\Illuminate\Foundation\Application|string|null
      */
     protected function getFailedLoginMessage()
     {
@@ -232,7 +113,7 @@ class AuthController extends Controller
      * Send the response after the user was authenticated.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     protected function sendLoginResponse(Request $request)
     {
@@ -265,5 +146,97 @@ class AuthController extends Controller
     protected function guard()
     {
         return Admin::guard();
+    }
+
+    public function getSetting(Content $content)
+    {
+        $form = $this->settingForm();
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableList();
+        });
+
+        return $content
+            ->title(trans('admin.user_setting'))
+            ->body($form->edit(Admin::user()->getKey()));
+    }
+
+    public function putSetting()
+    {
+        $form = $this->settingForm();
+
+        if (! $this->validateCredentialsWhenUpdatingPassword()) {
+            $form->responseValidationMessages('old_password', trans('admin.old_password_error'));
+        }
+
+        return $form->update(Admin::user()->getKey());
+    }
+
+    protected function validateCredentialsWhenUpdatingPassword()
+    {
+        $user = Admin::user();
+
+        $oldPassword = request('old_password');
+        $newPassword = request('password');
+
+        if ((! $newPassword) || ($newPassword === $user->getAuthPassword())) {
+            return true;
+        }
+
+        if (! $oldPassword) {
+            return false;
+        }
+
+        return $this->guard()
+            ->getProvider()
+            ->validateCredentials($user, ['password' => $oldPassword]);
+    }
+
+    protected function settingForm()
+    {
+        return new Form(new Administrator(), function (Form $form) {
+            $form->action(admin_url('auth/setting'));
+
+            $form->disableCreatingCheck();
+            $form->disableEditingCheck();
+            $form->disableViewCheck();
+
+            $form->tools(function (Form\Tools $tools) {
+                $tools->disableView();
+                $tools->disableDelete();
+            });
+
+            $form->display('username', trans('admin.username'));
+            $form->text('name', trans('admin.name'))
+                ->required();
+            $form->image('avatar', trans('admin.avatar'))
+                ->autoUpload();
+
+            $form->password('old_password', trans('admin.old_password'));
+
+            $form->password('password', trans('admin.password'))
+                ->minLength(5)
+                ->maxLength(20);
+            $form->password('password_confirmation', trans('admin.password_confirmation'))
+                ->same('password');
+
+            $form->ignore(['password_confirmation', 'old_password']);
+
+            $form->saving(function (Form $form) {
+                if ($form->password && $form->model()->password != $form->password) {
+                    $form->password = bcrypt($form->password);
+                }
+
+                if (! $form->password) {
+                    $form->deleteInput('password');
+                }
+            });
+
+            $form->saved(function (Form $form) {
+                return $form
+                    ->response()
+                    ->success(trans('admin.update_succeeded'))
+                    ->redirect('auth/setting');
+            });
+        });
     }
 }

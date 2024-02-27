@@ -4,5 +4,5 @@ namespace Dcat\Admin\Form\Field;
 
 class TimeRange extends DateRange
 {
-    protected $format = 'HH:mm:ss';
+    protected string $format = 'HH:mm:ss';
 }

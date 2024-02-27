@@ -6,7 +6,7 @@ use Dcat\Admin\Form\Field;
 
 class DateRange extends Field
 {
-    protected $format = 'YYYY-MM-DD';
+    protected string $format = 'YYYY-MM-DD';
 
     protected $column = [];
 
@@ -30,7 +30,7 @@ class DateRange extends Field
         return $value;
     }
 
-    public function render()
+    public function render(): string
     {
         $this->options['locale'] = config('app.locale');
 

@@ -7,9 +7,9 @@ use Dcat\Admin\Tree\RowAction;
 
 class QuickEdit extends RowAction
 {
-    protected $dialogFormDimensions = ['700px', '670px'];
+    protected array $dialogFormDimensions = ['700px', '670px'];
 
-    public function html()
+    public function html(): string
     {
         [$width, $height] = $this->dialogFormDimensions;
 

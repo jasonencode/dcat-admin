@@ -51,7 +51,7 @@ JS;
         Admin::script($script);
     }
 
-    public function display($callback = null)
+    public function display($callback = null): string
     {
         $this->addScript();
 

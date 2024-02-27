@@ -14,7 +14,7 @@ class Decimal extends Text
         'rightAlign' => false,
     ];
 
-    public function render()
+    public function render(): string
     {
         $this->inputmask($this->options);
 

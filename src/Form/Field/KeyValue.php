@@ -102,7 +102,7 @@ class KeyValue extends Field
         return array_combine($value['keys'], $value['values']);
     }
 
-    public function render()
+    public function render(): string
     {
         $value = $this->value();
 

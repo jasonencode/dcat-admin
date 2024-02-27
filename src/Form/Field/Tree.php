@@ -238,7 +238,7 @@ class Tree extends Field
         return Helper::array($value, true);
     }
 
-    public function render()
+    public function render(): string
     {
         $checkboxes = new WidgetCheckbox();
 

@@ -3,6 +3,7 @@
 namespace Dcat\Admin\Http\Controllers;
 
 use Dcat\Admin\Layout\Content;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 
 class AdminController extends Controller
@@ -12,14 +13,14 @@ class AdminController extends Controller
      *
      * @var string
      */
-    protected $title;
+    protected string $title = '';
 
     /**
      * Set description for following 4 action pages.
      *
      * @var array
      */
-    protected $description = [
+    protected array $description = [
         //        'index'  => 'Index',
         //        'show'   => 'Show',
         //        'edit'   => 'Edit',
@@ -31,14 +32,14 @@ class AdminController extends Controller
      *
      * @var string
      */
-    protected $translation;
+    protected string $translation = '';
 
     /**
      * Get content title.
      *
      * @return string
      */
-    protected function title()
+    protected function title(): string
     {
         return $this->title ?: admin_trans_label();
     }
@@ -48,7 +49,7 @@ class AdminController extends Controller
      *
      * @return array
      */
-    protected function description()
+    protected function description(): array
     {
         return $this->description;
     }
@@ -58,7 +59,7 @@ class AdminController extends Controller
      *
      * @return string
      */
-    protected function translation()
+    protected function translation(): string
     {
         return $this->translation;
     }
@@ -69,7 +70,7 @@ class AdminController extends Controller
      * @param  Content  $content
      * @return Content
      */
-    public function index(Content $content)
+    public function index(Content $content): Content
     {
         return $content
             ->translation($this->translation())
@@ -81,11 +82,11 @@ class AdminController extends Controller
     /**
      * Show interface.
      *
-     * @param  mixed  $id
+     * @param  int|string  $id
      * @param  Content  $content
      * @return Content
      */
-    public function show($id, Content $content)
+    public function show(int|string $id, Content $content): Content
     {
         return $content
             ->translation($this->translation())
@@ -97,11 +98,11 @@ class AdminController extends Controller
     /**
      * Edit interface.
      *
-     * @param  mixed  $id
+     * @param  int|string  $id
      * @param  Content  $content
      * @return Content
      */
-    public function edit($id, Content $content)
+    public function edit(int|string $id, Content $content): Content
     {
         return $content
             ->translation($this->translation())
@@ -116,7 +117,7 @@ class AdminController extends Controller
      * @param  Content  $content
      * @return Content
      */
-    public function create(Content $content)
+    public function create(Content $content): Content
     {
         return $content
             ->translation($this->translation())
@@ -128,10 +129,10 @@ class AdminController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int|string  $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update($id)
+    public function update(int|string $id): JsonResponse
     {
         return $this->form()->update($id);
     }
@@ -139,9 +140,9 @@ class AdminController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store()
+    public function store(): JsonResponse
     {
         return $this->form()->store();
     }
@@ -149,10 +150,10 @@ class AdminController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int|string  $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int|string $id): JsonResponse
     {
         return $this->form()->destroy($id);
     }

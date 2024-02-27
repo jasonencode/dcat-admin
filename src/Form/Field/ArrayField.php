@@ -21,7 +21,7 @@ class ArrayField extends HasMany
         $this->columnClass = $this->formatClass($column);
     }
 
-    protected function buildRelatedForms()
+    protected function buildRelatedForms(): array
     {
         if (is_null($this->form)) {
             return [];
@@ -55,7 +55,7 @@ class ArrayField extends HasMany
             ->toArray();
     }
 
-    public function buildNestedForm($key = null)
+    public function buildNestedForm($key = null): NestedForm
     {
         $form = new NestedForm($this->getNestedFormColumnName());
 

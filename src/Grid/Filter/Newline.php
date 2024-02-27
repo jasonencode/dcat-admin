@@ -12,7 +12,7 @@ class Newline extends AbstractFilter
     {
     }
 
-    public function render()
+    public function render(): string
     {
         return '<div class="col-md-12"></div>';
     }

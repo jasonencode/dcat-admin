@@ -55,7 +55,7 @@ class Tools implements Renderable
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         return $this->tools->map([Helper::class, 'render'])->implode(' ');
     }

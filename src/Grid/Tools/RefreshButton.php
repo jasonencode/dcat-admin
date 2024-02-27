@@ -20,10 +20,10 @@ class RefreshButton implements Renderable
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         if (! $this->display) {
-            return;
+            return '';
         }
 
         $refresh = trans('admin.refresh');

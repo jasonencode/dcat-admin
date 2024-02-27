@@ -1002,7 +1002,7 @@ HTML;
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $this->callComposing();
         $this->build();

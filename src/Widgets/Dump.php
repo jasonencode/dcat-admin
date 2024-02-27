@@ -86,7 +86,7 @@ class Dump extends Widget
         }
     }
 
-    public function render()
+    public function render(): string
     {
         $this->defaultHtmlAttribute(
             'style',

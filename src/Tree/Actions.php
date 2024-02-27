@@ -113,7 +113,7 @@ class Actions implements Renderable
         return $this->delete(! $value);
     }
 
-    public function render()
+    public function render(): string
     {
         $this->prependDefaultActions();
 

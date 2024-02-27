@@ -32,7 +32,7 @@ trait HasAuthorization
     /**
      * 返回无权限信息.
      *
-     * @return mixed
+     * @return \Dcat\Admin\Actions\Response|void
      */
     public function failedAuthorization()
     {

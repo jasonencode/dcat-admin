@@ -8,9 +8,9 @@ use Dcat\Admin\Grid\RowAction;
 class QuickEdit extends RowAction
 {
     /**
-     * @return array|null|string
+     * @return string
      */
-    public function title()
+    public function title(): string
     {
         if ($this->title) {
             return $this->title;
@@ -19,7 +19,7 @@ class QuickEdit extends RowAction
         return '<i class="feather icon-edit"></i> '.__('admin.quick_edit').' &nbsp;&nbsp;';
     }
 
-    public function render()
+    public function render(): string
     {
         [$width, $height] = $this->parent->option('dialog_form_area');
 
@@ -38,7 +38,7 @@ class QuickEdit extends RowAction
         return parent::render();
     }
 
-    public function makeSelector()
+    public function makeSelector(): string
     {
         return 'quick-edit';
     }

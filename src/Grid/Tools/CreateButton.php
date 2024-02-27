@@ -55,7 +55,7 @@ class CreateButton implements Renderable
 </a>";
     }
 
-    public function render()
+    public function render(): string
     {
         return $this->grid->tools()->format(
             "{$this->renderCreateButton()}{$this->renderDialogCreateButton()}"

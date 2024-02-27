@@ -52,7 +52,7 @@ class Terminal extends Widget
         return $this;
     }
 
-    public function render()
+    public function render(): string
     {
         $style = static::$style;
 

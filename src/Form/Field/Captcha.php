@@ -20,7 +20,7 @@ class Captcha extends Text
         $this->label = trans('admin.captcha');
     }
 
-    public function setForm($form = null)
+    public function setForm($form = null): static
     {
         parent::setForm($form);
 
@@ -31,7 +31,7 @@ class Captcha extends Text
         return $this;
     }
 
-    public function render()
+    public function render(): string
     {
         $this->addVariables(['captchaSrc' => captcha_src()]);
 

@@ -135,7 +135,7 @@ JS;
     /**
      * {@inheritdoc}
      */
-    public function render()
+    public function render(): string
     {
         $filter = $this->filter();
 
@@ -144,7 +144,7 @@ JS;
         $valueCount = $filter->countConditions();
 
         if ($scopres->isEmpty() && ! $filters) {
-            return;
+            return '';
         }
 
         $this->addScript();

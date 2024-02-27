@@ -695,7 +695,7 @@ class Builder implements FieldsCollection
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $this->removeIgnoreFields();
         $this->removeReservedFields();

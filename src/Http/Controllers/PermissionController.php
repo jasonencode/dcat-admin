@@ -11,12 +11,12 @@ use Illuminate\Support\Str;
 
 class PermissionController extends AdminController
 {
-    protected function title()
+    protected function title(): string
     {
         return trans('admin.permissions');
     }
 
-    public function index(Content $content)
+    public function index(Content $content): Content
     {
         return $content
             ->title($this->title())
@@ -35,7 +35,7 @@ class PermissionController extends AdminController
             $tree->branch(function ($branch) {
                 $branchName = htmlspecialchars($branch['name']);
                 $branchSlug = htmlspecialchars($branch['slug']);
-                $payload = "<div class='pull-left' style='min-width:310px'><b>{$branchName}</b>&nbsp;&nbsp;[<span class='text-primary'>{$branchSlug}</span>]";
+                $payload    = "<div class='pull-left' style='min-width:310px'><b>$branchName</b>&nbsp;&nbsp;[<span class='text-primary'>$branchSlug</span>]";
 
                 $path = array_filter($branch['http_path']);
 
@@ -63,14 +63,14 @@ class PermissionController extends AdminController
 
                     $color = Admin::color()->primaryDarker();
 
-                    return "<code style='color:{$color}'>$path</code>";
+                    return "<code style='color:$color'>$path</code>";
                 })->implode('&nbsp;&nbsp;');
 
                 $method = collect($method ?: ['ANY'])->unique()->map(function ($name) {
-                    return strtoupper($name);
-                })->map(function ($name) {
-                    return "<span class='label bg-primary'>{$name}</span>";
-                })->implode('&nbsp;').'&nbsp;';
+                        return strtoupper($name);
+                    })->map(function ($name) {
+                        return "<span class='label bg-primary'>$name</span>";
+                    })->implode('&nbsp;').'&nbsp;';
 
                 $payload .= "</div>&nbsp; $method<a class=\"dd-nodrag\">$path</a>";
 
@@ -89,7 +89,7 @@ class PermissionController extends AdminController
 
         return Form::make(Permission::with($with), function (Form $form) use ($bindMenu) {
             $permissionTable = config('admin.database.permissions_table');
-            $connection = config('admin.database.connection');
+            $connection      = config('admin.database.connection');
             $permissionModel = config('admin.database.permissions_model');
 
             $id = $form->getKey();
@@ -104,8 +104,8 @@ class PermissionController extends AdminController
 
             $form->text('slug', trans('admin.slug'))
                 ->required()
-                ->creationRules(['required', "unique:{$connection}.{$permissionTable}"])
-                ->updateRules(['required', "unique:{$connection}.{$permissionTable},slug,$id"]);
+                ->creationRules(['required', "unique:$connection.$permissionTable"])
+                ->updateRules(['required', "unique:$connection.$permissionTable,slug,$id"]);
             $form->text('name', trans('admin.name'))->required();
 
             $form->multipleSelect('http_method', trans('admin.http.method'))

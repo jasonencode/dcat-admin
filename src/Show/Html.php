@@ -13,7 +13,7 @@ class Html extends Field
         $this->html = $html;
     }
 
-    public function render()
+    public function render(): string
     {
         return Helper::render($this->html, [$this->value()], $this->parent->model());
     }

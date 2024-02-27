@@ -4,7 +4,7 @@ namespace Dcat\Admin\Form\Field;
 
 class Password extends Text
 {
-    public function render()
+    public function render(): string
     {
         $this->prepend('<i class="feather icon-eye"></i>')
             ->defaultAttribute('type', 'password');

@@ -272,7 +272,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 新增记录.
      *
      * @param  Form  $form
-     * @return mixed
+     * @return int|null
      */
     public function store(Form $form)
     {
@@ -301,7 +301,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 更新数据.
      *
      * @param  Form  $form
-     * @return bool
+     * @return int|null
      */
     public function update(Form $form)
     {
@@ -321,6 +321,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 数据行排序上移一个单位.
      *
      * @return bool
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function moveOrderUp()
     {
@@ -331,6 +332,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 数据行排序下移一个单位.
      *
      * @return bool
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function moveOrderDown()
     {
@@ -341,6 +343,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 删除数据.
      *
      * @param  Form  $form
+     * @param  array  $deletingData
      * @return bool
      */
     public function delete(Form $form, array $deletingData)
@@ -395,6 +398,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 获取父级ID字段名称.
      *
      * @return string
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function getParentColumn()
     {
@@ -405,6 +409,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 获取标题字段名称.
      *
      * @return string
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function getTitleColumn()
     {
@@ -415,6 +420,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 获取排序字段名称.
      *
      * @return string
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function getOrderColumn()
     {
@@ -426,6 +432,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      *
      * @param  array  $tree
      * @param  int  $parentId
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function saveOrder($tree = [], $parentId = 0)
     {
@@ -435,8 +442,9 @@ class QueryBuilderRepository extends Repository implements TreeRepository
     /**
      * 设置数据查询回调.
      *
-     * @param  \Closure|null  $query
+     * @param $queryCallback
      * @return $this
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function withQuery($queryCallback)
     {
@@ -447,6 +455,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 获取层级数据.
      *
      * @return array
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function toTree()
     {

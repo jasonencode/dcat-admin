@@ -215,7 +215,7 @@ class DialogTable extends Widget
         return $this->table;
     }
 
-    public function render()
+    public function render(): string
     {
         $this->addVariables([
             'title'  => $this->title,

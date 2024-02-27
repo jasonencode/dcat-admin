@@ -247,10 +247,10 @@ JS
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         if ($this->built) {
-            return;
+            return '';
         }
         $this->built = true;
 

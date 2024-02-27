@@ -15,8 +15,8 @@ class Exporter
     /**
      * Export scope constants.
      */
-    const SCOPE_ALL = 'all';
-    const SCOPE_CURRENT_PAGE = 'page';
+    const SCOPE_ALL           = 'all';
+    const SCOPE_CURRENT_PAGE  = 'page';
     const SCOPE_SELECTED_ROWS = 'selected';
 
     /**
@@ -235,7 +235,7 @@ class Exporter
     /**
      * @param $method
      * @param $arguments
-     * @return mixed
+     * @return \Dcat\Admin\Grid\Exporter
      */
     public function __call($method, $arguments)
     {

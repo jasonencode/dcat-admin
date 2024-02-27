@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Show;
 
+use Closure;
 use Dcat\Admin\Show;
 use Dcat\Admin\Traits\HasVariables;
 use Illuminate\Contracts\Support\Renderable;
@@ -141,7 +142,7 @@ class Panel implements Renderable
     /**
      * @return $this
      */
-    public function wrap(\Closure $wrapper)
+    public function wrap(Closure $wrapper)
     {
         $this->wrapper = $wrapper;
 
@@ -153,7 +154,7 @@ class Panel implements Renderable
      */
     public function hasWrapper()
     {
-        return $this->wrapper ? true : false;
+        return (bool) $this->wrapper;
     }
 
     /**
@@ -189,7 +190,7 @@ class Panel implements Renderable
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         return $this->doWrap();
     }
