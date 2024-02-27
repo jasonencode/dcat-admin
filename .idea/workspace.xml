@@ -5,8 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="78c2d4cd-abac-4873-8369-14705280d6d6" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/blade.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/blade.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeception.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeception.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dcat-admin.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dcat-admin.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/phpspec.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/phpspec.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Widgets/Metrics/Bar.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Widgets/Metrics/Bar.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Widgets/Metrics/Card.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Widgets/Metrics/Card.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Widgets/Metrics/Donut.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Widgets/Metrics/Donut.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Widgets/Metrics/Line.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Widgets/Metrics/Line.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Widgets/Metrics/RadialBar.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Widgets/Metrics/RadialBar.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Widgets/Metrics/SingleRound.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Widgets/Metrics/SingleRound.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,6 +129,18 @@
       <path value="$PROJECT_DIR$/vendor/ramsey/uuid" />
       <path value="$PROJECT_DIR$/vendor/ramsey/collection" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php83" />
+      <path value="$PROJECT_DIR$/vendor/laravel/prompts" />
+      <path value="$PROJECT_DIR$/vendor/dcat/easy-excel" />
+      <path value="$PROJECT_DIR$/vendor/dcat/laravel-wherehasin" />
+      <path value="$PROJECT_DIR$/vendor/mews/captcha" />
+      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/vendor/carbonphp/carbon-doctrine-types" />
+      <path value="$PROJECT_DIR$/vendor/intervention/image" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/psr/clock" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/vendor/box/spout" />
     </include_path>
   </component>
   <component name="ProjectColorInfo">{
@@ -155,7 +177,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-php-predefined-ba97393d7c68-b4dcf6bb9de9-com.jetbrains.php.sharedIndexes-PS-233.13135.108" />
+        <option value="bundled-php-predefined-ba97393d7c68-6f8e3395a2b4-com.jetbrains.php.sharedIndexes-PS-233.14475.35" />
       </set>
     </attachedChunks>
   </component>
@@ -196,7 +218,8 @@
       <workItem from="1693482247818" duration="3000" />
       <workItem from="1693816760283" duration="1346000" />
       <workItem from="1695273178934" duration="131000" />
-      <workItem from="1703597124057" duration="51000" />
+      <workItem from="1703597124057" duration="209000" />
+      <workItem from="1709013999463" duration="149000" />
     </task>
     <servers />
   </component>

@@ -73,7 +73,7 @@ class Line extends Card
     /**
      * 初始化.
      */
-    protected function init()
+    protected function init(): void
     {
         parent::init();
 
@@ -89,7 +89,7 @@ class Line extends Card
      *
      * @return $this
      */
-    public function chartStraight()
+    public function chartStraight(): static
     {
         return $this->chartOption('stroke.curve', 'straight');
     }
@@ -99,7 +99,7 @@ class Line extends Card
      *
      * @return $this
      */
-    public function chartSmooth()
+    public function chartSmooth(): static
     {
         return $this->chartOption('stroke.curve', 'smooth');
     }
@@ -109,7 +109,7 @@ class Line extends Card
      *
      * @return string
      */
-    public function renderContent()
+    public function renderContent(): string
     {
         $content = parent::renderContent();
 

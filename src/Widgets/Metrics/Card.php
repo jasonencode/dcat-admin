@@ -440,7 +440,7 @@ class Card extends Widget
         // 开启loading效果
         $this->fetching(
             <<<JS
-var \$card = $('#{$id}');
+var \$card = $('#$id');
 \$card.loading();
 JS
         );
@@ -524,7 +524,7 @@ JS;
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $this->setUpChart();
         $this->setUpCardHeight();
