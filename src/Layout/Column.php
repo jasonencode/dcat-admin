@@ -13,22 +13,22 @@ class Column implements Renderable
     /**
      * grid system prefix width.
      *
-     * @var array
+     * @var array|int|null
      */
-    protected $width = [];
+    protected array|int|null $width = [];
 
     /**
      * @var array
      */
-    protected $contents = [];
+    protected array $contents = [];
 
     /**
      * Column constructor.
      *
      * @param $content
-     * @param  int  $width
+     * @param  array|int|null  $width
      */
-    public function __construct($content, $width = 12)
+    public function __construct($content, array|int|null $width = 12)
     {
         $width = $this->normalizeWidth($width);
 
@@ -42,8 +42,7 @@ class Column implements Renderable
         // if null, or $this->width is empty array, set as "md" => "12"
         if (is_null($width) || (is_array($width) && count($width) === 0)) {
             $this->width['md'] = 12;
-        }
-        // $this->width is number(old version), set as "md" => $width
+        } // $this->width is number(old version), set as "md" => $width
         elseif (is_numeric($width)) {
             $this->width['md'] = $width;
         } else {
@@ -51,7 +50,7 @@ class Column implements Renderable
         }
     }
 
-    protected function normalizeWidth($width)
+    protected function normalizeWidth($width): int
     {
         return (int) ($width < 1 ? round(12 * $width) : $width);
     }
@@ -62,7 +61,7 @@ class Column implements Renderable
      * @param $content
      * @return $this
      */
-    public function append($content)
+    public function append($content): static
     {
         $this->contents[] = $content;
 
@@ -75,7 +74,7 @@ class Column implements Renderable
      * @param $content
      * @return Column
      */
-    public function row($content)
+    public function row($content): static
     {
         if (! $content instanceof Closure) {
             $row = new Row($content);
@@ -114,7 +113,7 @@ class Column implements Renderable
      *
      * @return string
      */
-    protected function startColumn()
+    protected function startColumn(): string
     {
         // get class name using width array
         $classnName = collect($this->width)->map(function ($value, $key) {
@@ -129,7 +128,7 @@ class Column implements Renderable
      *
      * @return string
      */
-    protected function endColumn()
+    protected function endColumn(): string
     {
         return '</div>';
     }

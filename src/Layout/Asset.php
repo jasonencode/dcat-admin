@@ -8,11 +8,6 @@ use Illuminate\Support\Str;
 
 class Asset
 {
-    /**
-     * 别名.
-     *
-     * @var array
-     */
     protected array $alias = [
         // Dcat Admin静态资源路径别名
         '@admin' => 'vendor/dcat-admin',
@@ -251,9 +246,9 @@ class Asset
     ];
 
     /**
-     * @var array
+     * @var array|string
      */
-    public array $fonts = [
+    public string|array $fonts = [
         '@nunito',
     ];
 
@@ -291,7 +286,7 @@ class Asset
      * @param  array|string|null  $value
      * @return void|array
      */
-    public function alias(array|string $name, array|string $value = null)
+    public function alias(array|string $name, array|string|null $value = null)
     {
         if (is_array($name)) {
             foreach ($name as $key => $value) {
@@ -343,11 +338,11 @@ class Asset
     }
 
     /**
-     * @param  array  $files
+     * @param  array|string  $files
      * @param  array  $params
      * @return array
      */
-    protected function normalizeAliasPaths($files, array $params)
+    protected function normalizeAliasPaths(array|string $files, array $params): array
     {
         $files = (array) $files;
 
@@ -370,7 +365,7 @@ class Asset
      * @param  string  $name
      * @return array
      */
-    protected function parseParams($name)
+    protected function parseParams(string $name): array
     {
         $name = explode('?', $name);
 
@@ -386,11 +381,11 @@ class Asset
     /**
      * 根据别名设置需要载入的js和css脚本.
      *
-     * @param  string|array  $alias
+     * @param  array|string  $alias
      * @param  array  $params
      * @return void
      */
-    public function require($alias, array $params = [])
+    public function require(array|string $alias, array $params = []): void
     {
         if (is_array($alias)) {
             foreach ($alias as $v) {
@@ -409,9 +404,9 @@ class Asset
     /**
      * 设置需要载入的css脚本.
      *
-     * @param  string|array  $css
+     * @param  array|string|null  $css
      */
-    public function css($css)
+    public function css(array|string|null $css): void
     {
         if (! $css) {
             return;
@@ -428,7 +423,7 @@ class Asset
      * @param  array  $css
      * @param  bool  $merge
      */
-    public function baseCss(array $css, bool $merge = false)
+    public function baseCss(array $css, bool $merge = false): void
     {
         if ($merge) {
             $this->baseCss = array_merge($this->baseCss, $css);
@@ -440,9 +435,9 @@ class Asset
     /**
      * 设置需要载入的js脚本.
      *
-     * @param  string|array  $js
+     * @param  array|string|null  $js
      */
-    public function js($js)
+    public function js(array|string|null $js): void
     {
         if (! $js) {
             return;
@@ -460,7 +455,7 @@ class Asset
      * @param  string  $type
      * @return string|array|null
      */
-    public function get($path, string $type = 'js')
+    public function get(string $path, string $type = 'js'): array|string|null
     {
         if (empty($this->alias[$path])) {
             return $this->url($path);
@@ -485,7 +480,7 @@ class Asset
      * @param  string  $path
      * @return string
      */
-    public function url($path)
+    public function url(string $path): string
     {
         if (! $path) {
             return $path;
@@ -506,7 +501,7 @@ class Asset
      * @param  string|null  $path
      * @return string|null
      */
-    public function getRealPath(?string $path)
+    public function getRealPath(?string $path): ?string
     {
         if (! $this->containsAlias($path)) {
             return $path;
@@ -533,7 +528,7 @@ class Asset
      * @param  mixed  $value
      * @return bool
      */
-    public function isPathAlias($value)
+    public function isPathAlias(mixed $value): bool
     {
         return $this->hasAlias($value) && is_string($this->alias[$value]);
     }
@@ -544,7 +539,7 @@ class Asset
      * @param $value
      * @return bool
      */
-    public function hasAlias($value)
+    public function hasAlias($value): bool
     {
         return isset($this->alias[$value]);
     }
@@ -555,7 +550,7 @@ class Asset
      * @param  string  $value
      * @return bool
      */
-    protected function containsAlias($value)
+    protected function containsAlias(string $value): bool
     {
         return $value && mb_strpos($value, '@') === 0;
     }
@@ -563,9 +558,10 @@ class Asset
     /**
      * 设置在head标签内加载的js.
      *
-     * @param  string|array  $js
+     * @param  array|string|null  $js
+     * @param  bool  $merge
      */
-    public function headerJs($js, bool $merge = true)
+    public function headerJs(array|string|null $js, bool $merge = true): void
     {
         if ($merge) {
             $this->headerJs = $js ? array_merge($this->headerJs, (array) $js) : $this->headerJs;
@@ -580,7 +576,7 @@ class Asset
      * @param  array  $js
      * @param  bool  $merge
      */
-    public function baseJs(array $js, bool $merge = true)
+    public function baseJs(array $js, bool $merge = true): void
     {
         if ($merge) {
             $this->baseJs = array_merge($this->baseJs, $js);
@@ -592,10 +588,10 @@ class Asset
     /**
      * 设置js代码.
      *
-     * @param  string|array  $script
+     * @param  array|string|null  $script
      * @param  bool  $direct
      */
-    public function script($script, bool $direct = false)
+    public function script(array|string|null $script, bool $direct = false): void
     {
         if (! $script) {
             return;
@@ -610,9 +606,9 @@ class Asset
     /**
      * 设置css代码.
      *
-     * @param  string  $style
+     * @param  string|null  $style
      */
-    public function style($style)
+    public function style(?string $style): void
     {
         if (! $style) {
             return;
@@ -623,15 +619,15 @@ class Asset
     /**
      * 字体css脚本路径.
      */
-    protected function addFontCss()
+    protected function addFontCss(): void
     {
         $this->fonts && ($this->baseCss = array_merge(
             $this->baseCss,
-            (array) $this->fonts
+            $this->fonts
         ));
     }
 
-    protected function isPjax()
+    protected function isPjax(): bool
     {
         return request()->pjax();
     }
@@ -639,7 +635,7 @@ class Asset
     /**
      * 合并基础css脚本.
      */
-    protected function mergeBaseCss()
+    protected function mergeBaseCss(): void
     {
         if ($this->isPjax()) {
             return;
@@ -653,7 +649,7 @@ class Asset
     /**
      * @return string
      */
-    public function cssToHtml()
+    public function cssToHtml(): string
     {
         $this->setUpTheme();
 
@@ -661,7 +657,7 @@ class Asset
 
         $html = '';
 
-        foreach (array_unique($this->css) as &$v) {
+        foreach (array_unique($this->css) as $v) {
             if (! $paths = $this->get($v, 'css')) {
                 continue;
             }
@@ -678,7 +674,7 @@ class Asset
      * @param  string  $url
      * @return string
      */
-    public function withVersionQuery($url)
+    public function withVersionQuery(string $url): string
     {
         if (! Str::contains($url, '?')) {
             $url .= '?';
@@ -692,7 +688,7 @@ class Asset
     /**
      * 合并基础js脚本.
      */
-    protected function mergeBaseJs()
+    protected function mergeBaseJs(): void
     {
         if ($this->isPjax()) {
             return;
@@ -704,14 +700,14 @@ class Asset
     /**
      * @return string
      */
-    public function jsToHtml()
+    public function jsToHtml(): string
     {
         $this->mergeBaseJs();
 
         $html = '';
 
-        foreach (array_unique($this->js) as &$v) {
-            if (! $paths = $this->get($v, 'js')) {
+        foreach (array_unique($this->js) as $v) {
+            if (! $paths = $this->get($v)) {
                 continue;
             }
 
@@ -726,12 +722,12 @@ class Asset
     /**
      * @return string
      */
-    public function headerJsToHtml()
+    public function headerJsToHtml(): string
     {
         $html = '';
 
-        foreach (array_unique($this->headerJs) as &$v) {
-            if (! $paths = $this->get($v, 'js')) {
+        foreach (array_unique($this->headerJs) as $v) {
+            if (! $paths = $this->get($v)) {
                 continue;
             }
 
@@ -746,7 +742,7 @@ class Asset
     /**
      * @return string
      */
-    public function scriptToHtml()
+    public function scriptToHtml(): string
     {
         $script       = implode(";\n", array_unique($this->script));
         $directScript = implode(";\n", array_unique($this->directScript));
@@ -774,7 +770,7 @@ HTML;
     /**
      * @return string
      */
-    public function styleToHtml()
+    public function styleToHtml(): string
     {
         $style = implode('', array_unique($this->style));
 

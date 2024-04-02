@@ -21,10 +21,10 @@ trait HasAuthorization
     /**
      * 是否有权限判断.
      *
-     * @param  Model|Authenticatable|HasPermissions|null  $user
+     * @param  Authenticatable|Model|null  $user
      * @return bool
      */
-    protected function authorize($user): bool
+    protected function authorize(Model|Authenticatable|null $user): bool
     {
         return true;
     }
