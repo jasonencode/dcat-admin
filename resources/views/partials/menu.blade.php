@@ -10,7 +10,9 @@
     @if(empty($item['children']))
         <li class="nav-item">
             <a data-id="{{ $item['id'] ?? '' }}"
-               @if(mb_strpos($item['uri'], '://') !== false || (isset($item['target']) && $item['target'] == '_blank')) target="_blank" @endif
+               @if(mb_strpos($item['uri'], '://') !== false || (isset($item['target']) && $item['target'] == '_blank'))
+                   target="_blank"
+               @endif
                href="{{ $builder->getUrl($item['uri']) }}"
                class="nav-link {!! $builder->isActive($item) ? 'active' : '' !!}"
             >
@@ -21,7 +23,6 @@
             </a>
         </li>
     @else
-
         <li class="{{ $horizontal ? 'dropdown' : 'has-treeview' }} {{ $depth > 0 ? 'dropdown-submenu' : '' }} nav-item {{ $builder->isActive($item) ? 'menu-open' : '' }}">
             <a href="#" data-id="{{ $item['id'] ?? '' }}"
                class="nav-link {{ $builder->isActive($item) ? ($horizontal ? 'active' : '') : '' }}
@@ -29,7 +30,6 @@
                 {!! str_repeat('&nbsp;', $depth) !!}<i class="fa fa-fw {{ $item['icon'] ?: $defaultIcon }}"></i>
                 <p>
                     {!! $builder->translate($item['title']) !!}
-
                     @if(! $horizontal)
                         <i class="right fa fa-angle-left"></i>
                     @endif
@@ -40,7 +40,6 @@
                     @php
                         $item['depth'] = $depth + 1;
                     @endphp
-
                     @include('admin::partials.menu', ['item' => $item])
                 @endforeach
             </ul>

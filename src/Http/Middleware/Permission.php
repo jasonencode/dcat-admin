@@ -9,31 +9,29 @@ use Dcat\Admin\Http\Auth\Permission as Checker;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 
 class Permission
 {
     /**
      * @var string
      */
-    protected $middlewarePrefix = 'admin.permission:';
+    protected string $middlewarePrefix = 'admin.permission:';
 
     /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  array  $args
      * @return mixed
      * @throws \Dcat\Admin\Exception\RuntimeException
      */
-    public function handle(Request $request, Closure $next, ...$args)
+    public function handle(Request $request, Closure $next): Response
     {
         $user = Admin::user();
 
         if (
-            ! $user
-            || ! empty($args)
-            || ! config('admin.permission.enable')
+            ! config('admin.permission.enable')
             || $this->shouldPassThrough($request)
             || $user->isAdministrator()
             || $this->checkRoutePermission($request)
@@ -58,7 +56,7 @@ class Permission
      * @return bool
      * @throws \Dcat\Admin\Exception\RuntimeException
      */
-    public function checkRoutePermission(Request $request)
+    public function checkRoutePermission(Request $request): bool
     {
         if (! $middleware = collect($request->route()->middleware())->first(function ($middleware) {
             return Str::startsWith($middleware, $this->middlewarePrefix);
@@ -83,7 +81,7 @@ class Permission
      * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
-    protected function isApiRoute($request)
+    protected function isApiRoute(Request $request): bool
     {
         return $request->routeIs(admin_api_route_name('*'));
     }
@@ -94,7 +92,7 @@ class Permission
      * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
-    public function shouldPassThrough($request)
+    public function shouldPassThrough(Request $request): bool
     {
         if ($this->isApiRoute($request) || Authenticate::shouldPassThrough($request)) {
             return true;

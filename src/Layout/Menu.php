@@ -29,7 +29,7 @@ class Menu
      * @return void
      * @throws \Throwable
      */
-    public function add(array $nodes = [], int $priority = 10)
+    public function add(array $nodes = [], int $priority = 10): void
     {
         admin_inject_section(Admin::SECTION['LEFT_SIDEBAR_MENU_BOTTOM'], function () use (&$nodes) {
             return $this->toHtml($nodes);
@@ -44,7 +44,7 @@ class Menu
      *
      * @throws \Throwable
      */
-    public function toHtml($nodes)
+    public function toHtml(array $nodes): string
     {
         $html = '';
 
@@ -61,7 +61,7 @@ class Menu
      * @param  string  $view
      * @return $this
      */
-    public function view(string $view)
+    public function view(string $view): static
     {
         $this->view = $view;
 
@@ -73,8 +73,9 @@ class Menu
      *
      * @param  array  $item
      * @return string
+     * @throws \Throwable
      */
-    public function render($item)
+    public function render(array $item): string
     {
         return view($this->view, ['item' => &$item, 'builder' => $this])->render();
     }
@@ -86,7 +87,7 @@ class Menu
      * @param  null|string  $path
      * @return bool
      */
-    public function isActive($item, ?string $path = null)
+    public function isActive(array $item, ?string $path = null): bool
     {
         if (empty($path)) {
             $path = request()->path();
@@ -120,7 +121,7 @@ class Menu
      * @param  array  $item
      * @return bool
      */
-    public function visible($item)
+    public function visible(array $item): bool
     {
         if (
             ! $this->checkPermission($item)
@@ -143,7 +144,7 @@ class Menu
      * @param  array|\Dcat\Admin\Models\Menu  $item
      * @return bool
      */
-    protected function userCanSeeMenu($item)
+    protected function userCanSeeMenu(array|\Dcat\Admin\Models\Menu $item): bool
     {
         $user = Admin::user();
 
@@ -160,23 +161,18 @@ class Menu
      * @param $item
      * @return bool
      */
-    protected function checkPermission($item)
+    protected function checkPermission($item): bool
     {
-        $permissionIds = $item['permission_id'] ?? null;
-        $roles = array_column(Helper::array($item['roles'] ?? []), 'slug');
+        $roles       = array_column(Helper::array($item['roles'] ?? []), 'slug');
         $permissions = array_column(Helper::array($item['permissions'] ?? []), 'slug');
-
-        if (! $permissionIds && ! $roles && ! $permissions) {
-            return true;
-        }
 
         $user = Admin::user();
 
-        if (! $user || $user->visible($roles)) {
+        if ($user->visible($roles)) {
             return true;
         }
 
-        foreach (array_merge(Helper::array($permissionIds), $permissions) as $permission) {
+        foreach ($permissions as $permission) {
             if ($user->can($permission)) {
                 return true;
             }
@@ -189,7 +185,7 @@ class Menu
      * @param  string  $text
      * @return string
      */
-    public function translate($text)
+    public function translate(string $text): string
     {
         $titleTranslation = 'menu.titles.'.trim(str_replace(' ', '_', strtolower($text)));
 
@@ -201,10 +197,10 @@ class Menu
     }
 
     /**
-     * @param  string  $uri
-     * @return string
+     * @param  string|null  $uri
+     * @return string|null
      */
-    public function getPath($uri)
+    public function getPath(?string $uri): ?string
     {
         return $uri
             ? (url()->isValidUrl($uri) ? $uri : admin_base_path($uri))
@@ -215,7 +211,7 @@ class Menu
      * @param  string  $uri
      * @return string
      */
-    public function getUrl($uri)
+    public function getUrl(string $uri): string
     {
         return $uri ? admin_url($uri) : $uri;
     }

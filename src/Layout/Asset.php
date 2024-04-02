@@ -13,7 +13,7 @@ class Asset
      *
      * @var array
      */
-    protected $alias = [
+    protected array $alias = [
         // Dcat Admin静态资源路径别名
         '@admin' => 'vendor/dcat-admin',
 
@@ -185,40 +185,40 @@ class Asset
      *
      * @var array
      */
-    public $script = [];
+    public array $script = [];
 
     /**
      * @var array
      */
-    public $directScript = [];
+    public array $directScript = [];
 
     /**
      * css代码.
      *
      * @var array
      */
-    public $style = [];
+    public array $style = [];
 
     /**
      * css脚本路径.
      *
      * @var array
      */
-    public $css = [];
+    public array $css = [];
 
     /**
      * js脚本路径.
      *
      * @var array
      */
-    public $js = [];
+    public array $js = [];
 
     /**
      * 在head标签内加载的js脚本.
      *
      * @var array
      */
-    public $headerJs = [
+    public array $headerJs = [
         'vendors' => '@vendors',
         'dcat'    => '@dcat',
     ];
@@ -228,7 +228,7 @@ class Asset
      *
      * @var array
      */
-    public $baseCss = [
+    public array $baseCss = [
         'adminlte'   => '@adminlte',
         'vendors'    => '@vendors',
         'toastr'     => '@toastr',
@@ -241,7 +241,7 @@ class Asset
      *
      * @var array
      */
-    public $baseJs = [
+    public array $baseJs = [
         'adminlte'  => '@adminlte',
         'toastr'    => '@toastr',
         'pjax'      => '@pjax',
@@ -253,14 +253,14 @@ class Asset
     /**
      * @var array
      */
-    public $fonts = [
+    public array $fonts = [
         '@nunito',
     ];
 
     /**
      * 初始化主题样式.
      */
-    protected function setUpTheme()
+    protected function setUpTheme(): void
     {
         $color = Admin::color()->getName();
 
@@ -287,11 +287,11 @@ class Asset
     /**
      * 设置或获取别名.
      *
-     * @param  string|array  $name
-     * @param  string|array  $value
+     * @param  array|string  $name
+     * @param  array|string|null  $value
      * @return void|array
      */
-    public function alias($name, $value = null)
+    public function alias(array|string $name, array|string $value = null)
     {
         if (is_array($name)) {
             foreach ($name as $key => $value) {
@@ -319,7 +319,7 @@ class Asset
      * @param  array  $params
      * @return array|string
      */
-    public function getAlias($name, array $params = [])
+    public function getAlias(string $name, array $params = []): array|string
     {
         if (mb_strpos($name, '@') !== 0) {
             $name = '@'.$name;

@@ -76,7 +76,7 @@ class Admin
      */
     public static function longVersion(): string
     {
-        return sprintf('Dcat Admin <comment>version</comment> <info>%s</info>', static::VERSION);
+        return sprintf('Jason Admin <comment>version</comment> <info>%s</info>', static::VERSION);
     }
 
     /**
@@ -431,11 +431,10 @@ class Admin
     /**
      * 响应并中断后续逻辑.
      *
-     * @param  array|string|Response  $response
+     * @param  array|string|\Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Support\Renderable  $response
      *
-     * @throws HttpResponseException
      */
-    public static function exit(array|string|Response $response = '')
+    public static function exit(array|string|Response|Renderable $response = '')
     {
         if (is_array($response)) {
             $response = response()->json($response);

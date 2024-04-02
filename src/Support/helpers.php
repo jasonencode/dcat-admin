@@ -483,11 +483,11 @@ if (! function_exists('admin_exit')) {
     /**
      * 响应数据并中断后续逻辑.
      *
-     * @param  array|string|Response  $response
+     * @param  array|string|Response|Renderable  $response
      *
      * @throws \Illuminate\Http\Exceptions\HttpResponseException
      */
-    function admin_exit(array|string|Response $response = ''): void
+    function admin_exit(array|string|Response|Renderable $response = ''): void
     {
         Admin::exit($response);
     }
