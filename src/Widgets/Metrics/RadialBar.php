@@ -154,7 +154,7 @@ class RadialBar extends Card
     /**
      * @return string
      */
-    public function renderFooter()
+    public function renderFooter(): string
     {
         return Helper::render($this->footer);
     }
@@ -162,7 +162,7 @@ class RadialBar extends Card
     /**
      * @return string
      */
-    public function renderContent()
+    public function renderContent(): string
     {
         $content = null;
 

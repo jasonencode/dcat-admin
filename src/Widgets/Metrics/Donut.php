@@ -98,7 +98,7 @@ class Donut extends Card
      *
      * @return string
      */
-    public function renderContent()
+    public function renderContent(): string
     {
         $content = parent::renderContent();
 

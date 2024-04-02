@@ -23,7 +23,7 @@ class SingleRound extends Round
      *
      * @return array
      */
-    protected function defaultChartOptions()
+    protected function defaultChartOptions(): array
     {
         $color = Admin::color();
 

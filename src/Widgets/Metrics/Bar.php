@@ -37,7 +37,7 @@ class Bar extends RadialBar
      *
      * @return array
      */
-    protected function defaultChartOptions()
+    protected function defaultChartOptions(): array
     {
         $color = Admin::color();
 
@@ -94,7 +94,7 @@ class Bar extends RadialBar
      * @param  string  $value
      * @return $this
      */
-    public function chartBarColumnWidth($value)
+    public function chartBarColumnWidth(string $value): static
     {
         return $this->chartOption('plotOptions.bar.columnWidth', $value);
     }
