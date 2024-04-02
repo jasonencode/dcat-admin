@@ -163,10 +163,14 @@ class Menu
      */
     protected function checkPermission($item): bool
     {
+        $user = Admin::user();
+
+        if ($user->isAdministrator()) {
+            return true;
+        }
+
         $roles       = array_column(Helper::array($item['roles'] ?? []), 'slug');
         $permissions = array_column(Helper::array($item['permissions'] ?? []), 'slug');
-
-        $user = Admin::user();
 
         if ($user->visible($roles)) {
             return true;
