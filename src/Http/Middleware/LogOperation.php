@@ -25,7 +25,7 @@ class LogOperation
     ];
 
     protected array $defaultAllowedMethods = [
-        'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH',
+        'POST', 'PUT', 'DELETE',
     ];
 
     /**
@@ -50,7 +50,7 @@ class LogOperation
             ];
 
             try {
-               Operation::create($log);
+                Operation::create($log);
             } catch (Exception) {
             }
         }
