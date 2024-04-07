@@ -10,9 +10,10 @@ class Operation extends Model
 {
     use HasDateTimeFormatter;
 
+    const UPDATED_AT = null;
+
     public static array $methods = [
-        'GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH',
-        'LINK', 'UNLINK', 'COPY', 'HEAD', 'PURGE',
+        'POST', 'PUT', 'DELETE',
     ];
 
     protected $guarded = [];
