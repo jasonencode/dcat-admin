@@ -8,7 +8,7 @@ use Illuminate\Contracts\Support\Renderable;
 
 class DialogTable extends Widget
 {
-    protected $view = 'admin::widgets.dialogtable';
+    protected string $view = 'admin::widgets.dialogtable';
 
     /**
      * @var string

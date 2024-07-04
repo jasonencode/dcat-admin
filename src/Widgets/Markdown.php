@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class Markdown extends Widget
 {
-    protected $view = 'admin::widgets.markdown';
+    protected string $view = 'admin::widgets.markdown';
 
     /**
      * @var string|Renderable
@@ -20,7 +20,7 @@ class Markdown extends Widget
      *
      * @var array
      */
-    protected $options = [
+    protected array $options = [
         'htmlDecode'      => 'style,script,iframe',
         'emoji'           => true,
         'taskList'        => true,

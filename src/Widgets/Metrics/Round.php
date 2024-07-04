@@ -15,7 +15,7 @@ class Round extends RadialBar
     /**
      * @var array
      */
-    protected $options = [
+    protected array $options = [
         'icon'     => null,
         'title'    => null,
         'header'   => null,

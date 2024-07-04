@@ -6,8 +6,8 @@ use Illuminate\Contracts\Support\Renderable;
 
 class Alert extends Widget
 {
-    protected $view = 'admin::widgets.alert';
-    protected $title;
+    protected string $view = 'admin::widgets.alert';
+    protected        $title;
     protected $content;
     protected $style;
     protected $icon;
@@ -135,7 +135,7 @@ class Alert extends Widget
     /**
      * @return array
      */
-    public function defaultVariables()
+    public function defaultVariables(): array
     {
         $this->class("alert alert-{$this->style} alert-dismissable");
 

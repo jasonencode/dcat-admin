@@ -8,28 +8,22 @@ use Dcat\Admin\Traits\InteractsWithApi;
 use Dcat\Admin\Widgets\Widget;
 use Illuminate\Support\Str;
 
-/**
- * Class Chart.
- *
- *
- * @see https://apexcharts.com/
- */
 class Chart extends Widget
 {
     use InteractsWithApi;
 
-    public static $js = [
+    public static array $js = [
         '@apex-charts',
     ];
 
     protected $containerSelector;
 
-    protected $built = false;
+    protected bool $built = false;
 
     public function __construct($selector = null, $options = [])
     {
         if ($selector && ! is_string($selector)) {
-            $options = $selector;
+            $options  = $selector;
             $selector = null;
         }
 
@@ -42,9 +36,9 @@ class Chart extends Widget
      * 设置或获取图表容器选择器.
      *
      * @param  string|null  $selector
-     * @return $this|string|null
+     * @return $this
      */
-    public function selector(?string $selector = null)
+    public function selector(?string $selector = null): static
     {
         if ($selector === null) {
             return $this->containerSelector;
@@ -60,10 +54,10 @@ class Chart extends Widget
     }
 
     /**
-     * @param  string|array  $title
+     * @param  array|string  $title
      * @return $this
      */
-    public function title($title)
+    public function title(array|string $title): static
     {
         if (is_string($title)) {
             $options = ['text' => $title];
@@ -80,7 +74,7 @@ class Chart extends Widget
      * @param  array  $series
      * @return $this
      */
-    public function series($series)
+    public function series(array $series): static
     {
         $this->options['series'] = Helper::array($series);
 
@@ -91,7 +85,7 @@ class Chart extends Widget
      * @param  array  $value
      * @return $this
      */
-    public function labels($value)
+    public function labels(array $value): static
     {
         $this->options['labels'] = Helper::array($value);
 
@@ -99,10 +93,10 @@ class Chart extends Widget
     }
 
     /**
-     * @param  string|array  $colors
+     * @param  array|string  $colors
      * @return $this
      */
-    public function colors($colors)
+    public function colors(array|string $colors): static
     {
         $this->options['colors'] = Helper::array($colors);
 
@@ -113,7 +107,7 @@ class Chart extends Widget
      * @param  array  $value
      * @return $this
      */
-    public function stroke($value)
+    public function stroke(array $value): static
     {
         $this->options['stroke'] = Helper::array($value);
 
@@ -124,7 +118,7 @@ class Chart extends Widget
      * @param  array  $value
      * @return $this
      */
-    public function xaxis($value)
+    public function xaxis(array $value): static
     {
         $this->options['xaxis'] = Helper::array($value);
 
@@ -135,7 +129,7 @@ class Chart extends Widget
      * @param  array  $value
      * @return $this
      */
-    public function tooltip($value)
+    public function tooltip(array $value): static
     {
         $this->options['tooltip'] = Helper::array($value);
 
@@ -146,7 +140,7 @@ class Chart extends Widget
      * @param  array  $value
      * @return $this
      */
-    public function yaxis($value)
+    public function yaxis(array $value): static
     {
         $this->options['yaxis'] = Helper::array($value);
 
@@ -157,7 +151,7 @@ class Chart extends Widget
      * @param  array  $value
      * @return $this
      */
-    public function fill($value)
+    public function fill(array $value): static
     {
         $this->options['fill'] = Helper::array($value);
 
@@ -168,7 +162,7 @@ class Chart extends Widget
      * @param  array  $value
      * @return $this
      */
-    public function chart($value)
+    public function chart(array $value): static
     {
         $this->options['chart'] = Helper::array($value);
 
@@ -176,10 +170,10 @@ class Chart extends Widget
     }
 
     /**
-     * @param  array|bool  $value
+     * @param  bool|array  $value
      * @return $this
      */
-    public function dataLabels($value)
+    public function dataLabels(bool|array $value): static
     {
         if (is_bool($value)) {
             $value = ['enabled' => $value];
@@ -193,16 +187,16 @@ class Chart extends Widget
     /**
      * @return string
      */
-    protected function buildDefaultScript()
+    protected function buildDefaultScript(): string
     {
         $options = JavaScript::format($this->options);
 
         return <<<JS
 (function () {
-    var options = {$options};
+    var options = $options;
 
     var chart = new ApexCharts(
-        $("{$this->containerSelector}")[0], 
+        $("$this->containerSelector")[0], 
         options
     );
     chart.render();
@@ -213,7 +207,7 @@ JS;
     /**
      * @return string
      */
-    public function addScript()
+    public function addScript(): string
     {
         if (! $this->allowBuildRequest()) {
             return $this->script = $this->buildDefaultScript();
@@ -225,7 +219,7 @@ if (! response.status) {
     return Dcat.error(response.message || 'Server internal error.');
 }
 
-var chartBox = $(response.selector || '{$this->containerSelector}');
+var chartBox = $(response.selector || '$this->containerSelector');
 
 if (chartBox.length) {
     chartBox.html('');
@@ -246,6 +240,7 @@ JS
 
     /**
      * @return string
+     * @throws \Throwable
      */
     public function render(): string
     {
@@ -257,9 +252,9 @@ JS
         return parent::render();
     }
 
-    public function html()
+    public function html(): string
     {
-        $hasSelector = $this->containerSelector ? true : false;
+        $hasSelector = (bool) $this->containerSelector;
 
         if (! $hasSelector) {
             // 没有指定ID，需要自动生成
@@ -271,7 +266,7 @@ JS
         $this->addScript();
 
         if ($hasSelector) {
-            return;
+            return '';
         }
 
         // 没有指定容器选择器，则需自动生成
@@ -289,7 +284,7 @@ HTML;
      *
      * @return array
      */
-    public function valueResult()
+    public function valueResult(): array
     {
         return [
             'status'   => 1,
@@ -303,11 +298,11 @@ HTML;
      *
      * @return string
      */
-    protected function formatScriptOptions()
+    protected function formatScriptOptions(): string
     {
         $code = JavaScript::format($this->options);
 
-        return "response.options = {$code}";
+        return "response.options = $code";
     }
 
     /**
@@ -315,7 +310,7 @@ HTML;
      *
      * @return string
      */
-    protected function generateId()
+    protected function generateId(): string
     {
         return 'apex-chart-'.Str::random(8);
     }

@@ -9,8 +9,8 @@ use Illuminate\Support\Str;
 
 class Card extends Widget
 {
-    protected $view = 'admin::widgets.card';
-    protected $title;
+    protected string $view = 'admin::widgets.card';
+    protected        $title;
     protected $content;
     protected $footer;
     protected $tools = [];
@@ -109,7 +109,7 @@ class Card extends Widget
     /**
      * {@inheritdoc}
      */
-    public function defaultVariables()
+    public function defaultVariables(): array
     {
         return [
             'title'      => $this->title,

@@ -13,7 +13,7 @@ class Tab extends Widget
     /**
      * @var string
      */
-    protected $view = 'admin::widgets.tab';
+    protected string $view = 'admin::widgets.tab';
 
     /**
      * @var array

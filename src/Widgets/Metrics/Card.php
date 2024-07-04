@@ -18,7 +18,7 @@ class Card extends Widget
     /**
      * @var string
      */
-    protected $view = 'admin::widgets.metrics.card';
+    protected string $view = 'admin::widgets.metrics.card';
 
     /**
      * 图标.

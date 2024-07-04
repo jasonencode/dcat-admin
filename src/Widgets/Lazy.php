@@ -52,7 +52,7 @@ Dcat.init('{$this->getElementSelector()}', function (target) {
 JS;
     }
 
-    public function html()
+    public function html(): string
     {
         $this->addScript();
 

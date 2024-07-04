@@ -7,7 +7,7 @@ class Code extends Markdown
     /**
      * @var string
      */
-    protected $lang = 'php';
+    protected string $lang = 'php';
 
     /**
      * @param  string  $content

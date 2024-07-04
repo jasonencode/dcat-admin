@@ -14,7 +14,7 @@ class Dropdown extends Widget
      */
     protected static $dividerHtml = '<li class="dropdown-divider"></li>';
 
-    protected $view = 'admin::widgets.dropdown';
+    protected string $view = 'admin::widgets.dropdown';
 
     /**
      * @var array
@@ -62,7 +62,7 @@ class Dropdown extends Widget
      * @param  string|null  $title
      * @return $this
      */
-    public function options($options = [], ?string $title = null)
+    public function options(array $options = [], ?string $title = null): static
     {
         if (! $options) {
             return $this;

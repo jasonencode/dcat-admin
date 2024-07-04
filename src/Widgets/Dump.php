@@ -9,12 +9,12 @@ class Dump extends Widget
     /**
      * @var string
      */
-    protected $padding = '10px';
+    protected string $padding = '10px';
 
     /**
      * @var string
      */
-    protected $content = '';
+    protected string $content = '';
 
     protected $maxWidth;
 

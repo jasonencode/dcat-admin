@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class LazyTable extends Widget
 {
-    public static $js = [
+    public static array $js = [
         '@grid-extension',
     ];
 
@@ -153,7 +153,7 @@ JS;
         return parent::render();
     }
 
-    public function html()
+    public function html(): string
     {
         $this->setHtmlAttribute([
             'data-url' => $this->renderable->getUrl(),

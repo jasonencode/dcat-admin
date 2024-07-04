@@ -10,22 +10,22 @@ class Table extends Widget
     /**
      * @var string
      */
-    protected $view = 'admin::widgets.table';
+    protected string $view = 'admin::widgets.table';
 
     /**
      * @var array
      */
-    protected $headers = [];
+    protected array $headers = [];
 
     /**
      * @var array
      */
-    protected $rows = [];
+    protected array $rows = [];
 
     /**
      * @var int
      */
-    protected $depth = 0;
+    protected int $depth = 0;
 
     /**
      * Table constructor.
@@ -33,11 +33,12 @@ class Table extends Widget
      * @param  array  $headers
      * @param  mixed  $rows
      * @param  array  $style
+     * @throws \Throwable
      */
-    public function __construct($headers = [], $rows = false, $style = [])
+    public function __construct(array $headers = [], mixed $rows = false, array $style = [])
     {
         if ($rows === false) {
-            $rows = $headers;
+            $rows    = $headers;
             $headers = [];
         }
 
@@ -54,7 +55,7 @@ class Table extends Widget
      * @param  array  $headers
      * @return $this
      */
-    public function setHeaders($headers = [])
+    public function setHeaders(array $headers = []): static
     {
         $this->headers = $headers;
 
@@ -65,7 +66,7 @@ class Table extends Widget
      * @param  int  $depth
      * @return $this
      */
-    public function depth(int $depth)
+    public function depth(int $depth): static
     {
         $this->depth = $depth;
 
@@ -77,8 +78,9 @@ class Table extends Widget
      *
      * @param  array  $rows
      * @return $this
+     * @throws \Throwable
      */
-    public function setRows($rows = [])
+    public function setRows(array $rows = []): static
     {
         if ($rows && ! Arr::isAssoc(Helper::array($rows, false))) {
             $this->rows = $rows;
@@ -119,10 +121,10 @@ class Table extends Widget
      * @param  array  $style
      * @return $this
      */
-    public function setStyle($style = [])
+    public function setStyle(array $style = []): static
     {
         if ($style) {
-            $this->class(implode(' ', (array) $style), true);
+            $this->class(implode(' ', $style), true);
         }
 
         return $this;
@@ -132,6 +134,7 @@ class Table extends Widget
      * Render the table.
      *
      * @return string
+     * @throws \Throwable
      */
     public function render(): string
     {
@@ -147,7 +150,7 @@ class Table extends Widget
     /**
      * @return $this
      */
-    public function withBorder()
+    public function withBorder(): static
     {
         $this->class('table-bordered', true);
 

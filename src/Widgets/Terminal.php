@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 
 class Terminal extends Widget
 {
-    protected static $style = '.dump info{color: #21b978;}.dump warning{color: #ffcc80}.dump comment{color: rgba(255, 189, 74, .8);}.dump error{color: #ff5b5b}';
+    protected static string $style = '.dump info{color: #21b978;}.dump warning{color: #ffcc80}.dump comment{color: rgba(255, 189, 74, .8);}.dump error{color: #ff5b5b}';
 
     protected $content;
 

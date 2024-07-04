@@ -26,43 +26,43 @@ abstract class Widget implements Renderable
     /**
      * @var array
      */
-    public static $css = [];
+    public static array $css = [];
 
     /**
      * @var array
      */
-    public static $js = [];
+    public static array $js = [];
 
     /**
      * @var string
      */
-    protected $view;
+    protected string $view = '';
 
     /**
      * @var string
      */
-    protected $script = '';
+    protected string $script = '';
 
     /**
      * @var array
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * @var string
      */
-    protected $elementClass;
+    protected string $elementClass = '';
 
     /**
      * @var bool
      */
-    protected $runScript = true;
+    protected bool $runScript = true;
 
     /**
      * @param  mixed  ...$params
      * @return static
      */
-    public static function make(...$params)
+    public static function make(...$params): static
     {
         return new static(...$params);
     }
@@ -72,9 +72,9 @@ abstract class Widget implements Renderable
      *
      * @param  mixed  $value
      * @param  callable  $callback
-     * @return $this|mixed
+     * @return mixed
      */
-    public function when($value, $callback)
+    public function when(mixed $value, callable $callback): mixed
     {
         if ($value) {
             return $callback($this, $value) ?: $this;
@@ -89,7 +89,7 @@ abstract class Widget implements Renderable
      * @param  array  $options
      * @return $this
      */
-    public function options($options = [])
+    public function options(array $options = []): static
     {
         if ($options instanceof Arrayable) {
             $options = $options->toArray();
@@ -104,10 +104,10 @@ abstract class Widget implements Renderable
      * 设置或获取配置选项.
      *
      * @param  string  $key
-     * @param  mixed  $value
+     * @param  mixed|null  $value
      * @return $this
      */
-    public function option($key, $value = null)
+    public function option(string $key, mixed $value = null): static
     {
         if ($value === null) {
             return Arr::get($this->options, $key);
@@ -123,7 +123,7 @@ abstract class Widget implements Renderable
      *
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -133,7 +133,7 @@ abstract class Widget implements Renderable
      *
      * @return array
      */
-    public function defaultVariables()
+    public function defaultVariables(): array
     {
         return [
             'attributes' => $this->formatHtmlAttributes(),
@@ -146,7 +146,7 @@ abstract class Widget implements Renderable
     /**
      * 收集静态资源.
      */
-    public static function requireAssets()
+    public static function requireAssets(): void
     {
         static::$js && Admin::js(static::$js);
         static::$css && Admin::css(static::$css);
@@ -155,7 +155,7 @@ abstract class Widget implements Renderable
     /**
      * 运行JS.
      */
-    protected function withScript()
+    protected function withScript(): void
     {
         if ($this->runScript && $this->script) {
             Admin::script($this->script);
@@ -166,13 +166,14 @@ abstract class Widget implements Renderable
      * @param $value
      * @return string
      */
-    protected function toString($value)
+    protected function toString($value): string
     {
         return Helper::render($value);
     }
 
     /**
      * @return string
+     * @throws \Throwable
      */
     public function render(): string
     {
@@ -192,7 +193,7 @@ abstract class Widget implements Renderable
      *
      * @return string
      */
-    public function getElementSelector()
+    public function getElementSelector(): string
     {
         return '.'.$this->getElementClass();
     }
@@ -201,7 +202,7 @@ abstract class Widget implements Renderable
      * @param  string  $elementClass
      * @return $this
      */
-    public function setElementClass(string $elementClass)
+    public function setElementClass(string $elementClass): static
     {
         $this->elementClass = $elementClass;
 
@@ -209,9 +210,9 @@ abstract class Widget implements Renderable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getElementClass()
+    public function getElementClass(): string
     {
         return $this->elementClass ?: str_replace('\\', '_', static::class);
     }
@@ -220,11 +221,12 @@ abstract class Widget implements Renderable
      * 渲染HTML.
      *
      * @return string
+     * @throws \Throwable
      */
-    public function html()
+    public function html(): string
     {
         if (! $this->view) {
-            return;
+            return '';
         }
 
         $result = Admin::resolveHtml(view($this->view, $this->variables()), ['runScript' => $this->runScript]);
@@ -239,7 +241,7 @@ abstract class Widget implements Renderable
      *
      * @return void
      */
-    protected function autoRender()
+    protected function autoRender(): void
     {
         Content::composed(function () {
             if ($results = Helper::render($this->render())) {
@@ -253,7 +255,7 @@ abstract class Widget implements Renderable
      *
      * @param  string  $view
      */
-    public function view($view)
+    public function view(string $view): void
     {
         $this->view = $view;
     }
@@ -264,7 +266,7 @@ abstract class Widget implements Renderable
      * @param  bool  $run
      * @return $this
      */
-    public function runScript(bool $run = true)
+    public function runScript(bool $run = true): static
     {
         $this->runScript = $run;
 
@@ -274,7 +276,7 @@ abstract class Widget implements Renderable
     /**
      * @return string
      */
-    public function getScript()
+    public function getScript(): string
     {
         return $this->script;
     }
@@ -283,7 +285,7 @@ abstract class Widget implements Renderable
      * @param  mixed  $content
      * @return Lazy|LazyTable|mixed
      */
-    protected function formatRenderable($content)
+    protected function formatRenderable(mixed $content): mixed
     {
         if ($content instanceof LazyGrid) {
             return LazyTable::make($content);
@@ -304,8 +306,8 @@ abstract class Widget implements Renderable
     public function __call($method, $parameters)
     {
         if ($method === 'style' || $method === 'class') {
-            $value = $parameters[0] ?? null;
-            $append = $parameters[1] ?? ($method === 'class' ? false : true);
+            $value  = $parameters[0] ?? null;
+            $append = $parameters[1] ?? ! ($method === 'class');
 
             if (is_array($value)) {
                 $value = implode(' ', $value);
@@ -337,7 +339,7 @@ abstract class Widget implements Renderable
      * @param  string  $key
      * @return mixed
      */
-    public function __get($key)
+    public function __get(string $key)
     {
         return $this->htmlAttributes[$key] ?? null;
     }
@@ -347,15 +349,16 @@ abstract class Widget implements Renderable
      * @param  mixed  $value
      * @return void
      */
-    public function __set($key, $value)
+    public function __set(string $key, mixed $value)
     {
         $this->htmlAttributes[$key] = $value;
     }
 
     /**
-     * @return mixed
+     * @return string
+     * @throws \Throwable
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->render();
     }

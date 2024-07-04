@@ -25,14 +25,14 @@ class Donut extends Card
      *
      * @var array
      */
-    protected $contentWidth = [6, 6];
+    protected array $contentWidth = [6, 6];
 
     /**
      * 趋势图图表默认配置.
      *
      * @return array
      */
-    protected function defaultChartOptions()
+    protected function defaultChartOptions(): array
     {
         $color = Admin::color();
 
@@ -68,7 +68,7 @@ class Donut extends Card
     /**
      * 初始化.
      */
-    protected function init()
+    protected function init(): void
     {
         parent::init();
 
@@ -86,7 +86,7 @@ class Donut extends Card
      * @param  int  $right
      * @return $this
      */
-    public function contentWidth(int $left, int $right)
+    public function contentWidth(int $left, int $right): static
     {
         $this->contentWidth = [$left, $right];
 

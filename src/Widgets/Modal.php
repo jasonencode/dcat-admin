@@ -365,7 +365,7 @@ JS
         return $this->renderButton();
     }
 
-    public function html()
+    public function html(): string
     {
         return <<<HTML
 <div {$this->formatHtmlAttributes()} role="dialog">
@@ -383,12 +383,12 @@ JS
 HTML;
     }
 
-    protected function renderTitle()
+    protected function renderTitle(): string
     {
         return Helper::render($this->title);
     }
 
-    protected function renderContent()
+    protected function renderContent(): string
     {
         return Helper::render($this->content);
     }

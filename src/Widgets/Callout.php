@@ -6,8 +6,8 @@ use Illuminate\Contracts\Support\Renderable;
 
 class Callout extends Widget
 {
-    protected $view = 'admin::widgets.alert';
-    protected $title;
+    protected string $view = 'admin::widgets.alert';
+    protected        $title;
     protected $content;
     protected $style = 'default';
     protected $showCloseBtn = false;
@@ -134,7 +134,7 @@ class Callout extends Widget
     /**
      * @return array
      */
-    public function defaultVariables()
+    public function defaultVariables(): array
     {
         $this->class("callout callout-{$this->style} alert alert-dismissable");
 

@@ -7,8 +7,8 @@ use Illuminate\Contracts\Support\Renderable;
 
 class Box extends Widget
 {
-    protected $view = 'admin::widgets.box';
-    protected $title = 'Box header';
+    protected string $view  = 'admin::widgets.box';
+    protected        $title = 'Box header';
     protected $content = 'here is the box content.';
     protected $tools = [];
     protected $padding;
@@ -137,7 +137,7 @@ class Box extends Widget
      *
      * @return array
      */
-    public function defaultVariables()
+    public function defaultVariables(): array
     {
         return [
             'title'      => $this->title,

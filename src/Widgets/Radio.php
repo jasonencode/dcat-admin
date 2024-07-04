@@ -6,8 +6,8 @@ use Illuminate\Contracts\Support\Arrayable;
 
 class Radio extends Widget
 {
-    protected $view = 'admin::widgets.radio';
-    protected $type = 'radio';
+    protected string $view = 'admin::widgets.radio';
+    protected        $type = 'radio';
     protected $style = 'primary';
     protected $right = '16px';
     protected $checked;
@@ -119,7 +119,7 @@ class Radio extends Widget
      * @param  array  $opts
      * @return $this
      */
-    public function options($opts = [])
+    public function options($opts = []): static
     {
         if ($opts instanceof Arrayable) {
             $opts = $opts->toArray();
@@ -147,7 +147,7 @@ class Radio extends Widget
     /**
      * @return array
      */
-    public function defaultVariables()
+    public function defaultVariables(): array
     {
         return [
             'style'      => $this->style,
