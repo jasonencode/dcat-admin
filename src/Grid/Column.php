@@ -776,18 +776,18 @@ class Column
      * Allow fluent calls on the Column object.
      *
      * @param  string  $method
-     * @param  array  $arguments
+     * @param  array  $parameters
      * @return $this
      */
-    public function __call($method, $arguments)
+    public function __call($method, $parameters)
     {
         if (
             ! isset(static::$displayers[$method])
             && static::hasMacro($method)
         ) {
-            return $this->__macroCall($method, $arguments);
+            return $this->__macroCall($method, $parameters);
         }
 
-        return $this->resolveDisplayer($method, $arguments);
+        return $this->resolveDisplayer($method, $parameters);
     }
 }

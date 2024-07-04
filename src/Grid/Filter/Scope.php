@@ -88,12 +88,12 @@ class Scope implements Renderable
 
     /**
      * @param  string  $method
-     * @param  array  $arguments
+     * @param  array  $parameters
      * @return $this
      */
-    public function __call($method, $arguments)
+    public function __call($method, $parameters)
     {
-        $this->queries->push(compact('method', 'arguments'));
+        $this->queries->push(compact('method', 'parameters'));
 
         return $this;
     }

@@ -608,20 +608,20 @@ HTML;
 
     /**
      * @param  string  $method
-     * @param  array  $arguments
+     * @param  array  $parameters
      * @return $this
      */
-    public function __call($method, $arguments = [])
+    public function __call($method, $parameters = [])
     {
         if ($class = Arr::get(static::$extendedFields, $method)) {
-            return $this->callExtendedField($class, $arguments);
+            return $this->callExtendedField($class, $parameters);
         }
 
         if (static::hasMacro($method)) {
-            return $this->macroCall($method, $arguments);
+            return $this->macroCall($method, $parameters);
         }
 
-        return $this->callSupportDisplayer($method, $arguments);
+        return $this->callSupportDisplayer($method, $parameters);
     }
 
     /**

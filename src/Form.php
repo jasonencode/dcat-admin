@@ -1797,19 +1797,19 @@ class Form implements Renderable
      * Generate a Field object and add to form builder if Field exists.
      *
      * @param  string  $method
-     * @param  array  $arguments
+     * @param  array  $parameters
      * @return Field
      */
-    public function __call($method, $arguments)
+    public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {
-            return $this->macroCall($method, $arguments);
+            return $this->macroCall($method, $parameters);
         }
 
         if ($className = static::findFieldClass($method)) {
-            $column = Arr::get($arguments, 0, '');
+            $column = Arr::get($parameters, 0, '');
 
-            $element = new $className($column, array_slice($arguments, 1));
+            $element = new $className($column, array_slice($parameters, 1));
 
             $this->pushField($element);
 

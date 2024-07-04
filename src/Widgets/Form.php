@@ -905,15 +905,15 @@ JS
      * Generate a Field object and add to form builder if Field exists.
      *
      * @param  string  $method
-     * @param  array  $arguments
+     * @param  array  $parameters
      * @return Field|null
      */
-    public function __call($method, $arguments)
+    public function __call($method, $parameters)
     {
         if ($className = static::findFieldClass($method)) {
-            $name = Arr::get($arguments, 0, '');
+            $name = Arr::get($parameters, 0, '');
 
-            $element = new $className($name, array_slice($arguments, 1));
+            $element = new $className($name, array_slice($parameters, 1));
 
             $this->pushField($element);
 
@@ -921,7 +921,7 @@ JS
         }
 
         if (static::hasMacro($method)) {
-            return $this->macroCall($method, $arguments);
+            return $this->macroCall($method, $parameters);
         }
 
         throw new RuntimeException("Field [{$method}] does not exist.");

@@ -1083,16 +1083,16 @@ JS
      * Dynamically add columns to the grid view.
      *
      * @param $method
-     * @param $arguments
+     * @param $parameters
      * @return Column
      */
-    public function __call($method, $arguments)
+    public function __call($method, $parameters)
     {
         if (static::hasMacro($method)) {
-            return $this->macroCall($method, $arguments);
+            return $this->macroCall($method, $parameters);
         }
 
-        return $this->addColumn($method, $arguments[0] ?? null);
+        return $this->addColumn($method, $parameters[0] ?? null);
     }
 
     public function __toString()

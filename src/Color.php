@@ -328,14 +328,14 @@ class Color
      * 获取颜色.
      *
      * @param  string  $method
-     * @param  array  $arguments
+     * @param  array  $parameters
      * @return string
      */
-    public function __call($method, $arguments = [])
+    public function __call($method, $parameters = [])
     {
         return $this->darken(
             Helper::slug($method),
-            $arguments[0] ?? 0
+            $parameters[0] ?? 0
         );
     }
 

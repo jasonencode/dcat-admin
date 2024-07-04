@@ -28,8 +28,8 @@ class Show implements Renderable
 {
     use HasBuilderEvents;
     use Macroable {
-            __call as macroCall;
-        }
+        __call as macroCall;
+    }
 
     /**
      * @var string
@@ -37,14 +37,14 @@ class Show implements Renderable
     protected string $view = 'admin::show.container';
 
     /**
-     * @var Repository
+     * @var Repository|null
      */
-    protected $repository;
+    protected ?Repository $repository = null;
 
     /**
      * @var mixed
      */
-    protected $_id;
+    protected mixed $_id = '';
 
     /**
      * @var string
@@ -52,9 +52,9 @@ class Show implements Renderable
     protected string $keyName = 'id';
 
     /**
-     * @var Fluent
+     * @var Fluent|null
      */
-    protected $model;
+    protected ?Fluent $model = null;
 
     /**
      * Show panel builder.
@@ -68,39 +68,40 @@ class Show implements Renderable
      *
      * @var string
      */
-    protected $resource;
+    protected string $resource = '';
 
     /**
      * Fields to be show.
      *
-     * @var Collection
+     * @var ?Collection
      */
-    protected $fields;
+    protected ?Collection $fields = null;
 
     /**
      * Relations to be show.
      *
-     * @var Collection
+     * @var ?Collection
      */
-    protected $relations;
+    protected ?Collection $relations = null;
 
     /**
-     * @var Panel
+     * @var ?Panel
      */
-    protected $panel;
+    protected ?Panel $panel = null;
     /**
-     * @var \Illuminate\Support\Collection
+     * @var ?Collection
      */
-    protected $rows;
+    protected ?Collection $rows = null;
 
     /**
      * Show constructor.
      *
-     * @param  mixed  $id  $id
+     * @param  mixed|null  $id  $id
      * @param  null  $model
      * @param  \Closure|null  $builder
+     * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
-    public function __construct($id = null, $model = null, ?\Closure $builder = null)
+    public function __construct(mixed $id = null, $model = null, ?Closure $builder = null)
     {
         switch (func_num_args()) {
             case 1:
@@ -109,13 +110,13 @@ class Show implements Renderable
                     $this->setKey($id);
                 } else {
                     $builder = $model;
-                    $model = $id;
+                    $model   = $id;
                 }
                 break;
             default:
                 $this->setKey($id);
         }
-        $this->rows = new Collection();
+        $this->rows    = new Collection();
         $this->builder = $builder;
 
         $this->initModel($model);
@@ -125,7 +126,10 @@ class Show implements Renderable
         $this->callResolving();
     }
 
-    protected function initModel($model)
+    /**
+     * @throws \Dcat\Admin\Exception\InvalidArgumentException
+     */
+    protected function initModel($model): void
     {
         if ($model instanceof Repository || $model instanceof Builder) {
             $this->repository = Admin::repository($model);
@@ -156,8 +160,9 @@ class Show implements Renderable
      *
      * @param  mixed  ...$params
      * @return $this
+     * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
-    public static function make(...$params)
+    public static function make(...$params): static
     {
         return new static(...$params);
     }
@@ -166,7 +171,7 @@ class Show implements Renderable
      * @param  string  $value
      * @return $this
      */
-    public function setKeyName(string $value)
+    public function setKeyName(string $value): static
     {
         $this->keyName = $value;
 
@@ -178,7 +183,7 @@ class Show implements Renderable
      *
      * @return string
      */
-    public function getKeyName()
+    public function getKeyName(): string
     {
         if (! $this->repository) {
             return $this->keyName;
@@ -189,9 +194,9 @@ class Show implements Renderable
 
     /**
      * @param  mixed  $id
-     * @return mixed
+     * @return \Dcat\Admin\Show
      */
-    public function setKey($id)
+    public function setKey(mixed $id): static
     {
         $this->_id = $id;
 
@@ -201,16 +206,16 @@ class Show implements Renderable
     /**
      * @return mixed
      */
-    public function getKey()
+    public function getKey(): mixed
     {
         return $this->_id;
     }
 
     /**
-     * @param  Fluent|\Illuminate\Database\Eloquent\Model|null  $model
-     * @return Fluent|$this|\Illuminate\Database\Eloquent\Model
+     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Fluent|array|null  $model
+     * @return $this|Fluent
      */
-    public function model($model = null)
+    public function model(Model|Fluent|array|null $model = null): Fluent|static
     {
         if ($model === null) {
             return $this->model;
@@ -231,7 +236,7 @@ class Show implements Renderable
      * @param  string  $view
      * @return $this
      */
-    public function view($view)
+    public function view(string $view): static
     {
         $this->panel->view($view);
 
@@ -244,7 +249,7 @@ class Show implements Renderable
      * @param  array  $variables
      * @return $this
      */
-    public function with($variables = [])
+    public function with(array $variables = []): static
     {
         $this->panel->with($variables);
 
@@ -254,7 +259,7 @@ class Show implements Renderable
     /**
      * @return $this
      */
-    public function wrap(\Closure $wrapper)
+    public function wrap(Closure $wrapper): static
     {
         $this->panel->wrap($wrapper);
 
@@ -264,16 +269,16 @@ class Show implements Renderable
     /**
      * Initialize the contents to show.
      */
-    protected function initContents()
+    protected function initContents(): void
     {
-        $this->fields = new Collection();
+        $this->fields    = new Collection();
         $this->relations = new Collection();
     }
 
     /**
      * Initialize panel.
      */
-    protected function initPanel()
+    protected function initPanel(): void
     {
         $this->panel = new Panel($this);
     }
@@ -283,22 +288,22 @@ class Show implements Renderable
      *
      * @return Panel
      */
-    public function panel()
+    public function panel(): Panel
     {
         return $this->panel;
     }
 
     /**
-     * @param  \Closure|array|AbstractTool|Renderable|Htmlable|string  $callback
+     * @param  array|string|\Closure|AbstractTool|Htmlable|Renderable|null  $callback
      * @return $this|Tools
      */
-    public function tools($callback = null)
+    public function tools(Renderable|Htmlable|array|string|Closure|AbstractTool $callback = null): Tools|static
     {
         if ($callback === null) {
             return $this->panel->tools();
         }
 
-        if ($callback instanceof \Closure) {
+        if ($callback instanceof Closure) {
             $callback->call($this->model, $this->panel->tools());
 
             return $this;
@@ -322,7 +327,7 @@ class Show implements Renderable
      * @param  string  $label
      * @return Field
      */
-    public function field($name, $label = '')
+    public function field(string $name, string $label = ''): Field
     {
         return $this->addField($name, $label);
     }
@@ -330,10 +335,10 @@ class Show implements Renderable
     /**
      * Get fields or add multiple fields.
      *
-     * @param  array  $fields
+     * @param  array|null  $fields
      * @return $this|Collection
      */
-    public function fields(array $fields = null)
+    public function fields(array|null $fields = null): Collection|static
     {
         if ($fields === null) {
             return $this->fields;
@@ -353,7 +358,7 @@ class Show implements Renderable
     /**
      * @return Collection
      */
-    public function relations()
+    public function relations(): Collection
     {
         return $this->relations;
     }
@@ -361,9 +366,9 @@ class Show implements Renderable
     /**
      * Show all fields.
      *
-     * @return Show
+     * @return \Illuminate\Support\Collection|\Dcat\Admin\Show
      */
-    public function all()
+    public function all(): Collection|static
     {
         $fields = array_keys($this->model()->toArray());
 
@@ -375,14 +380,14 @@ class Show implements Renderable
      *
      * @param  string  $name
      * @param  string|\Closure  $label
-     * @param  null|\Closure  $builder
+     * @param  \Closure|null  $builder
      * @return Relation
      */
-    public function relation($name, $label, $builder = null)
+    public function relation(string $name, string|Closure $label, Closure $builder = null): Relation
     {
         if (is_null($builder)) {
             $builder = $label;
-            $label = '';
+            $label   = '';
         }
 
         return $this->addRelation($name, $builder, $label);
@@ -395,7 +400,7 @@ class Show implements Renderable
      * @param  string  $label
      * @return Field
      */
-    protected function addField($name, $label = '')
+    protected function addField(string $name, string $label = ''): Field
     {
         $field = new Field($name, $label);
 
@@ -416,7 +421,7 @@ class Show implements Renderable
      * @param  string  $label
      * @return Relation
      */
-    protected function addRelation($name, $builder, $label = '')
+    protected function addRelation(string $name, Closure $builder, string $label = ''): Relation
     {
         $relation = new Relation($name, $builder, $label);
 
@@ -434,7 +439,7 @@ class Show implements Renderable
      *
      * @param  string  $name
      */
-    protected function overwriteExistingField($name)
+    protected function overwriteExistingField(string $name): void
     {
         if ($this->fields->isEmpty()) {
             return;
@@ -452,7 +457,7 @@ class Show implements Renderable
      *
      * @param  string  $name
      */
-    protected function overwriteExistingRelation($name)
+    protected function overwriteExistingRelation(string $name): void
     {
         if ($this->relations->isEmpty()) {
             return;
@@ -468,7 +473,7 @@ class Show implements Renderable
     /**
      * @return Repository
      */
-    public function repository()
+    public function repository(): Repository
     {
         return $this->repository;
     }
@@ -476,7 +481,7 @@ class Show implements Renderable
     /**
      * Show a divider.
      */
-    public function divider()
+    public function divider(): void
     {
         $this->fields->push(new Divider());
     }
@@ -484,7 +489,7 @@ class Show implements Renderable
     /**
      * Show a divider.
      */
-    public function newline()
+    public function newline(): void
     {
         $this->fields->push(new Newline());
     }
@@ -494,7 +499,7 @@ class Show implements Renderable
      *
      * @param  string  $html
      */
-    public function html($html = '')
+    public function html(string $html = ''): void
     {
         $this->fields->push((new Html($html))->setParent($this));
     }
@@ -504,7 +509,7 @@ class Show implements Renderable
      *
      * @return $this
      */
-    public function disableListButton(bool $disable = true)
+    public function disableListButton(bool $disable = true): static
     {
         $this->panel->tools()->disableList($disable);
 
@@ -516,7 +521,7 @@ class Show implements Renderable
      *
      * @return $this
      */
-    public function disableDeleteButton(bool $disable = true)
+    public function disableDeleteButton(bool $disable = true): static
     {
         $this->panel->tools()->disableDelete($disable);
 
@@ -528,7 +533,7 @@ class Show implements Renderable
      *
      * @return $this
      */
-    public function disableEditButton(bool $disable = true)
+    public function disableEditButton(bool $disable = true): static
     {
         $this->panel->tools()->disableEdit($disable);
 
@@ -542,7 +547,7 @@ class Show implements Renderable
      * @param  null|string  $height
      * @return $this
      */
-    public function showQuickEdit(?string $width = null, ?string $height = null)
+    public function showQuickEdit(?string $width = null, ?string $height = null): static
     {
         $this->panel->tools()->showQuickEdit($width, $height);
 
@@ -554,7 +559,7 @@ class Show implements Renderable
      *
      * @return $this
      */
-    public function disableQuickEdit()
+    public function disableQuickEdit(): static
     {
         $this->panel->tools()->disableQuickEdit();
 
@@ -564,7 +569,7 @@ class Show implements Renderable
     /**
      * @return string
      */
-    public function resource()
+    public function resource(): string
     {
         if (empty($this->resource)) {
             $path = request()->path();
@@ -584,7 +589,7 @@ class Show implements Renderable
      * @param  string  $path
      * @return $this
      */
-    public function setResource($path)
+    public function setResource(string $path): static
     {
         if ($path) {
             $this->resource = admin_url($path);
@@ -597,16 +602,16 @@ class Show implements Renderable
      * Add field and relation dynamically.
      *
      * @param  string  $method
-     * @param  array  $arguments
+     * @param  array  $parameters
      * @return Field
      */
-    public function __call($method, $arguments = [])
+    public function __call($method, $parameters = [])
     {
         if (static::hasMacro($method)) {
-            return $this->macroCall($method, $arguments);
+            return $this->macroCall($method, $parameters);
         }
 
-        return $this->call($method, $arguments);
+        return $this->call($method, $parameters);
     }
 
     /**
@@ -614,9 +619,9 @@ class Show implements Renderable
      * @param  array  $arguments
      * @return bool|Show|Field|Relation
      */
-    protected function call($method, $arguments = [])
+    protected function call($method, array $arguments = []): Field|Show|bool|Relation
     {
-        $label = isset($arguments[0]) ? $arguments[0] : '';
+        $label = $arguments[0] ?? '';
 
         if ($field = $this->handleRelationField($method, $arguments)) {
             return $field;
@@ -632,11 +637,11 @@ class Show implements Renderable
      * @param  array  $arguments
      * @return $this|bool|Relation|Field
      */
-    protected function handleRelationField($method, $arguments)
+    protected function handleRelationField(string $method, array $arguments): Field|bool|Relation|static
     {
-        if (count($arguments) == 1 && $arguments[0] instanceof \Closure) {
+        if (count($arguments) == 1 && $arguments[0] instanceof Closure) {
             return $this->addRelation($method, $arguments[0]);
-        } elseif (count($arguments) == 2 && $arguments[1] instanceof \Closure) {
+        } elseif (count($arguments) == 2 && $arguments[1] instanceof Closure) {
             return $this->addRelation($method, $arguments[1], $arguments[0]);
         }
 
@@ -647,6 +652,7 @@ class Show implements Renderable
      * Render the show panels.
      *
      * @return string
+     * @throws \Throwable
      */
     public function render(): string
     {
@@ -683,7 +689,7 @@ class Show implements Renderable
      * @param  Closure  $callback
      * @return $this
      */
-    public function row(Closure $callback)
+    public function row(Closure $callback): static
     {
         $this->rows->push(new Row($callback, $this));
 
@@ -693,7 +699,7 @@ class Show implements Renderable
     /**
      * @return \Illuminate\Support\Collection
      */
-    public function rows()
+    public function rows(): Collection
     {
         return $this->rows;
     }
@@ -702,9 +708,9 @@ class Show implements Renderable
      * Add a model field to show.
      *
      * @param  string  $name
-     * @return Field|Collection
+     * @return Field
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         return $this->call($name);
     }

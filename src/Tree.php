@@ -43,14 +43,14 @@ class Tree implements Renderable
     protected string $elementId = 'tree-';
 
     /**
-     * @var TreeRepository
+     * @var ?TreeRepository
      */
-    protected $repository;
+    protected ?TreeRepository $repository = null;
 
     /**
-     * @var \Closure
+     * @var \Closure|null
      */
-    protected $queryCallback;
+    protected ?Closure $queryCallback = null;
 
     /**
      * View of tree to render.
@@ -65,24 +65,24 @@ class Tree implements Renderable
     protected string $branchView = 'admin::tree.branch';
 
     /**
-     * @var \Closure
+     * @var ?Closure
      */
-    protected $callback;
+    protected ?Closure $callback = null;
 
     /**
-     * @var null
+     * @var ?Closure
      */
-    protected $branchCallback = null;
-
-    /**
-     * @var string
-     */
-    public $path;
+    protected ?Closure $branchCallback = null;
 
     /**
      * @var string
      */
-    public $url;
+    public string $path = '';
+
+    /**
+     * @var string
+     */
+    public string $url = '';
 
     /**
      * @var bool
@@ -122,14 +122,14 @@ class Tree implements Renderable
     /**
      * Header tools.
      *
-     * @var Tools
+     * @var ?Tools
      */
-    public $tools;
+    public ?Tools $tools = null;
 
     /**
      * @var string
      */
-    protected $actionsClass;
+    protected string $actionsClass = '';
 
     /**
      * @var \Closure[]
@@ -137,9 +137,9 @@ class Tree implements Renderable
     protected array $actionCallbacks = [];
 
     /**
-     * @var Closure
+     * @var ?Closure
      */
-    protected $wrapper;
+    protected ?Closure $wrapper = null;
 
     /**
      * Menu constructor.
