@@ -8,9 +8,9 @@ use Dcat\Admin\Form\Layout;
 trait HasLayout
 {
     /**
-     * @var Layout
+     * @var ?Layout
      */
-    protected $layout;
+    protected ?Layout $layout = null;
 
     /**
      * @param  int|float  $width

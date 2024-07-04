@@ -5,16 +5,17 @@ namespace Dcat\Admin\Traits;
 use Dcat\Admin\Support\Helper;
 use DOMDocument;
 use DOMElement;
+use Illuminate\Contracts\Support\Renderable;
 
 trait HasHtml
 {
-    protected static $shouldResolveTags = ['style', 'script', 'template', 'link'];
+    protected static array $shouldResolveTags = ['style', 'script', 'template', 'link'];
 
     /**
-     * @param  string|array  $content
+     * @param  array|string|null  $content
      * @return null|string
      */
-    public static function html($content = null)
+    public static function html(array|string $content = null): ?string
     {
         $html = static::context()->html ?: [];
 
@@ -26,30 +27,31 @@ trait HasHtml
             $html,
             array_map([Helper::class, 'render'], (array) $content)
         );
+
+        return null;
     }
 
     /**
      * @param  string  $view
      * @param  array  $data
-     * @param  array  $data
+     * @param  array  $options
      * @return string
      *
      * @throws \Throwable
      */
-    public static function view(string $view, array $data = [], array $options = [])
+    public static function view(string $view, array $data = [], array $options = []): string
     {
         return static::resolveHtml(view($view, $data), $options)['html'];
     }
 
     /**
-     * @param  string|\Illuminate\Contracts\Support\Renderable  $content
-     * @param  array  $data
+     * @param  \Illuminate\Contracts\Support\Renderable|string  $content
      * @param  array  $options
      * @return array ['html' => $html, 'script' => $script]
      *
      * @throws \Throwable
      */
-    public static function resolveHtml($content, array $options = []): array
+    public static function resolveHtml(Renderable|string $content, array $options = []): array
     {
         $dom = static::getDOMDocument(Helper::render($content));
 
@@ -74,7 +76,7 @@ trait HasHtml
      *
      * @throws \Throwable
      */
-    protected static function getDOMDocument(string $html)
+    protected static function getDOMDocument(string $html): DOMDocument
     {
         $dom = new DOMDocument();
 
@@ -102,7 +104,7 @@ trait HasHtml
      * @param  DOMElement  $element
      * @return void
      */
-    protected static function resolveLink(DOMElement $element)
+    protected static function resolveLink(DOMElement $element): void
     {
         if ($element->getAttribute('rel') == 'stylesheet' && $href = $element->getAttribute('href')) {
             static::css(admin_asset($href));
@@ -113,7 +115,7 @@ trait HasHtml
      * @param  DOMElement  $element
      * @return void
      */
-    protected static function resolveTemplate(DOMElement $element)
+    protected static function resolveTemplate(DOMElement $element): void
     {
         $html = '';
         foreach ($element->childNodes as $childNode) {
@@ -160,14 +162,14 @@ trait HasHtml
      * @param  DOMElement  $element
      * @return void
      */
-    protected static function resolveStyle(DOMElement $element)
+    protected static function resolveStyle(DOMElement $element): void
     {
         if (! empty(trim($element->nodeValue))) {
             static::style($element->nodeValue);
         }
     }
 
-    protected static function resolveElement(?DOMElement $element)
+    protected static function resolveElement(?DOMElement $element): array
     {
         $html = $script = '';
 

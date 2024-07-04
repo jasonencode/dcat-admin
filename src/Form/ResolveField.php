@@ -4,24 +4,24 @@ namespace Dcat\Admin\Form;
 
 trait ResolveField
 {
-    protected $resolvingFieldCallbacks = [];
+    protected array $resolvingFieldCallbacks = [];
 
     /**
+     * @param  \Closure  $callback
+     * @return $this
      * @example $form->resolvingField(function ($field, $form) {
      *     ...
      * });
      *
-     * @param  \Closure  $callback
-     * @return $this
      */
-    public function resolvingField(\Closure $callback)
+    public function resolvingField(\Closure $callback): static
     {
         $this->resolvingFieldCallbacks[] = $callback;
 
         return $this;
     }
 
-    public function setResolvingFieldCallbacks(array $callbacks)
+    public function setResolvingFieldCallbacks(array $callbacks): void
     {
         $this->resolvingFieldCallbacks = $callbacks;
     }
@@ -30,7 +30,7 @@ trait ResolveField
      * @param  Field  $field
      * @return void
      */
-    protected function callResolvingFieldCallbacks(Field $field)
+    protected function callResolvingFieldCallbacks(Field $field): void
     {
         foreach ($this->resolvingFieldCallbacks as $callback) {
             if ($callback($field, $this) === false) {

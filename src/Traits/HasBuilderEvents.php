@@ -6,27 +6,27 @@ use Dcat\Admin\Admin;
 
 trait HasBuilderEvents
 {
-    public static function resolving(callable $callback, bool $once = false)
+    public static function resolving(callable $callback, bool $once = false): void
     {
         static::addBuilderListeners('builder:resolving', $callback, $once);
     }
 
-    protected function callResolving(...$params)
+    protected function callResolving(...$params): void
     {
         $this->fireBuilderEvent('builder:resolving', ...$params);
     }
 
-    public static function composing(callable $callback, bool $once = false)
+    public static function composing(callable $callback, bool $once = false): void
     {
         static::addBuilderListeners('builder:composing', $callback, $once);
     }
 
-    protected function callComposing(...$params)
+    protected function callComposing(...$params): void
     {
         $this->fireBuilderEvent('builder:composing', ...$params);
     }
 
-    protected function fireBuilderEvent($key, ...$params)
+    protected function fireBuilderEvent($key, ...$params): void
     {
         $context = Admin::context();
 
@@ -47,7 +47,7 @@ trait HasBuilderEvents
         $context[$key] = $listeners;
     }
 
-    protected static function addBuilderListeners($key, $callback, $once)
+    protected static function addBuilderListeners($key, $callback, $once): void
     {
         $context = Admin::context();
 
@@ -60,7 +60,7 @@ trait HasBuilderEvents
         $context[$key] = $listeners;
     }
 
-    protected static function formatEventKey($key)
+    protected static function formatEventKey($key): string
     {
         return static::class.':'.$key;
     }

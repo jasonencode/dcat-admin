@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Form\Concerns;
 
+use Closure;
 use Dcat\Admin\Form\Field;
 
 trait HandleCascadeFields
@@ -11,7 +12,7 @@ trait HandleCascadeFields
      * @param  \Closure  $closure
      * @return Field\CascadeGroup
      */
-    public function cascadeGroup(\Closure $closure, array $dependency)
+    public function cascadeGroup(Closure $closure, array $dependency): Field\CascadeGroup
     {
         $this->pushField($group = new Field\CascadeGroup($dependency));
 

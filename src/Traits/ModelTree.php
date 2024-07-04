@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Traits;
 
+use Closure;
 use Dcat\Admin\Exception\AdminException;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Tree;
@@ -26,17 +27,17 @@ trait ModelTree
     /**
      * @var array
      */
-    protected static $branchOrder = [];
+    protected static array $branchOrder = [];
 
     /**
      * @var \Closure[]
      */
-    protected $queryCallbacks = [];
+    protected array $queryCallbacks = [];
 
     /**
      * @return string
      */
-    public function getParentColumn()
+    public function getParentColumn(): string
     {
         return property_exists($this, 'parentColumn') ? $this->parentColumn : 'parent_id';
     }
@@ -46,7 +47,7 @@ trait ModelTree
      *
      * @return string
      */
-    public function getTitleColumn()
+    public function getTitleColumn(): string
     {
         return property_exists($this, 'titleColumn') ? $this->titleColumn : 'title';
     }
@@ -56,7 +57,7 @@ trait ModelTree
      *
      * @return string
      */
-    public function getOrderColumn()
+    public function getOrderColumn(): string
     {
         return property_exists($this, 'orderColumn') ? $this->orderColumn : 'order';
     }
@@ -66,7 +67,7 @@ trait ModelTree
      *
      * @return string
      */
-    public function getDepthColumn()
+    public function getDepthColumn(): string
     {
         return property_exists($this, 'depthColumn') ? $this->depthColumn : '';
     }
@@ -74,7 +75,7 @@ trait ModelTree
     /**
      * @return string
      */
-    public function getDefaultParentId()
+    public function getDefaultParentId(): string
     {
         return property_exists($this, 'defaultParentId') ? $this->defaultParentId : '0';
     }
@@ -85,7 +86,7 @@ trait ModelTree
      * @param  \Closure|null  $query
      * @return $this
      */
-    public function withQuery(\Closure $query = null)
+    public function withQuery(Closure $query = null): static
     {
         $this->queryCallbacks[] = $query;
 
@@ -95,9 +96,10 @@ trait ModelTree
     /**
      * Format data to tree like array.
      *
+     * @param  array|null  $nodes
      * @return array
      */
-    public function toTree(array $nodes = null)
+    public function toTree(array $nodes = null): array
     {
         if ($nodes === null) {
             $nodes = $this->allNodes();
@@ -124,10 +126,10 @@ trait ModelTree
     }
 
     /**
-     * @param  $this  $model
+     * @param $model
      * @return $this|Builder
      */
-    protected function callQueryCallbacks($model)
+    protected function callQueryCallbacks($model): Builder|static
     {
         foreach ($this->queryCallbacks as $callback) {
             if ($callback) {
@@ -159,7 +161,7 @@ trait ModelTree
      * @param  array  $tree
      * @param  int  $parentId
      */
-    public static function saveOrder($tree = [], $parentId = 0, $depth = 1)
+    public static function saveOrder(array $tree = [], int $parentId = 0, $depth = 1): void
     {
         if (empty(static::$branchOrder)) {
             static::setBranchOrder($tree);
@@ -169,7 +171,7 @@ trait ModelTree
             $node = static::find($branch['id']);
 
             $node->{$node->getParentColumn()} = $parentId;
-            $node->{$node->getOrderColumn()} = static::$branchOrder[$branch['id']];
+            $node->{$node->getOrderColumn()}  = static::$branchOrder[$branch['id']];
             $node->getDepthColumn() && $node->{$node->getDepthColumn()} = $depth;
             $node->save();
 
@@ -179,14 +181,14 @@ trait ModelTree
         }
     }
 
-    protected function determineOrderColumnName()
+    protected function determineOrderColumnName(): string
     {
         return $this->getOrderColumn();
     }
 
     public function moveOrderDown()
     {
-        $orderColumnName = $this->determineOrderColumnName();
+        $orderColumnName  = $this->determineOrderColumnName();
         $parentColumnName = $this->getParentColumn();
 
         $sameOrderModel = $this->getSameOrderModel('>');
@@ -215,7 +217,7 @@ trait ModelTree
 
     public function moveOrderUp()
     {
-        $orderColumnName = $this->determineOrderColumnName();
+        $orderColumnName  = $this->determineOrderColumnName();
         $parentColumnName = $this->getParentColumn();
 
         $swapWithModel = $this->buildSortQuery()
@@ -242,7 +244,7 @@ trait ModelTree
 
     protected function getSameOrderModel(string $operator = '<')
     {
-        $orderColumnName = $this->determineOrderColumnName();
+        $orderColumnName  = $this->determineOrderColumnName();
         $parentColumnName = $this->getParentColumn();
 
         return $this->buildSortQuery()
@@ -255,7 +257,7 @@ trait ModelTree
             ->first();
     }
 
-    public function moveToStart()
+    public function moveToStart(): static
     {
         $parentColumnName = $this->getParentColumn();
 
@@ -283,10 +285,10 @@ trait ModelTree
      * Get options for Select field in form.
      *
      * @param  \Closure|null  $closure
-     * @param  string  $rootText
+     * @param  string|null  $rootText
      * @return array
      */
-    public static function selectOptions(\Closure $closure = null, $rootText = null)
+    public static function selectOptions(Closure $closure = null, string $rootText = null)
     {
         $rootText = $rootText ?: admin_trans_label('root');
 
@@ -304,9 +306,13 @@ trait ModelTree
      * @param  string  $space
      * @return array
      */
-    protected function buildSelectOptions(array $nodes = [], $parentId = 0, $prefix = '', $space = '&nbsp;')
-    {
-        $d = '├─';
+    protected function buildSelectOptions(
+        array $nodes = [],
+        int $parentId = 0,
+        string $prefix = '',
+        string $space = '&nbsp;'
+    ): array {
+        $d      = '├─';
         $prefix = $prefix ?: $d.$space;
 
         $options = [];
@@ -317,11 +323,13 @@ trait ModelTree
 
         foreach ($nodes as $index => $node) {
             if ($node[$this->getParentColumn()] == $parentId) {
-                $currentPrefix = $this->hasNextSibling($nodes, $node[$this->getParentColumn()], $index) ? $prefix : str_replace($d, '└─', $prefix);
+                $currentPrefix = $this->hasNextSibling($nodes, $node[$this->getParentColumn()],
+                    $index) ? $prefix : str_replace($d, '└─', $prefix);
 
                 $node[$this->getTitleColumn()] = $currentPrefix.$space.$node[$this->getTitleColumn()];
 
-                $childrenPrefix = str_replace($d, str_repeat($space, 6), $prefix).$d.str_replace([$d, $space], '', $prefix);
+                $childrenPrefix = str_replace($d, str_repeat($space, 6), $prefix).$d.str_replace([$d, $space], '',
+                        $prefix);
 
                 $children = $this->buildSelectOptions($nodes, $node[$this->getKeyName()], $childrenPrefix);
 
@@ -347,8 +355,9 @@ trait ModelTree
 
     /**
      * {@inheritdoc}
+     * @throws \Dcat\Admin\Exception\InvalidArgumentException|\Dcat\Admin\Exception\AdminException
      */
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 

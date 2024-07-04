@@ -7,14 +7,14 @@ namespace Dcat\Admin\Traits;
  */
 trait HasVariables
 {
-    protected $variables = [];
+    protected array $variables = [];
 
     /**
      * 获取所有变量.
      *
      * @return array
      */
-    public function variables()
+    public function variables(): array
     {
         if (! method_exists($this, 'defaultVariables')) {
             return $this->variables;
@@ -29,7 +29,7 @@ trait HasVariables
      * @param  array  $variables
      * @return $this
      */
-    public function addVariables(array $variables = [])
+    public function addVariables(array $variables = []): static
     {
         $this->variables = array_merge($this->variables, $variables);
 

@@ -12,7 +12,7 @@ trait HasRows
      *
      * @var Row[]
      */
-    protected $rows = [];
+    protected array $rows = [];
 
     /**
      * Add a row in form.
@@ -20,7 +20,7 @@ trait HasRows
      * @param  Closure  $callback
      * @return $this
      */
-    public function row(Closure $callback)
+    public function row(Closure $callback): static
     {
         $this->rows[] = new Row($callback, $this);
 

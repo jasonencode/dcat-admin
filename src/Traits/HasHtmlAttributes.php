@@ -2,14 +2,17 @@
 
 namespace Dcat\Admin\Traits;
 
+use Dcat\Admin\Actions\Action;
 use Dcat\Admin\Support\Helper;
+use Dcat\Admin\Widgets\Form;
+use Dcat\Admin\Widgets\Widget;
 use Illuminate\Support\Arr;
 
 trait HasHtmlAttributes
 {
-    protected $htmlAttributes = [];
+    protected array $htmlAttributes = [];
 
-    public function defaultHtmlAttribute($attribute, $value)
+    public function defaultHtmlAttribute($attribute, $value): static
     {
         if (! array_key_exists($attribute, $this->htmlAttributes)) {
             $this->setHtmlAttribute($attribute, $value);
@@ -18,7 +21,7 @@ trait HasHtmlAttributes
         return $this;
     }
 
-    public function setHtmlAttribute($key, $value = null)
+    public function setHtmlAttribute($key, $value = null): static
     {
         if (is_array($key)) {
             $this->htmlAttributes = array_merge($this->htmlAttributes, $key);
@@ -30,7 +33,7 @@ trait HasHtmlAttributes
         return $this;
     }
 
-    public function appendHtmlAttribute($key, $value)
+    public function appendHtmlAttribute($key, $value): Form|Widget|Action
     {
         $result = $this->getHtmlAttribute($key);
 
@@ -43,14 +46,14 @@ trait HasHtmlAttributes
         return $this->setHtmlAttribute($key, $result);
     }
 
-    public function forgetHtmlAttribute($keys)
+    public function forgetHtmlAttribute($keys): static
     {
         Arr::forget($this->htmlAttributes, $keys);
 
         return $this;
     }
 
-    public function getHtmlAttributes()
+    public function getHtmlAttributes(): array
     {
         return $this->htmlAttributes;
     }
@@ -60,12 +63,12 @@ trait HasHtmlAttributes
         return $this->htmlAttributes[$key] ?? $default;
     }
 
-    public function hasHtmlAttribute($key)
+    public function hasHtmlAttribute($key): bool
     {
         return array_key_exists($key, $this->htmlAttributes);
     }
 
-    public function formatHtmlAttributes()
+    public function formatHtmlAttributes(): string
     {
         return Helper::buildHtmlAttributes($this->htmlAttributes);
     }

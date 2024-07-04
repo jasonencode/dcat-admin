@@ -6,15 +6,16 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
+use Illuminate\Validation\Validator;
 
 trait HasFormResponse
 {
-    protected $currentUrl;
+    protected string $currentUrl = '';
 
     /**
      * @return JsonResponse
      */
-    public function response()
+    public function response(): JsonResponse
     {
         return Admin::json();
     }
@@ -22,11 +23,11 @@ trait HasFormResponse
     /**
      * 返回字段验证错误信息.
      *
-     * @param  array|MessageBag|\Illuminate\Validation\Validator  $validationMessages
+     * @param  \Illuminate\Validation\Validator|array|MessageBag  $validationMessages
      * @return \Illuminate\Http\JsonResponse
      */
-    public function validationErrorsResponse($validationMessages)
-    {
+    public function validationErrorsResponse(Validator|array|MessageBag $validationMessages
+    ): \Illuminate\Http\JsonResponse {
         return $this
             ->response()
             ->withValidation($validationMessages)
@@ -39,7 +40,7 @@ trait HasFormResponse
      * @param  string  $url
      * @return $this
      */
-    public function setCurrentUrl($url)
+    public function setCurrentUrl(string $url): static
     {
         $this->currentUrl = admin_url($url);
 
@@ -53,7 +54,7 @@ trait HasFormResponse
      * @param  Request|null  $request
      * @return string
      */
-    protected function getCurrentUrl($default = null, Request $request = null)
+    protected function getCurrentUrl(string $default = null, Request $request = null): string
     {
         if ($this->currentUrl) {
             return admin_url($this->currentUrl);
@@ -83,9 +84,9 @@ trait HasFormResponse
      * 响应数据.
      *
      * @param $response
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|mixed
      */
-    protected function sendResponse($response)
+    protected function sendResponse($response): mixed
     {
         if ($response instanceof JsonResponse) {
             return $response->send();

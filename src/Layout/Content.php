@@ -9,6 +9,7 @@ use Dcat\Admin\Traits\HasBuilderEvents;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\ViewErrorBag;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Content implements Renderable
@@ -18,43 +19,43 @@ class Content implements Renderable
     /**
      * @var string
      */
-    protected $view = 'admin::layouts.content';
+    protected string $view = 'admin::layouts.content';
 
     /**
      * @var array
      */
-    protected $variables = [];
+    protected array $variables = [];
 
     /**
      * Content title.
      *
      * @var string
      */
-    protected $title = '';
+    protected string $title = '';
 
     /**
      * Content description.
      *
      * @var string
      */
-    protected $description = '';
+    protected string $description = '';
 
     /**
      * Page breadcrumb.
      *
      * @var array
      */
-    protected $breadcrumb = [];
+    protected array $breadcrumb = [];
 
     /**
      * @var Row[]
      */
-    protected $rows = [];
+    protected array $rows = [];
 
     /**
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * Content constructor.
@@ -76,7 +77,7 @@ class Content implements Renderable
      * @param  mixed  ...$params
      * @return $this
      */
-    public static function make(...$params)
+    public static function make(...$params): static
     {
         return new static(...$params);
     }
@@ -85,7 +86,7 @@ class Content implements Renderable
      * @param  string  $header
      * @return $this
      */
-    public function header($header = '')
+    public function header(string $header = ''): static
     {
         return $this->title($header);
     }
@@ -96,7 +97,7 @@ class Content implements Renderable
      * @param  string  $title
      * @return $this
      */
-    public function title($title)
+    public function title(string $title): static
     {
         $this->title = $title;
 
@@ -109,7 +110,7 @@ class Content implements Renderable
      * @param  string  $description
      * @return $this
      */
-    public function description($description = '')
+    public function description(string $description = ''): static
     {
         $this->description = $description;
 
@@ -122,7 +123,7 @@ class Content implements Renderable
      * @param  string|null  $translation
      * @return $this
      */
-    public function translation(?string $translation)
+    public function translation(?string $translation): static
     {
         Admin::translation($translation);
 
@@ -134,7 +135,7 @@ class Content implements Renderable
      *
      * @return $this
      */
-    public function full()
+    public function full(): static
     {
         return $this->view('admin::layouts.full-content');
     }
@@ -152,7 +153,7 @@ class Content implements Renderable
      *     ]);
      *
      */
-    public function breadcrumb(...$breadcrumb)
+    public function breadcrumb(...$breadcrumb): static
     {
         $this->formatBreadcrumb($breadcrumb);
 
@@ -167,7 +168,7 @@ class Content implements Renderable
      *
      * @throws \Exception
      */
-    protected function formatBreadcrumb(array &$breadcrumb)
+    protected function formatBreadcrumb(array &$breadcrumb): void
     {
         if (! $breadcrumb) {
             throw new RuntimeException('Breadcrumb format error!');
@@ -203,7 +204,7 @@ class Content implements Renderable
      * @param  mixed  $content
      * @return Content
      */
-    public function body($content)
+    public function body(mixed $content): static
     {
         return $this->row($content);
     }
@@ -214,7 +215,7 @@ class Content implements Renderable
      * @param $content
      * @return $this
      */
-    public function row($content)
+    public function row($content): static
     {
         if ($content instanceof Closure) {
             $row = new Row();
@@ -231,7 +232,7 @@ class Content implements Renderable
      * @param $content
      * @return $this
      */
-    public function prepend($content)
+    public function prepend($content): static
     {
         if ($content instanceof Closure) {
             $row = new Row();
@@ -244,7 +245,7 @@ class Content implements Renderable
         return $this;
     }
 
-    protected function prependRow(Row $row)
+    protected function prependRow(Row $row): void
     {
         array_unshift($this->rows, $row);
     }
@@ -254,7 +255,7 @@ class Content implements Renderable
      *
      * @param  Row  $row
      */
-    protected function addRow(Row $row)
+    protected function addRow(Row $row): void
     {
         $this->rows[] = $row;
     }
@@ -262,10 +263,10 @@ class Content implements Renderable
     /**
      * Build html of content.
      *
-     * @return string
+     * @return array|string|\Symfony\Component\HttpFoundation\Response|null
      * @throws \Exception
      */
-    public function build()
+    public function build(): array|string|Response|null
     {
         try {
             $html = '';
@@ -285,7 +286,7 @@ class Content implements Renderable
      * @return array|string|\Symfony\Component\HttpFoundation\Response|null
      * @throws \Exception
      */
-    protected function handleException(Throwable $e)
+    protected function handleException(Throwable $e): array|string|Response|null
     {
         $response = Admin::handleException($e);
 
@@ -305,7 +306,7 @@ class Content implements Renderable
      * @param  string  $message
      * @return $this
      */
-    public function withSuccess($title = '', $message = '')
+    public function withSuccess(string $title = '', string $message = ''): static
     {
         admin_success($title, $message);
 
@@ -319,7 +320,7 @@ class Content implements Renderable
      * @param  string  $message
      * @return $this
      */
-    public function withError($title = '', $message = '')
+    public function withError(string $title = '', string $message = ''): static
     {
         admin_error($title, $message);
 
@@ -333,7 +334,7 @@ class Content implements Renderable
      * @param  string  $message
      * @return $this
      */
-    public function withWarning($title = '', $message = '')
+    public function withWarning(string $title = '', string $message = ''): static
     {
         admin_warning($title, $message);
 
@@ -347,7 +348,7 @@ class Content implements Renderable
      * @param  string  $message
      * @return $this
      */
-    public function withInfo($title = '', $message = '')
+    public function withInfo(string $title = '', string $message = ''): static
     {
         admin_info($title, $message);
 
@@ -360,7 +361,7 @@ class Content implements Renderable
      * @param  null|string  $view
      * @return $this
      */
-    public function view(?string $view)
+    public function view(?string $view): static
     {
         $this->view = $view;
 
@@ -368,11 +369,11 @@ class Content implements Renderable
     }
 
     /**
-     * @param  string|array  $key
-     * @param  mixed  $value
+     * @param  array|string  $key
+     * @param  mixed|null  $value
      * @return $this
      */
-    public function with($key, $value = null)
+    public function with(array|string $key, mixed $value = null): static
     {
         if (is_array($key)) {
             $this->variables = array_merge($this->variables, $key);
@@ -384,11 +385,11 @@ class Content implements Renderable
     }
 
     /**
-     * @param  string|array  $key
-     * @param  mixed  $value
+     * @param  array|string  $key
+     * @param  mixed|null  $value
      * @return $this
      */
-    public function withConfig($key, $value = null)
+    public function withConfig(array|string $key, mixed $value = null): static
     {
         if (is_array($key)) {
             $this->config = array_merge($this->config, $key);
@@ -402,7 +403,7 @@ class Content implements Renderable
     /**
      * @return void
      */
-    protected function shareDefaultErrors()
+    protected function shareDefaultErrors(): void
     {
         if (! session()->all()) {
             view()->share(['errors' => new ViewErrorBag()]);
@@ -412,7 +413,7 @@ class Content implements Renderable
     /**
      * @return array
      */
-    protected function variables()
+    protected function variables(): array
     {
         return array_merge([
             'header'          => $this->title,
@@ -426,7 +427,7 @@ class Content implements Renderable
     /**
      * @return array
      */
-    protected function applyClasses()
+    protected function applyClasses(): array
     {
         // default data array
         $defaultData = [
@@ -513,7 +514,7 @@ class Content implements Renderable
      * Render this content.
      *
      * @return string
-     * @throws \Exception
+     * @throws \Exception|\Throwable
      */
     public function render(): string
     {
@@ -537,7 +538,7 @@ class Content implements Renderable
      * @param  callable  $callback
      * @param  bool  $once
      */
-    public static function composed(callable $callback, bool $once = false)
+    public static function composed(callable $callback, bool $once = false): void
     {
         static::addBuilderListeners('builder.composed', $callback, $once);
     }
@@ -547,7 +548,7 @@ class Content implements Renderable
      *
      * @param  array  ...$params
      */
-    protected function callComposed(...$params)
+    protected function callComposed(...$params): void
     {
         $this->fireBuilderEvent('builder.composed', ...$params);
     }

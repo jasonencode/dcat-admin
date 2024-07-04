@@ -40,7 +40,7 @@ class NestedForm extends WidgetForm
      *
      * @var Collection
      */
-    protected $fields;
+    protected Collection|array $fields;
 
     /**
      * Original data for this field.

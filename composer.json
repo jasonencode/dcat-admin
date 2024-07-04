@@ -23,6 +23,7 @@
         "ext-fileinfo": "*",
         "ext-pcntl": "*",
         "ext-zip": "*",
+        "ext-dom": "*",
         "dcat/easy-excel": "^1.1",
         "dcat/laravel-wherehasin": "^0.8",
         "doctrine/dbal": "^2.6|^3.8",

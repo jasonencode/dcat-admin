@@ -108,22 +108,22 @@ class Form implements Renderable
     /**
      * @var string
      */
-    protected $view = 'admin::widgets.form';
+    protected string $view = 'admin::widgets.form';
 
     /**
      * @var Field[]|Collection
      */
-    protected $fields;
+    protected Collection|array $fields;
 
     /**
      * @var array
      */
-    protected $variables = [];
+    protected array $variables = [];
 
     /**
      * @var bool
      */
-    protected $ajax = true;
+    protected bool $ajax = true;
 
     /**
      * @var Fluent
@@ -140,12 +140,12 @@ class Form implements Renderable
      *
      * @var array
      */
-    protected $buttons = ['reset' => true, 'submit' => true];
+    protected array $buttons = ['reset' => true, 'submit' => true];
 
     /**
      * @var bool
      */
-    protected $useFormTag = true;
+    protected bool $useFormTag = true;
 
     /**
      * @var string
@@ -155,7 +155,7 @@ class Form implements Renderable
     /**
      * @var array
      */
-    protected $width = [
+    protected array $width = [
         'label' => 2,
         'field' => 8,
     ];
@@ -163,20 +163,20 @@ class Form implements Renderable
     /**
      * @var array
      */
-    protected $confirm = [];
+    protected array $confirm = [];
 
     /**
      * @var bool
      */
-    protected $validationErrorToastr = true;
+    protected bool $validationErrorToastr = true;
 
     /**
      * Form constructor.
      *
      * @param  array  $data
-     * @param  mixed  $key
+     * @param  mixed|null  $key
      */
-    public function __construct($data = [], $key = null)
+    public function __construct(array $data = [], mixed $key = null)
     {
         if ($data) {
             $this->fill($data);
@@ -740,7 +740,7 @@ HTML;
     /**
      * {@inheritdoc}
      */
-    public function setCurrentUrl($url)
+    public function setCurrentUrl(string $url)
     {
         if ($this instanceof LazyRenderable) {
             $this->payload([static::CURRENT_URL_NAME => $url]);

@@ -11,9 +11,10 @@ trait Resizable
      *
      * @param  string  $type
      * @param  string  $attribute
+     * @param  null  $disk
      * @return string|null
      */
-    public function thumbnail($type, $attribute = 'image', $disk = null)
+    public function thumbnail(string $type, string $attribute = 'image', $disk = null): ?string
     {
         // Return empty string if the field not found
         if (! isset($this->attributes[$attribute])) {
@@ -23,9 +24,7 @@ trait Resizable
         // We take image from posts field
         $image = $this->attributes[$attribute];
 
-        $thumbnail = $this->getThumbnailPath($image, $type);
-
-        return $thumbnail;
+        return $this->getThumbnailPath($image, $type);
     }
 
     /**
@@ -35,7 +34,7 @@ trait Resizable
      * @param $type
      * @return string
      */
-    public function getThumbnailPath($image, $type)
+    public function getThumbnailPath($image, $type): string
     {
         // We need to get extension type ( .jpeg , .png ...)
         $ext = pathinfo($image, PATHINFO_EXTENSION);
