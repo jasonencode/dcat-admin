@@ -212,10 +212,10 @@ class Menu
     }
 
     /**
-     * @param  string  $uri
+     * @param  string|null  $uri
      * @return string
      */
-    public function getUrl(string $uri): string
+    public function getUrl(?string $uri): string
     {
         return $uri ? admin_url($uri) : $uri;
     }
