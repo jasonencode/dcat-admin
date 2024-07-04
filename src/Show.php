@@ -34,7 +34,7 @@ class Show implements Renderable
     /**
      * @var string
      */
-    protected $view = 'admin::show.container';
+    protected string $view = 'admin::show.container';
 
     /**
      * @var Repository
@@ -49,7 +49,7 @@ class Show implements Renderable
     /**
      * @var string
      */
-    protected $keyName = 'id';
+    protected string $keyName = 'id';
 
     /**
      * @var Fluent
@@ -97,8 +97,8 @@ class Show implements Renderable
      * Show constructor.
      *
      * @param  mixed  $id  $id
-     * @param  Model|Builder|Repository|array|Arrayable  $model
-     * @param  \Closure  $builder
+     * @param  null  $model
+     * @param  \Closure|null  $builder
      */
     public function __construct($id = null, $model = null, ?\Closure $builder = null)
     {

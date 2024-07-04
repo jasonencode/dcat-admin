@@ -17,7 +17,7 @@ abstract class LazyRenderable extends Renderable
      *
      * @var bool
      */
-    protected $simple = false;
+    protected bool $simple = false;
 
     /**
      * 创建表格.
@@ -40,7 +40,7 @@ abstract class LazyRenderable extends Renderable
 HTML;
     }
 
-    protected function addStyle()
+    protected function addStyle(): void
     {
         Admin::style('.select2-container--open{z-index:29891015}');
     }
@@ -51,7 +51,7 @@ HTML;
      * @param  bool  $value
      * @return $this
      */
-    public function simple(bool $value = true)
+    public function simple(bool $value = true): static
     {
         return $this->payload([static::SIMPLE_NAME => $value]);
     }
@@ -60,7 +60,7 @@ HTML;
      * @param  Grid  $grid
      * @return Grid
      */
-    protected function prepare(Grid $grid)
+    protected function prepare(Grid $grid): Grid
     {
         if (! $grid->getName()) {
             $grid->setName($this->getDefaultName());
@@ -95,7 +95,7 @@ HTML;
      *
      * @return bool
      */
-    public function allowSimpleMode()
+    public function allowSimpleMode(): bool
     {
         return $this->simple || $this->_simple_;
     }
@@ -105,7 +105,7 @@ HTML;
      *
      * @return string
      */
-    protected function getDefaultName()
+    protected function getDefaultName(): string
     {
         return strtolower(str_replace('\\', '-', static::class));
     }

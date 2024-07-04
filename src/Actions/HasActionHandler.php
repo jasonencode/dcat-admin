@@ -12,18 +12,18 @@ trait HasActionHandler
     }
 
     /**
-     * @var Response
+     * @var Response|null
      */
-    protected $response;
+    protected ?Response $response = null;
 
-    private $confirmString;
+    private string|array|null $confirmString = null;
 
-    private $paramString;
+    private ?string $paramString = null;
 
     /**
      * @return Response
      */
-    public function response()
+    public function response(): Response
     {
         if (is_null($this->response)) {
             $this->response = new Response();
@@ -35,7 +35,7 @@ trait HasActionHandler
     /**
      * @return string
      */
-    public function method()
+    public function method(): string
     {
         return $this->method;
     }
@@ -43,7 +43,7 @@ trait HasActionHandler
     /**
      * @return array
      */
-    protected function parameters()
+    protected function parameters(): array
     {
         return [];
     }
@@ -51,16 +51,16 @@ trait HasActionHandler
     /**
      * Confirm message of action.
      *
-     * @return string|void
+     * @return void|array|string
      */
     public function confirm()
     {
     }
 
     /**
-     * @return mixed
+     * @return string|array
      */
-    public function makeCalledClass()
+    public function makeCalledClass(): string|array
     {
         return str_replace('\\', '_', get_called_class());
     }
@@ -68,7 +68,7 @@ trait HasActionHandler
     /**
      * @return string
      */
-    public function handlerRoute()
+    public function handlerRoute(): string
     {
         return route(admin_api_route_name('action'));
     }
@@ -76,7 +76,7 @@ trait HasActionHandler
     /**
      * @return string
      */
-    protected function normalizeConfirmData()
+    protected function normalizeConfirmData(): string
     {
         if ($this->confirmString !== null) {
             return $this->confirmString;
@@ -90,7 +90,7 @@ trait HasActionHandler
     /**
      * @return string
      */
-    protected function normalizeParameters()
+    protected function normalizeParameters(): string
     {
         return $this->paramString ?: ($this->paramString = json_encode($this->parameters()));
     }
@@ -98,7 +98,7 @@ trait HasActionHandler
     /**
      * @return void
      */
-    protected function addHandlerScript()
+    protected function addHandlerScript(): void
     {
         $script = <<<JS
 Dcat.Action({
@@ -112,7 +112,7 @@ Dcat.Action({
     calledClass: '{$this->makeCalledClass()}',
     before: {$this->actionScript()},
     html: {$this->handleHtmlResponse()},
-    success: {$this->resolverScript()}, 
+    success: {$this->resolverScript()},
     error: {$this->rejectScript()},
 });
 JS;
@@ -126,7 +126,7 @@ JS;
      *
      * @return string
      */
-    protected function actionScript()
+    protected function actionScript(): string
     {
         // 发起请求之前回调，返回false可以中断请求
         return <<<'JS'
@@ -139,7 +139,7 @@ JS;
      *
      * @return string
      */
-    protected function resolverScript()
+    protected function resolverScript(): string
     {
         // 请求成功回调，返回false可以中断默认的成功处理逻辑
         return <<<'JS'
@@ -152,7 +152,7 @@ JS;
      *
      * @return string
      */
-    protected function handleHtmlResponse()
+    protected function handleHtmlResponse(): string
     {
         return <<<'JS'
 function (target, html, data) {
@@ -166,7 +166,7 @@ JS;
      *
      * @return string
      */
-    protected function rejectScript()
+    protected function rejectScript(): string
     {
         return <<<'JS'
 function (target, results) {}
@@ -176,7 +176,7 @@ JS;
     /**
      * @return Response
      */
-    public function failedAuthorization()
+    public function failedAuthorization(): Response
     {
         return $this->response()->error(__('admin.deny'));
     }

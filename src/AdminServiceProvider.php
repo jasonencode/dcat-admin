@@ -68,6 +68,9 @@ class AdminServiceProvider extends ServiceProvider
         ],
     ];
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function register(): void
     {
         $this->aliasAdmin();

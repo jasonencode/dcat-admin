@@ -72,7 +72,7 @@ class Color
      *
      * @var array
      */
-    protected static $extensions = [
+    protected static array $extensions = [
         'default'    => [
             'colors' => [
                 'primary'        => '#586cb1',
@@ -108,7 +108,7 @@ class Color
      *
      * @var array
      */
-    protected static $allColors = [
+    protected static array $allColors = [
         'info'    => 'blue',
         'success' => 'green',
         'danger'  => 'red',
@@ -192,24 +192,24 @@ class Color
      *
      * @var string
      */
-    protected $name;
+    protected string $name = 'default';
 
     /**
      * @var array
      */
-    protected $colors = [];
+    protected array $colors = [];
 
     /**
      * @var array
      */
-    protected $realColors;
+    protected array $realColors = [];
 
     /**
      * 获取主题色名称.
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         if (! $this->name) {
             $this->name = config('admin.layout.color') ?: static::DEFAULT_COLOR;
@@ -224,7 +224,7 @@ class Color
      * @param  string  $name
      * @return void
      */
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -232,11 +232,11 @@ class Color
     /**
      * 获取颜色.
      *
-     * @param  string  $colorName
-     * @param  string  $default
-     * @return string
+     * @param  string|null  $colorName
+     * @param  string|null  $default
+     * @return string|null
      */
-    public function get(?string $colorName, ?string $default = null)
+    public function get(?string $colorName, ?string $default = null): ?string
     {
         if ($this->realColors) {
             return $this->realColors[$colorName] ?? $default;
@@ -258,7 +258,7 @@ class Color
      *
      * @return array
      */
-    public function all()
+    public function all(): array
     {
         if ($this->realColors === null) {
             $colors = $this->getColors();
@@ -276,11 +276,11 @@ class Color
     /**
      * 颜色转亮.
      *
-     * @param  string  $color
+     * @param  string|null  $color
      * @param  int  $amt
      * @return string
      */
-    public function lighten(?string $color, int $amt)
+    public function lighten(?string $color, int $amt): string
     {
         return Helper::colorLighten($this->get($color, $color), $amt);
     }
@@ -292,7 +292,7 @@ class Color
      * @param  int  $amt
      * @return string
      */
-    public function darken(string $color, int $amt)
+    public function darken(string $color, int $amt): string
     {
         return Helper::colorDarken($this->get($color, $color), $amt);
     }
@@ -300,11 +300,11 @@ class Color
     /**
      * 颜色透明度转化.
      *
-     * @param  string  $color
+     * @param  string|null  $color
      * @param  float|string  $alpha
      * @return string
      */
-    public function alpha(?string $color, $alpha)
+    public function alpha(?string $color, float|string $alpha): string
     {
         return Helper::colorAlpha($this->get($color, $color), $alpha);
     }
@@ -312,7 +312,7 @@ class Color
     /**
      * @return array
      */
-    protected function getColors()
+    protected function getColors(): array
     {
         if (! $this->colors) {
             $this->colors = array_merge(
@@ -346,7 +346,7 @@ class Color
      * @param  array  $colors
      * @return void
      */
-    public static function extend(string $name, array $colors)
+    public static function extend(string $name, array $colors): void
     {
         static::$extensions[$name] = [
             'colors' => $colors,

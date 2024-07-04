@@ -213,9 +213,9 @@ class Menu
 
     /**
      * @param  string|null  $uri
-     * @return string
+     * @return string|null
      */
-    public function getUrl(?string $uri): string
+    public function getUrl(?string $uri): ?string
     {
         return $uri ? admin_url($uri) : $uri;
     }

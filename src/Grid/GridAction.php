@@ -13,13 +13,13 @@ abstract class GridAction extends Action
     /**
      * @var Grid
      */
-    protected $parent;
+    protected Grid $parent;
 
     /**
      * @param  Grid  $grid
      * @return $this
      */
-    public function setGrid(Grid $grid)
+    public function setGrid(Grid $grid): static
     {
         $this->parent = $grid;
 
@@ -31,7 +31,7 @@ abstract class GridAction extends Action
      *
      * @return string
      */
-    public function resource()
+    public function resource(): string
     {
         return $this->parent->resource();
     }
