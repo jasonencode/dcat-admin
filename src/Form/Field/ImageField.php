@@ -2,11 +2,7 @@
 
 namespace Dcat\Admin\Form\Field;
 
-use Dcat\Admin\Exception\AdminException;
 use Illuminate\Support\Str;
-use Intervention\Image\Constraint;
-use Intervention\Image\Facades\Image as InterventionImage;
-use Intervention\Image\ImageManagerStatic;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 trait ImageField
@@ -39,7 +35,7 @@ trait ImageField
     public function callInterventionMethods(string $target, string $mime): string
     {
         if (! empty($this->interventionCalls)) {
-            $image = ImageManagerStatic::make($target);
+            $image = app('image')->read($target);
 
             $mime = $mime ?: finfo_file(finfo_open(FILEINFO_MIME_TYPE), $target);
 
@@ -67,10 +63,6 @@ trait ImageField
     {
         if (static::hasMacro($method)) {
             return parent::__call($method, $arguments);
-        }
-
-        if (! class_exists(ImageManagerStatic::class)) {
-            throw new AdminException('To use image handling and manipulation, please install [intervention/image] first.');
         }
 
         $this->interventionCalls[] = [
@@ -130,7 +122,7 @@ trait ImageField
         }
 
         foreach ($this->thumbnails as $name => $_) {
-            $ext = pathinfo($file, PATHINFO_EXTENSION);
+            $ext  = pathinfo($file, PATHINFO_EXTENSION);
             $path = Str::replaceLast('.'.$ext, '', $file);
             $path = $path.'-'.$name.'.'.$ext;
 
@@ -153,17 +145,21 @@ trait ImageField
             $ext    = pathinfo($this->name, PATHINFO_EXTENSION);
             $path   = Str::replaceLast('.'.$ext, '', $this->name);
             $path   = $path.'-'.$name.'.'.$ext;
-            $image  = InterventionImage::make($file);
+            $image  = app('image')->read($file);
             $action = $size[2] ?? 'resize';
-            $image->$action($size[0], $size[1], function (Constraint $constraint) {
-                $constraint->aspectRatio();
-            });
+            $image->$action($size[0], $size[1]);
 
             if (! is_null($this->storagePermission)) {
-                $this->getStorage()->put("{$this->getDirectory()}/$path", $image->encode()->stream(),
-                    $this->storagePermission);
+                $this->getStorage()->put(
+                    "{$this->getDirectory()}/$path",
+                    $image->encodeByExtension($ext),
+                    $this->storagePermission
+                );
             } else {
-                $this->getStorage()->put("{$this->getDirectory()}/$path", $image->encode()->stream());
+                $this->getStorage()->put(
+                    "{$this->getDirectory()}/$path",
+                    $image->encodeByExtension($ext)
+                );
             }
         }
 
