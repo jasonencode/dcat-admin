@@ -14,6 +14,8 @@ class File extends Field implements UploadFieldInterface
     use WebUploader;
     use UploadField;
 
+    protected $view = 'admin::form.file';
+
     /**
      * @var array
      */
