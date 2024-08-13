@@ -146,7 +146,7 @@ trait ImageField
             $path   = Str::replaceLast('.'.$ext, '', $this->name);
             $path   = $path.'-'.$name.'.'.$ext;
             $image  = app('image')->read($file);
-            $action = $size[2] ?? 'resize';
+            $action = $size[2] ?? 'scale';
             $image->$action($size[0], $size[1]);
 
             if (! is_null($this->storagePermission)) {

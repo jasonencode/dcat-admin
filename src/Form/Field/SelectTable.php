@@ -17,7 +17,7 @@ class SelectTable extends Field
      */
     protected $dialog;
 
-    protected $style = 'primary';
+    protected string $style = 'primary';
 
     protected $visibleColumn;
 
@@ -36,7 +36,7 @@ class SelectTable extends Field
      * @param  string  $title
      * @return $this
      */
-    public function title($title)
+    public function title(string $title): static
     {
         $this->dialog->title($title);
 
@@ -46,14 +46,14 @@ class SelectTable extends Field
     /**
      * 设置弹窗宽度.
      *
+     * @param  string  $width
+     * @return $this
      * @example
      *    $this->width('500px');
      *    $this->width('50%');
      *
-     * @param  string  $width
-     * @return $this
      */
-    public function dialogWidth(string $width)
+    public function dialogWidth(string $width): static
     {
         $this->dialog->width($width);
 
@@ -66,7 +66,7 @@ class SelectTable extends Field
      * @param  bool  $maxmin
      * @return $this
      */
-    public function dialogMaxMin(bool $maxmin)
+    public function dialogMaxMin(bool $maxmin): static
     {
         $this->dialog->maxmin($maxmin);
 
@@ -79,7 +79,7 @@ class SelectTable extends Field
      * @param  bool  $resize
      * @return $this
      */
-    public function dialogResize(bool $resize)
+    public function dialogResize(bool $resize): static
     {
         $this->dialog->resize($resize);
 
@@ -92,7 +92,7 @@ class SelectTable extends Field
      * @param  LazyRenderable  $renderable
      * @return $this
      */
-    public function from(LazyRenderable $renderable)
+    public function from(LazyRenderable $renderable): static
     {
         $this->dialog->from($renderable);
 
@@ -102,14 +102,14 @@ class SelectTable extends Field
     /**
      * 设置选中的key以及标题字段.
      *
-     * @param $visibleColumn
-     * @param $key
+     * @param  string|null  $visibleColumn
+     * @param  string|null  $key
      * @return $this
      */
-    public function pluck(?string $visibleColumn, ?string $key = 'id')
+    public function pluck(?string $visibleColumn, ?string $key = 'id'): static
     {
         $this->visibleColumn = $visibleColumn;
-        $this->key = $key;
+        $this->key           = $key;
 
         return $this;
     }
@@ -118,7 +118,7 @@ class SelectTable extends Field
      * @param  array  $options
      * @return $this
      */
-    public function options($options = [])
+    public function options($options = []): static
     {
         $this->options = $options;
 
@@ -133,7 +133,7 @@ class SelectTable extends Field
      * @param  string  $text
      * @return $this
      */
-    public function model(string $model, string $id = 'id', string $text = 'title')
+    public function model(string $model, string $id = 'id', string $text = 'title'): static
     {
         return $this->pluck($text, $id)->options(function ($v) use ($model, $id, $text) {
             if (! $v) {
@@ -144,7 +144,7 @@ class SelectTable extends Field
         });
     }
 
-    protected function formatOptions()
+    protected function formatOptions(): void
     {
         $value = Helper::array($this->value());
 
@@ -168,12 +168,12 @@ class SelectTable extends Field
     /**
      * @return string
      */
-    protected function defaultPlaceholder()
+    protected function defaultPlaceholder(): string
     {
         return trans('admin.choose').' '.$this->label;
     }
 
-    protected function setUpTable()
+    protected function setUpTable(): void
     {
         $this->dialog
             ->footer($this->renderFooter())
@@ -210,7 +210,7 @@ class SelectTable extends Field
         return parent::render();
     }
 
-    protected function renderButton()
+    protected function renderButton(): string
     {
         return <<<HTML
 <div class="btn btn-{$this->style}">
@@ -224,7 +224,7 @@ HTML;
      *
      * @return string
      */
-    protected function renderFooter()
+    protected function renderFooter(): string
     {
         $submit = trans('admin.submit');
         $cancel = trans('admin.cancel');

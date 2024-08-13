@@ -6,15 +6,13 @@ use Dcat\Admin\Support\Helper;
 
 class MultipleImage extends Image
 {
-    protected $view = 'admin::form.file';
-
     /**
      * Allow to sort files.
      *
      * @param  bool  $value
      * @return $this
      */
-    public function sortable(bool $value = true)
+    public function sortable(bool $value = true): static
     {
         $this->options['sortable'] = $value;
 
@@ -27,7 +25,7 @@ class MultipleImage extends Image
      * @param  int  $limit
      * @return $this
      */
-    public function limit(int $limit)
+    public function limit(int $limit): static
     {
         if ($limit < 2) {
             return $this;
@@ -43,8 +41,9 @@ class MultipleImage extends Image
      *
      * @param  string|array  $value
      * @return array
+     * @throws \Exception
      */
-    protected function prepareInputValue($value)
+    protected function prepareInputValue($value): array
     {
         if ($path = request(static::FILE_DELETE_FLAG)) {
             $this->deleteFile($path);

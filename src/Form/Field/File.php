@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Validator;
 
 class File extends Field implements UploadFieldInterface
 {
-    use WebUploader;
-    use UploadField;
+    use WebUploader,
+        UploadField;
 
     protected $view = 'admin::form.file';
 

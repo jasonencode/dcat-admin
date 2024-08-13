@@ -10,8 +10,6 @@ class Image extends File
 
     protected $rules = ['nullable', 'image'];
 
-    protected $view = 'admin::form.file';
-
     public function __construct($column, $arguments = [])
     {
         parent::__construct($column, $arguments);
