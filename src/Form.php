@@ -57,7 +57,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @method Field\TimeRange timeRange($start, $end, $label = '')
  * @method Field\Number number($column, $label = '')
  * @method Field\Currency currency($column, $label = '')
- * @method Field\SwitchField switch($column, $label = '')
+ * @method Field\SwitchField switch ($column, $label = '')
  * @method Field\Display display($column, $label = '')
  * @method Field\Rate rate($column, $label = '')
  * @method Field\Divide divider(string $title = null)
@@ -100,8 +100,8 @@ class Form implements Renderable
     use Concerns\HasRows;
     use Concerns\HasTabs;
     use Macroable {
-            __call as macroCall;
-        }
+        __call as macroCall;
+    }
 
     /**
      * Remove flag in `has many` form.
@@ -287,10 +287,10 @@ class Form implements Renderable
      */
     public function __construct($repository = null, ?Closure $callback = null, Request $request = null)
     {
-        $this->repository = $repository ? Admin::repository($repository) : null;
-        $this->callback = $callback;
-        $this->request = $request ?: request();
-        $this->builder = new Builder($this);
+        $this->repository    = $repository ? Admin::repository($repository) : null;
+        $this->callback      = $callback;
+        $this->request       = $request ?: request();
+        $this->builder       = new Builder($this);
         $this->isSoftDeletes = $repository ? $this->repository->isSoftDeletes() : false;
 
         $this->model(new Fluent());
@@ -572,7 +572,7 @@ class Form implements Renderable
                 return $this->sendResponse($response);
             }
 
-            $status = (bool) $result;
+            $status  = (bool) $result;
             $message = $result ? trans('admin.delete_succeeded') : trans('admin.delete_failed');
         } catch (\Throwable $exception) {
             $response = $this->handleException($exception);
@@ -581,7 +581,7 @@ class Form implements Renderable
                 return $response;
             }
 
-            $status = false;
+            $status  = false;
             $message = $exception->getMessage() ?: trans('admin.delete_failed');
         }
 
@@ -973,7 +973,7 @@ class Form implements Renderable
     protected function handleEditable(array $input = [])
     {
         if (array_key_exists('_editable', $input)) {
-            $name = $input['name'];
+            $name  = $input['name'];
             $value = $input['value'];
 
             Arr::forget($input, ['pk', 'value', 'name']);
@@ -1149,6 +1149,8 @@ class Form implements Renderable
     }
 
     /**
+     * @param  bool|\Closure  $condition
+     * @return Condition
      * @example
      *     $form->if(true)->then(function (Form $form) {
      *          $form->text('name');
@@ -1168,8 +1170,6 @@ class Form implements Renderable
      *
      *     $form->if(true)->removeField('name');
      *
-     * @param  bool|\Closure  $condition
-     * @return Condition
      */
     public function if($condition)
     {
@@ -1331,7 +1331,7 @@ class Form implements Renderable
     public function width($fieldWidth = 8, $labelWidth = 2)
     {
         $this->builder->fields()->each(function ($field) use ($fieldWidth, $labelWidth) {
-            /* @var Field $field  */
+            /* @var Field $field */
             $field->width($fieldWidth, $labelWidth);
         });
 
@@ -1724,7 +1724,7 @@ class Form implements Renderable
      * @param  string  $class
      * @return void
      */
-    public static function extend($abstract, $class)
+    public static function extend(string $abstract, string $class): void
     {
         static::$availableFields[$abstract] = $class;
     }
@@ -1732,7 +1732,7 @@ class Form implements Renderable
     /**
      * @return array
      */
-    public static function extensions()
+    public static function extensions(): array
     {
         return static::$availableFields;
     }
@@ -1744,7 +1744,7 @@ class Form implements Renderable
      * @param  string  $alias
      * @return void
      */
-    public static function alias($field, $alias)
+    public static function alias(string $field, string $alias): void
     {
         static::$fieldAlias[$alias] = $field;
     }
@@ -1755,7 +1755,7 @@ class Form implements Renderable
      * @param  string  $method
      * @return bool|mixed
      */
-    public static function findFieldClass($method)
+    public static function findFieldClass(string $method): mixed
     {
         // If alias exists.
         if (isset(static::$fieldAlias[$method])) {
@@ -1777,7 +1777,7 @@ class Form implements Renderable
      * @param  string  $name
      * @return array|mixed
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         return $this->input($name);
     }
@@ -1787,8 +1787,9 @@ class Form implements Renderable
      *
      * @param  string  $name
      * @param  mixed  $value
+     * @return array
      */
-    public function __set($name, $value)
+    public function __set(string $name, mixed $value)
     {
         return Arr::set($this->inputs, $name, $value);
     }

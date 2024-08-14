@@ -260,7 +260,7 @@ class Color
      */
     public function all(): array
     {
-        if ($this->realColors === null) {
+        if (blank($this->realColors)) {
             $colors = $this->getColors();
 
             foreach ($colors as $key => &$color) {
