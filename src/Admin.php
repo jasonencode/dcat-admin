@@ -90,7 +90,7 @@ class Admin
     /**
      * 菜单管理.
      *
-     * @param  Closure|null  $builder
+     * @param Closure|null $builder
      * @return Menu
      */
     public static function menu(Closure $builder = null): Menu
@@ -117,7 +117,7 @@ class Admin
     }
 
     /**
-     * @param  string|null  $favicon
+     * @param string|null $favicon
      * @return string|void
      */
     public static function favicon(?string $favicon = null)
@@ -132,7 +132,7 @@ class Admin
     /**
      * 设置翻译文件路径.
      *
-     * @param  string|null  $path
+     * @param string|null $path
      */
     public static function translation(?string $path): void
     {
@@ -158,7 +158,7 @@ class Admin
     }
 
     /**
-     * @param  Closure|null  $builder
+     * @param Closure|null $builder
      * @return Navbar
      */
     public static function navbar(Closure $builder = null): Navbar
@@ -173,7 +173,7 @@ class Admin
     /**
      * 启用或禁用Pjax.
      *
-     * @param  bool  $value
+     * @param bool $value
      * @return void
      */
     public static function pjax(bool $value = true): void
@@ -206,7 +206,7 @@ class Admin
     /**
      * section.
      *
-     * @param  Closure|null  $builder
+     * @param Closure|null $builder
      * @return SectionManager
      */
     public static function section(Closure $builder = null): SectionManager
@@ -221,8 +221,8 @@ class Admin
     /**
      * 创建数据仓库实例.
      *
-     * @param $repository
-     * @param  array  $args
+     * @param       $repository
+     * @param array $args
      * @return Repository
      * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
@@ -236,7 +236,7 @@ class Admin
             $repository = EloquentRepository::make($repository);
         }
 
-        if (! $repository instanceof Repository) {
+        if (!$repository instanceof Repository) {
             $class = is_object($repository) ? get_class($repository) : $repository;
 
             throw new InvalidArgumentException("The class [$class] must be a type of [".Repository::class.'].');
@@ -258,7 +258,7 @@ class Admin
     /**
      * 处理异常.
      *
-     * @param  \Throwable  $e
+     * @param \Throwable $e
      * @return array|string|\Symfony\Component\HttpFoundation\Response|null
      * @throws \Exception
      */
@@ -270,7 +270,7 @@ class Admin
     /**
      * 上报异常.
      *
-     * @param  \Throwable  $e
+     * @param \Throwable $e
      * @return mixed
      */
     public static function reportException(Throwable $e): mixed
@@ -281,7 +281,7 @@ class Admin
     /**
      * 显示异常信息.
      *
-     * @param  \Throwable  $e
+     * @param \Throwable $e
      * @return mixed
      */
     public static function renderException(Throwable $e): mixed
@@ -290,7 +290,7 @@ class Admin
     }
 
     /**
-     * @param  callable  $callback
+     * @param callable $callback
      */
     public static function booting(callable $callback): void
     {
@@ -298,7 +298,7 @@ class Admin
     }
 
     /**
-     * @param  callable  $callback
+     * @param callable $callback
      */
     public static function booted(callable $callback): void
     {
@@ -342,7 +342,7 @@ class Admin
     }
 
     /**
-     * @param  array|string  $name
+     * @param array|string $name
      * @return void
      */
     public static function addIgnoreQueryName(array|string $name): void
@@ -351,7 +351,7 @@ class Admin
 
         $ignoreQueries = $context->ignoreQueries ?? [];
 
-        $context->ignoreQueries = array_merge($ignoreQueries, (array) $name);
+        $context->ignoreQueries = array_merge($ignoreQueries, (array)$name);
     }
 
     /**
@@ -365,7 +365,7 @@ class Admin
     /**
      * 中断默认的渲染逻辑.
      *
-     * @param  \Illuminate\Contracts\Support\Renderable|\Closure|string|null  $value
+     * @param \Illuminate\Contracts\Support\Renderable|\Closure|string|null $value
      */
     public static function prevent(Renderable|Closure|string|null $value): void
     {
@@ -389,7 +389,7 @@ class Admin
      */
     public static function renderContents()
     {
-        if (! static::shouldPrevent()) {
+        if (!static::shouldPrevent()) {
             return;
         }
 
@@ -420,7 +420,7 @@ class Admin
     /**
      * 响应json数据.
      *
-     * @param  array  $data
+     * @param array $data
      * @return JsonResponse
      */
     public static function json(array $data = []): JsonResponse
@@ -431,7 +431,7 @@ class Admin
     /**
      * 响应并中断后续逻辑.
      *
-     * @param  array|string|\Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Support\Renderable  $response
+     * @param array|string|\Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Support\Renderable $response
      *
      */
     public static function exit(array|string|Response|Renderable $response = '')
@@ -458,7 +458,7 @@ class Admin
     /**
      * 往分组插入中间件.
      *
-     * @param  array  $mix
+     * @param array $mix
      */
     public static function mixMiddlewareGroup(array $mix = []): void
     {
@@ -474,7 +474,7 @@ class Admin
 
                 $finalGroup[] = $mid;
 
-                if (! isset($group[$next]) || $group[$next] !== 'admin.permission') {
+                if (!isset($group[$next]) || $group[$next] !== 'admin.permission') {
                     continue;
                 }
 
@@ -496,7 +496,7 @@ class Admin
     /**
      * 获取js配置.
      *
-     * @param  array|null  $variables
+     * @param array|null $variables
      * @return string
      */
     public static function jsVariables(array $variables = null): string

@@ -25,19 +25,19 @@ class Tools implements Renderable
      *
      * @var Grid
      */
-    protected $grid;
+    protected Grid $grid;
 
     /**
      * Collection of tools.
      *
      * @var Collection
      */
-    protected $tools;
+    protected Collection $tools;
 
     /**
      * @var bool
      */
-    protected $outline = true;
+    protected bool $outline = true;
 
     /**
      * Create a new Tools instance.

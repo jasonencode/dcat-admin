@@ -4,6 +4,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | 是否开启后台验证码
+    |--------------------------------------------------------------------------
+    */
+    'enable_captcha'            => env('ADMIN_ENABLE_CAPTCHA', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | 默认的缩略图尺寸
+    |--------------------------------------------------------------------------
+    */
+    'thumb_size'                => env('ADMIN_THUMB_SIZE', 192),
+
+    /*
+    |--------------------------------------------------------------------------
     | dcat-admin name
     |--------------------------------------------------------------------------
     |
@@ -11,7 +25,7 @@ return [
     | login page.
     |
     */
-    'name'                      => 'Dcat Admin',
+    'name'                      => env('ADMIN_NAME', 'UzTech Admin'),
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +36,10 @@ return [
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo'                      => '<img src="/vendor/dcat-admin/images/logo.png" width="35"> &nbsp;Uz Admin',
+    'logo'                      => env(
+        'ADMIN_LOGO',
+        '<img src="/vendor/dcat-admin/images/logo.png" width="35"> &nbsp;UzTech Admin'
+    ),
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +51,10 @@ return [
     | '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo-mini'                 => '<img src="/vendor/dcat-admin/images/logo.png">',
+    'logo-mini'                 => env(
+        'ADMIN_LOGO_MINI',
+        '<img src="/vendor/dcat-admin/images/logo.png">'
+    ),
 
     /*
     |--------------------------------------------------------------------------
@@ -74,6 +94,8 @@ return [
         'middleware' => ['web', 'admin', 'admin.operation'],
 
         'enable_session_middleware' => false,
+
+        'as' => 'admin.',
     ],
 
     /*
@@ -96,7 +118,7 @@ return [
     | Html title for all pages.
     |
     */
-    'title'                     => 'Admin',
+    'title'                     => env('ADMIN_TITLE', 'Admin'),
 
     /*
     |--------------------------------------------------------------------------
@@ -189,9 +211,18 @@ return [
         'column_selector' => [
             'store'        => Dcat\Admin\Grid\ColumnSelector\SessionStore::class,
             'store_params' => [
-                'driver' => 'file',
+                'driver' => env('CACHE_DRIVER', 'file'),
             ],
         ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | dcat-admin helpers setting.
+    |--------------------------------------------------------------------------
+    */
+    'helpers'                   => [
+        'enable' => false,
     ],
 
     /*
@@ -225,8 +256,8 @@ return [
     'menu'                      => [
         'cache'                => [
             // enable cache or not
-            'enable' => false,
-            'store'  => 'file',
+            'enable' => env('ADMIN_MENU_CACHED', false),
+            'store'  => env('CACHE_DRIVER'),
         ],
 
         // Whether enable menu bind to a permission.
@@ -251,8 +282,10 @@ return [
     |
     */
     'upload'                    => [
+
         // Disk in `config/filesystem.php`.
-        'disk'      => config('filesystems.default'),
+        'disk' => config('filesystems.default'),
+
     ],
 
     /*
@@ -266,31 +299,32 @@ return [
     'database'                  => [
 
         // Database connection for following tables.
-        'connection'             => '',
+        'connection'                => '',
 
         // User tables and model.
-        'users_table'            => 'admin_users',
-        'users_model'            => Dcat\Admin\Models\Administrator::class,
+        'users_table'               => 'admin_users',
+        'users_model'               => Dcat\Admin\Models\Administrator::class,
 
         // Role table and model.
-        'roles_table'            => 'admin_roles',
-        'roles_model'            => Dcat\Admin\Models\Role::class,
+        'roles_table'               => 'admin_roles',
+        'roles_model'               => Dcat\Admin\Models\Role::class,
 
         // Permission table and model.
-        'permissions_table'      => 'admin_permissions',
-        'permissions_model'      => Dcat\Admin\Models\Permission::class,
+        'permissions_table'         => 'admin_permissions',
+        'permissions_model'         => Dcat\Admin\Models\Permission::class,
 
         // Menu table and model.
-        'menu_table'             => 'admin_menu',
-        'menu_model'             => Dcat\Admin\Models\Menu::class,
+        'menu_table'                => 'admin_menu',
+        'menu_model'                => Dcat\Admin\Models\Menu::class,
 
         // Pivot table for table above.
-        'role_users_table'       => 'admin_role_users',
-        'role_permissions_table' => 'admin_role_permissions',
-        'role_menu_table'        => 'admin_role_menu',
-        'permission_menu_table'  => 'admin_permission_menu',
-        'settings_table'         => 'admin_settings',
-        'operation_logs'         => 'admin_operation_logs',
+        'role_users_table'          => 'admin_role_users',
+        'role_permissions_table'    => 'admin_role_permissions',
+        'role_menu_table'           => 'admin_role_menu',
+        'permission_menu_table'     => 'admin_permission_menu',
+        'extensions_table'          => 'admin_extensions',
+        'extension_histories_table' => 'admin_extension_histories',
+        'operation_logs'            => 'admin_operation_logs',
     ],
 
     /*
@@ -312,9 +346,9 @@ return [
         'sidebar_collapsed' => false,
 
         // light, primary, dark
-        'sidebar_style'     => 'light',
+        'sidebar_style'     => 'primary',
 
-        'dark_mode_switch' => false,
+        'dark_mode_switch' => true,
 
         // bg-primary, bg-info, bg-warning, bg-success, bg-danger, bg-dark
         'navbar_color'     => '',
@@ -335,5 +369,5 @@ return [
     |
     | Whether enable default breadcrumb for every page content.
     */
-    'enable_default_breadcrumb' => true,
+    'enable_default_breadcrumb' => false,
 ];
