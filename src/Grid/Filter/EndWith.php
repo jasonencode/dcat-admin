@@ -6,7 +6,7 @@ use Illuminate\Support\Arr;
 
 class EndWith extends AbstractFilter
 {
-    protected $type = 'like';
+    protected string $type = 'like';
 
     /**
      * Get condition of this filter.

@@ -12,6 +12,7 @@ use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Traits\HasBuilderEvents;
 use Dcat\Admin\Traits\HasVariables;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Macroable;
 
@@ -41,160 +42,173 @@ class Grid
     const ASYNC_NAME          = '_async_';
 
     /**
-     * The grid data model instance.
+     * 表格数据实例
      *
      * @var \Dcat\Admin\Grid\Model
      */
-    protected $model;
+    protected Model $model;
 
     /**
-     * Collection of grid columns.
+     * 表格列的集合
      *
      * @var \Illuminate\Support\Collection
      */
-    protected $columns;
+    protected Collection $columns;
 
     /**
-     * Collection of all grid columns.
+     * 表格全部列的集合
      *
      * @var \Illuminate\Support\Collection
      */
-    protected $allColumns;
+    protected Collection $allColumns;
 
     /**
-     * Collection of all data rows.
+     * 表格数据行
      *
      * @var \Illuminate\Support\Collection
      */
-    protected $rows;
+    protected Collection $rows;
 
     /**
+     * 行的回调方法
+     *
      * @var array
      */
-    protected $rowsCallbacks = [];
+    protected array $rowsCallbacks = [];
 
     /**
-     * All column names of the grid.
+     * 列名称
      *
      * @var array
      */
     protected array $columnNames = [];
 
     /**
-     * Grid builder.
+     * 表格构建器
      *
-     * @var \Closure
+     * @var \Closure|null
      */
-    protected $builder;
+    protected ?Closure $builder = null;
 
     /**
-     * Mark if the grid is built.
+     * 标记表格是否构建完成
      *
      * @var bool
      */
     protected $built = false;
 
     /**
-     * Resource path of the grid.
+     * 表格的资源路径
      *
-     * @var
+     * @var string
      */
-    protected $resourcePath;
+    protected string $resourcePath;
 
     /**
-     * Default primary key name.
+     * 表单的主键名称
      *
      * @var string|array
      */
-    protected string|array $keyName;
+    protected string|array $keyName = 'id';
 
     /**
-     * View for grid to render.
+     * 渲染模板
      *
      * @var string
      */
     protected $view = 'admin::grid.table';
 
     /**
+     * 表头
+     *
      * @var Closure[]
      */
-    protected $header = [];
+    protected array $header = [];
 
     /**
+     * 表尾
+     *
      * @var Closure[]
      */
-    protected $footer = [];
+    protected array $footer = [];
 
     /**
-     * @var Closure
+     * 外部包裹
+     *
+     * @var Closure|null
      */
-    protected $wrapper;
+    protected ?Closure $wrapper = null;
 
     /**
-     * @var bool
-     */
-    protected $addNumberColumn = false;
-
-    /**
+     * 表ID
+     *
      * @var string
      */
-    protected $tableId = 'grid-table';
+    protected string $tableId = 'grid-table';
 
     /**
-     * @var Grid\Tools\RowSelector
+     * 行选择器
+     *
+     * @var Grid\Tools\RowSelector|null
      */
-    protected $rowSelector;
+    protected ?Tools\RowSelector $rowSelector = null;
 
     /**
-     * Options for grid.
+     * 表格的选项
      *
      * @var array
      */
-    protected $options = [
-        'pagination'          => true,
-        'filter'              => true,
+    protected array $options = [
         'actions'             => true,
-        'quick_edit_button'   => false,
-        'edit_button'         => true,
-        'view_button'         => true,
-        'delete_button'       => true,
-        'row_selector'        => true,
-        'create_button'       => true,
-        'bordered'            => false,
-        'table_collapse'      => true,
-        'toolbar'             => true,
-        'create_mode'         => self::CREATE_MODE_DEFAULT,
-        'dialog_form_area'    => ['700px', '670px'],
-        'table_class'         => ['table', 'custom-data-table', 'data-table'],
-        'scrollbar_x'         => false,
         'actions_class'       => null,
         'batch_actions_class' => null,
+        'bordered'            => false,
+        'create_button'       => true,
+        'create_mode'         => self::CREATE_MODE_DEFAULT,
+        'delete_button'       => true,
+        'dialog_form_area'    => ['700px', '670px'],
+        'edit_button'         => true,
+        'filter'              => true,
+        'pagination'          => true,
         'paginator_class'     => null,
+        'quick_edit_button'   => false,
+        'row_selector'        => true,
+        'scrollbar_x'         => false,
+        'table_class'         => ['table', 'custom-data-table', 'data-table'],
+        'table_collapse'      => true,
+        'toolbar'             => true,
+        'view_button'         => true,
     ];
 
     /**
+     * 当前请求
+     *
      * @var \Illuminate\Http\Request
      */
-    protected $request;
+    protected Request $request;
 
     /**
+     * 是否显示
+     *
      * @var bool
      */
-    protected $show = true;
+    protected bool $show = true;
 
     /**
+     * 异步加载
+     *
      * @var bool
      */
-    protected $async = false;
+    protected bool $async = false;
 
     /**
-     * Create a new grid instance.
+     * 创建表格实例
      *
      * Grid constructor.
      *
-     * @param  null  $repository
-     * @param  null|\Closure  $builder
-     * @param  null  $request
+     * @param null          $repository 资源
+     * @param null|\Closure $builder    构建器
+     * @param null          $request    请求
      * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
     public function __construct($repository = null, ?Closure $builder = null, $request = null)
@@ -220,7 +234,7 @@ class Grid
     }
 
     /**
-     * Get table ID.
+     * 获取表格ID
      *
      * @return string
      */
@@ -230,7 +244,7 @@ class Grid
     }
 
     /**
-     * Set primary key name.
+     * 设置主键名称
      *
      * @param string|array $name
      * @return $this
@@ -243,29 +257,29 @@ class Grid
     }
 
     /**
-     * Get or set primary key name.
+     * 获取主键名称
      *
      * @return string|array
      */
     public function getKeyName(): array|string
     {
-        return $this->keyName ?: 'id';
+        return $this->keyName;
     }
 
     /**
-     * Add column to Grid.
+     * 增加列
      *
      * @param string $name
      * @param string $label
      * @return Column
      */
-    public function column($name, $label = ''): Column
+    public function column(string $name, string $label = ''): Column
     {
         return $this->addColumn($name, $label);
     }
 
     /**
-     * Add number column.
+     * 添加行号显示列
      *
      * @param null|string $label
      * @return Column
@@ -292,11 +306,6 @@ class Grid
         return $this;
     }
 
-    public function getAsync(): bool
-    {
-        return $this->async;
-    }
-
     /**
      * 判断是否允许查询数据.
      *
@@ -320,35 +329,18 @@ class Grid
     }
 
     /**
-     * Batch add column to grid.
+     * 列集合.
      *
-     * @param array $columns
-     * @return Collection|void
-     * @example
-     * 1.$grid->columns(['name' => 'Name', 'email' => 'Email' ...]);
-     * 2.$grid->columns('name', 'email' ...)
-     *
+     * @return \Illuminate\Support\Collection
      */
-    public function columns($columns = null)
+    public function columns(): Collection
     {
-        if ($columns === null) {
-            return $this->columns;
-        }
-
-        if (func_num_args() == 1 && is_array($columns)) {
-            foreach ($columns as $column => $label) {
-                $this->column($column, $label);
-            }
-
-            return;
-        }
-
-        foreach (func_get_args() as $column) {
-            $this->column($column);
-        }
+        return $this->columns;
     }
 
     /**
+     * 所有列集合
+     *
      * @return Collection
      */
     public function allColumns(): Collection
@@ -357,12 +349,12 @@ class Grid
     }
 
     /**
-     * 删除列.
+     * 删除列
      *
      * @param string|Column $column
      * @return $this
      */
-    public function dropColumn($column): static
+    public function dropColumn(string|Column $column): static
     {
         if ($column instanceof Column) {
             $column = $column->getName();
@@ -375,13 +367,13 @@ class Grid
     }
 
     /**
-     * Add column to grid.
+     * 增加列
      *
      * @param string $field
      * @param string $label
      * @return Column
      */
-    protected function addColumn(string $field = '', string $label = ''): Column
+    protected function addColumn(string $field, string $label = ''): Column
     {
         $column = $this->newColumn($field, $label);
 
@@ -392,11 +384,13 @@ class Grid
     }
 
     /**
+     * 在前面插入列
+     *
      * @param string $field
      * @param string $label
      * @return Column
      */
-    public function prependColumn(string $field = '', string $label = ''): Column
+    public function prependColumn(string $field, string $label = ''): Column
     {
         $column = $this->newColumn($field, $label);
 
@@ -411,7 +405,7 @@ class Grid
      * @param string $label
      * @return Column
      */
-    public function newColumn($field = '', $label = ''): Column
+    public function newColumn(string $field, string $label = ''): Column
     {
         $column = new Column($field, $label);
         $column->setGrid($this);
@@ -420,7 +414,7 @@ class Grid
     }
 
     /**
-     * Get Grid model.
+     * 获取模型
      *
      * @return Model
      */
@@ -430,6 +424,8 @@ class Grid
     }
 
     /**
+     * 获取全部列名
+     *
      * @return array
      */
     public function getColumnNames(): array
@@ -438,7 +434,9 @@ class Grid
     }
 
     /**
-     * Apply column filter to grid query.
+     * 应用查询过滤器
+     *
+     * @return void
      */
     protected function applyColumnFilter(): void
     {
@@ -449,7 +447,7 @@ class Grid
      * @param string|array $class
      * @return void
      */
-    public function addTableClass($class): void
+    public function addTableClass(string|array $class): void
     {
         $this->options['table_class'] = array_merge((array)$this->options['table_class'], (array)$class);
     }
@@ -464,7 +462,7 @@ class Grid
     }
 
     /**
-     * Build the grid.
+     * 构建表格
      *
      * @return void
      * @throws \Psr\Container\ContainerExceptionInterface
@@ -525,7 +523,7 @@ class Grid
      * @param Collection $data
      * @return void
      */
-    protected function buildRows($data): void
+    protected function buildRows(Collection $data): void
     {
         $this->rows = $data->map(function ($row) {
             return new Row($this, $row);
@@ -858,10 +856,10 @@ HTML;
     }
 
     /**
-     * Create a grid instance.
+     * 创建表格实例
      *
-     * @param  mixed  ...$params
-     * @return $this
+     * @param ...$params
+     * @return static
      * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
     public static function make(...$params): static
@@ -913,12 +911,12 @@ HTML;
     }
 
     /**
-     * Set a view to render.
+     * 设置渲染模板
      *
      * @param string $view
      * @return $this
      */
-    public function view($view): static
+    public function view(string $view): static
     {
         $this->view = $view;
 
@@ -926,12 +924,12 @@ HTML;
     }
 
     /**
-     * Set grid title.
+     * 设置表格标题
      *
      * @param string $title
      * @return $this
      */
-    public function title($title): static
+    public function title(string $title): static
     {
         $this->variables['title'] = $title;
 
@@ -944,7 +942,7 @@ HTML;
      * @param string $description
      * @return $this
      */
-    public function description($description): static
+    public function description(string $description): static
     {
         $this->variables['description'] = $description;
 
@@ -957,7 +955,7 @@ HTML;
      * @param string $path
      * @return $this
      */
-    public function setResource($path): static
+    public function setResource(string $path): static
     {
         $this->resourcePath = admin_url($path);
 
@@ -1086,7 +1084,7 @@ JS
      * @param string $name
      * @return Column
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         return $this->addColumn($name);
     }
@@ -1094,11 +1092,11 @@ JS
     /**
      * Dynamically add columns to the grid view.
      *
-     * @param $method
-     * @param $parameters
+     * @param string $method
+     * @param        $parameters
      * @return Column
      */
-    public function __call($method, $parameters)
+    public function __call(string $method, $parameters)
     {
         if (static::hasMacro($method)) {
             return $this->macroCall($method, $parameters);
@@ -1108,11 +1106,12 @@ JS
     }
 
     /**
+     * @return string
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Throwable
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->render();
     }

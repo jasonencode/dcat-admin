@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid\Filter\Presenter;
 
+use Closure;
 use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Arrayable;
@@ -11,43 +12,43 @@ use Illuminate\Support\Arr;
 class Select extends Presenter
 {
     /**
-     * @var string
+     * @var string|null
      */
-    protected $elementClass = null;
+    protected ?string $elementClass = null;
 
     /**
      * Options of select.
      *
      * @var array
      */
-    protected $options = [];
+    protected mixed $options = [];
 
     /**
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * @var string
      */
-    protected $script;
+    protected string $script;
 
     /**
      * @var string
      */
-    protected $placeholder;
+    protected string $placeholder;
 
     /**
      * @var bool
      */
-    protected $selectAll = true;
+    protected bool $selectAll = true;
 
     /**
      * Select constructor.
      *
-     * @param  mixed  $options
+     * @param array $options
      */
-    public function __construct($options)
+    public function __construct(array $options)
     {
         $this->options = $options;
     }
@@ -57,11 +58,11 @@ class Select extends Presenter
      *
      * all configurations see https://select2.org/configuration/options-api
      *
-     * @param  string|array  $key
-     * @param  mixed  $val
+     * @param array|string $key
+     * @param mixed|null   $val
      * @return $this
      */
-    public function config($key, $val = null)
+    public function config(array|string $key, mixed $val = null): static
     {
         if (is_array($key)) {
             $this->config = array_merge($this->config, $key);
@@ -75,7 +76,7 @@ class Select extends Presenter
     /**
      * @return $this
      */
-    public function disableSelectAll()
+    public function disableSelectAll(): static
     {
         $this->selectAll = false;
 
@@ -93,7 +94,7 @@ class Select extends Presenter
             $this->loadRemoteOptions($this->options);
         }
 
-        if ($this->options instanceof \Closure) {
+        if ($this->options instanceof Closure) {
             $this->options = $this->options->call($this->filter, $this->filter->getValue());
         }
 
@@ -115,15 +116,16 @@ class Select extends Presenter
     /**
      * Load options from current selected resource(s).
      *
-     * @param  string  $model
-     * @param  string  $idField
-     * @param  string  $textField
+     * @param string $model
+     * @param string $idField
+     * @param string $textField
      * @return $this
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
     public function model($model, string $idField = 'id', string $textField = 'name')
     {
-        if (! class_exists($model)
-            || ! in_array(Model::class, class_parents($model))
+        if (!class_exists($model)
+            || !in_array(Model::class, class_parents($model))
         ) {
             throw new RuntimeException("[$model] must be a valid model class");
         }
@@ -154,12 +156,12 @@ class Select extends Presenter
     /**
      * Load options from remote.
      *
-     * @param  string  $url
-     * @param  array  $parameters
-     * @param  array  $options
+     * @param string $url
+     * @param array  $parameters
+     * @param array  $options
      * @return $this
      */
-    protected function loadRemoteOptions(string $url, array $parameters = [], array $options = [])
+    protected function loadRemoteOptions(string $url, array $parameters = [], array $options = []): static
     {
         $ajaxOptions = [
             'url' => Helper::urlWithQuery(admin_url($url), $parameters),
@@ -174,7 +176,7 @@ class Select extends Presenter
 
         $ajaxOptions = array_merge($ajaxOptions, $options);
 
-        $values = array_filter((array) $this->filter->getValue());
+        $values = array_filter((array)$this->filter->getValue());
 
         return $this->addVariables([
             'remote' => compact('ajaxOptions', 'values'),
@@ -182,11 +184,11 @@ class Select extends Presenter
     }
 
     /**
-     * @param  string|array  $key
-     * @param  mixed  $value
+     * @param array|string $key
+     * @param mixed|null   $value
      * @return $this
      */
-    public function addDefaultConfig($key, $value = null)
+    public function addDefaultConfig(array|string $key, mixed $value = null): static
     {
         if (is_array($key)) {
             foreach ($key as $k => $v) {
@@ -196,7 +198,7 @@ class Select extends Presenter
             return $this;
         }
 
-        if (! isset($this->config[$key])) {
+        if (!isset($this->config[$key])) {
             $this->config[$key] = $value;
         }
 
@@ -206,10 +208,10 @@ class Select extends Presenter
     /**
      * Set input placeholder.
      *
-     * @param  string  $placeholder
+     * @param string|null $placeholder
      * @return $this|string
      */
-    public function placeholder(string $placeholder = null)
+    public function placeholder(string $placeholder = null): string|static
     {
         if ($placeholder === null) {
             return $this->placeholder ?: __('admin.choose');
@@ -223,12 +225,12 @@ class Select extends Presenter
     /**
      * Load options from ajax.
      *
-     * @param  string  $resourceUrl
-     * @param $idField
-     * @param $textField
+     * @param string $resourceUrl
+     * @param string $idField
+     * @param string $textField
      * @return $this
      */
-    public function ajax(string $resourceUrl, string $idField = 'id', string $textField = 'text')
+    public function ajax(string $resourceUrl, string $idField = 'id', string $textField = 'text'): static
     {
         $this->config([
             'allowClear'         => true,
@@ -255,7 +257,7 @@ class Select extends Presenter
         ];
     }
 
-    public function getElementClassSelector()
+    public function getElementClassSelector(): string
     {
         return '.'.$this->getElementClass();
     }
@@ -272,13 +274,13 @@ class Select extends Presenter
     /**
      * Load options for other select when change.
      *
-     * @param  string  $target
-     * @param  string  $resourceUrl
-     * @param  string  $idField
-     * @param  string  $textField
+     * @param string $target
+     * @param string $resourceUrl
+     * @param string $idField
+     * @param string $textField
      * @return $this
      */
-    public function load($target, string $resourceUrl, string $idField = 'id', string $textField = 'text'): self
+    public function load(string $target, string $resourceUrl, string $idField = 'id', string $textField = 'text'): self
     {
         return $this->loads($target, $resourceUrl, $idField, $textField);
     }
@@ -286,20 +288,20 @@ class Select extends Presenter
     /**
      * 联动加载多个字段.
      *
-     * @param  array|string  $fields
-     * @param  array|string  $sourceUrls
-     * @param  string  $idField
-     * @param  string  $textField
+     * @param array|string $fields
+     * @param array|string $sourceUrls
+     * @param string       $idField
+     * @param string       $textField
      * @return $this
      */
-    public function loads($fields = [], $sourceUrls = [], string $idField = 'id', string $textField = 'text')
+    public function loads(array|string $fields = [], array|string $sourceUrls = [], string $idField = 'id', string $textField = 'text'): static
     {
         $fieldsStr = implode('^', array_map(function ($field) {
             return $this->filter->formatColumnClass($field);
-        }, (array) $fields));
-        $urlsStr = implode('^', array_map(function ($url) {
+        }, (array)$fields));
+        $urlsStr   = implode('^', array_map(function ($url) {
             return admin_url($url);
-        }, (array) $sourceUrls));
+        }, (array)$sourceUrls));
 
         return $this->addVariables(['loads' => [
             'fields'    => $fieldsStr,
@@ -313,10 +315,10 @@ class Select extends Presenter
     /**
      * Get form element class.
      *
-     * @param  string  $target
+     * @param string $target
      * @return mixed
      */
-    protected function getClass($target): string
+    protected function getClass(string $target): string
     {
         return str_replace('.', '_', $target);
     }

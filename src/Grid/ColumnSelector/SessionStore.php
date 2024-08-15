@@ -11,14 +11,14 @@ class SessionStore implements ColumnSelectorStore
     /**
      * @var Grid
      */
-    protected $grid;
+    protected Grid $grid;
 
-    public function setGrid(Grid $grid)
+    public function setGrid(Grid $grid): void
     {
         $this->grid = $grid;
     }
 
-    public function store(array $input)
+    public function store(array $input): void
     {
         session()->put($this->getKey(), $input);
     }
@@ -28,12 +28,12 @@ class SessionStore implements ColumnSelectorStore
         return session()->get($this->getKey());
     }
 
-    public function forget()
+    public function forget(): void
     {
         session()->remove($this->getKey());
     }
 
-    protected function getKey()
+    protected function getKey(): string
     {
         return $this->grid->getName().'/'.request()->path().'/'.Admin::user()->getKey();
     }

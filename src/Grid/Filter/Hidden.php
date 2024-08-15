@@ -10,9 +10,9 @@ class Hidden extends AbstractFilter
     protected $name;
 
     /**
-     * @var string
+     * @var string|array
      */
-    protected $value;
+    protected string|array $value;
 
     /**
      * Hidden constructor.

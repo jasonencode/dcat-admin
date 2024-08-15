@@ -10,19 +10,19 @@ class Column
     /**
      * @var Collection
      */
-    protected $filters;
+    protected Collection $filters;
 
     /**
      * @var int
      */
-    protected $width;
+    protected int $width;
 
     /**
      * Column constructor.
      *
-     * @param  int  $width
+     * @param int $width
      */
-    public function __construct($width = 12)
+    public function __construct(int $width = 12)
     {
         $this->width = $width;
         $this->filters = new Collection();

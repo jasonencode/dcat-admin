@@ -9,7 +9,7 @@ class Text extends Presenter
     /**
      * @var string
      */
-    protected $placeholder = '';
+    protected string $placeholder = '';
 
     /**
      * @var string

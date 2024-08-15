@@ -9,32 +9,32 @@ class Radio extends Presenter
     /**
      * @var array
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * Display inline.
      *
      * @var bool
      */
-    protected $inline = true;
+    protected bool $inline = true;
 
     /**
      * @var bool
      */
-    protected $showLabel = true;
+    protected bool $showLabel = true;
 
     /**
      * Radio constructor.
      *
-     * @param  array  $options
+     * @param array $options
      */
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
         if ($options instanceof Arrayable) {
             $options = $options->toArray();
         }
 
-        $this->options = (array) $options;
+        $this->options = $options;
 
         return $this;
     }
@@ -51,7 +51,7 @@ class Radio extends Presenter
         return $this;
     }
 
-    public function showLabel(bool $value)
+    public function showLabel(bool $value): static
     {
         $this->showLabel = $value;
 

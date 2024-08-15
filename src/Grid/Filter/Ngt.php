@@ -9,7 +9,7 @@ class Ngt extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    protected $view = 'admin::filter.gt';
+    protected string $view = 'admin::filter.gt';
 
     /**
      * Get condition of this filter.

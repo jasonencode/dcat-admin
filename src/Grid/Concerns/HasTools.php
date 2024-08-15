@@ -19,7 +19,7 @@ trait HasTools
     protected Tools $tools;
 
     /**
-     * Setup grid tools.
+     * 初始化工具栏.
      */
     public function setUpTools(): void
     {

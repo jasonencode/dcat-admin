@@ -10,7 +10,7 @@ class Between extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    protected $view = 'admin::filter.between';
+    protected string $view = 'admin::filter.between';
 
     /**
      * @var int

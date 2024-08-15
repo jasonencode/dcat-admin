@@ -18,9 +18,9 @@ trait CanHidesColumns
     public array $hiddenColumns = [];
 
     /**
-     * @var ColumnSelectorStore
+     * @var ColumnSelectorStore|null
      */
-    private ColumnSelectorStore $columnSelectorStorage;
+    private ?ColumnSelectorStore $columnSelectorStorage = null;
 
     private array $visibleColumnsFromQuery;
 
@@ -53,6 +53,9 @@ trait CanHidesColumns
 
     /**
      * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Throwable
      */
     public function renderColumnSelector(): string
     {

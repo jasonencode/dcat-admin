@@ -23,9 +23,9 @@ class Row implements Arrayable
     /**
      * Row data.
      *
-     * @var Fluent
+     * @var \Dcat\Admin\Grid\Model|Fluent
      */
-    protected $data;
+    protected Model|Fluent $data;
 
     /**
      * Attributes of row.
@@ -63,15 +63,12 @@ class Row implements Arrayable
     /**
      * Get column attributes.
      *
-     * @param  string  $column
+     * @param string $column
      * @return string
      */
     public function columnAttributes(string $column): string
     {
-        if (
-            ($column = $this->grid->columns()->get($column))
-            && ($attributes = $column->getAttributes())
-        ) {
+        if (($column = $this->grid->columns()->get($column)) && ($attributes = $column->getAttributes())) {
             return $this->formatHtmlAttributes($attributes);
         }
 
@@ -81,7 +78,7 @@ class Row implements Arrayable
     /**
      * Format attributes to html.
      *
-     * @param  array  $attributes
+     * @param array $attributes
      * @return string
      */
     private function formatHtmlAttributes(array $attributes = []): string
@@ -92,7 +89,7 @@ class Row implements Arrayable
     /**
      * Set attributes.
      *
-     * @param  array  $attributes
+     * @param array $attributes
      * @return \Dcat\Admin\Grid\Row
      */
     public function setAttributes(array $attributes): static
@@ -105,7 +102,7 @@ class Row implements Arrayable
     /**
      * Set style of the row.
      *
-     * @param  array|string  $style
+     * @param array|string $style
      */
     public function style(array|string $style): void
     {
@@ -133,7 +130,7 @@ class Row implements Arrayable
     /**
      * Getter.
      *
-     * @param  string  $attr
+     * @param string $attr
      * @return mixed
      */
     public function __get(string $attr)
@@ -144,8 +141,8 @@ class Row implements Arrayable
     /**
      * Setter.
      *
-     * @param  string  $attr
-     * @param  mixed  $value
+     * @param string $attr
+     * @param mixed  $value
      * @return void
      */
     public function __set(string $attr, mixed $value)
@@ -156,8 +153,8 @@ class Row implements Arrayable
     /**
      * Get or set value of column in this row.
      *
-     * @param  string  $name
-     * @param  mixed|null  $value
+     * @param string     $name
+     * @param mixed|null $value
      * @return float|\Illuminate\Support\Carbon|bool|int|string|\Dcat\Admin\Grid\Row|null
      */
     public function column(string $name, mixed $value = null): float|Carbon|bool|int|string|null|static
@@ -188,8 +185,8 @@ class Row implements Arrayable
     /**
      * Output column value.
      *
-     * @param  mixed  $value
-     * @return bool|float|\Illuminate\Support\Carbon|int|string|null
+     * @param mixed $value
+     * @return float|\Illuminate\Support\Carbon|bool|int|string|null
      */
     protected function output(mixed $value): float|Carbon|bool|int|string|null
     {
@@ -209,7 +206,7 @@ class Row implements Arrayable
             $value = $value->toJson();
         }
 
-        if (! is_null($value) && ! is_scalar($value)) {
+        if (!is_null($value) && !is_scalar($value)) {
             return sprintf('<pre class="dump">%s</pre>',
                 json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         }

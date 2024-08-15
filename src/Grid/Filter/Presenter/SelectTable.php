@@ -17,9 +17,9 @@ class SelectTable extends Presenter
     /**
      * @var DialogTable
      */
-    protected $dialog;
+    protected DialogTable $dialog;
 
-    protected $style = 'primary';
+    protected string $style = 'primary';
 
     protected $id;
 
@@ -173,7 +173,7 @@ class SelectTable extends Presenter
             <<<JS
 Dcat.init('#{$this->id}', function (self) {
     var dialogId = self.parent().find('{$this->dialog->getElementSelector()}').attr('id');
-    
+
     Dcat.grid.SelectTable({
         dialog: '[data-id="' + dialogId + '"]',
         container: '#{$this->id}',

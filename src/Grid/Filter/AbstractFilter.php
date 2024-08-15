@@ -42,7 +42,7 @@ abstract class AbstractFilter
      *
      * @var array|string
      */
-    protected $id;
+    protected string|array $id;
 
     /**
      * Label of presenter.
@@ -52,26 +52,26 @@ abstract class AbstractFilter
     protected $label;
 
     /**
-     * @var array|string
+     * @var array|string|null
      */
-    protected $value;
+    protected array|string|null $value = null;
 
     /**
-     * @var array|string
+     * @var array|string|null
      */
-    protected $defaultValue;
+    protected array|string|null $defaultValue = null;
 
     /**
      * @var string
      */
-    protected $column;
+    protected string $column;
 
     /**
      * Presenter object.
      *
-     * @var Presenter
+     * @var Presenter|null
      */
-    protected $presenter;
+    protected ?Presenter $presenter = null;
 
     /**
      * Query for filter.
@@ -83,7 +83,7 @@ abstract class AbstractFilter
     /**
      * @var Filter
      */
-    protected $parent;
+    protected Filter $parent;
 
     /**
      * @var int
@@ -93,33 +93,33 @@ abstract class AbstractFilter
     /**
      * @var string
      */
-    protected $style;
+    protected string $style = '';
 
     /**
      * @var string
      */
-    protected $view = 'admin::filter.where';
+    protected string $view = 'admin::filter.where';
 
     /**
-     * @var Collection
+     * @var Collection|null
      */
-    public $group;
+    public ?Collection $group = null;
 
     /**
      * @var bool
      */
-    protected $ignore = false;
+    protected bool $ignore = false;
 
     /**
      * AbstractFilter constructor.
      *
-     * @param $column
-     * @param  string  $label
+     * @param string $column
+     * @param string $label
      */
-    public function __construct($column, $label = '')
+    public function __construct(string $column, string $label = '')
     {
         $this->column = $column;
-        $this->label = $this->formatLabel($label);
+        $this->label  = $this->formatLabel($label);
     }
 
     /**
@@ -127,7 +127,7 @@ abstract class AbstractFilter
      *
      * @return void
      */
-    protected function setupDefaultPresenter()
+    protected function setupDefaultPresenter(): void
     {
         $this->setPresenter(new Text($this->label));
     }
@@ -135,10 +135,10 @@ abstract class AbstractFilter
     /**
      * Format label.
      *
-     * @param  string  $label
+     * @param string $label
      * @return string
      */
-    protected function formatLabel($label)
+    protected function formatLabel(string $label): string
     {
         if ($label) {
             return $label;
@@ -152,7 +152,7 @@ abstract class AbstractFilter
     /**
      * Set the column width.
      *
-     * @param  int|string  $width
+     * @param int|string $width
      * @return $this
      */
     public function width($width)
@@ -178,7 +178,7 @@ abstract class AbstractFilter
     /**
      * Format name.
      *
-     * @param  string  $column
+     * @param string $column
      * @return string
      */
     protected function formatName($column)
@@ -200,7 +200,7 @@ abstract class AbstractFilter
     /**
      * Format id.
      *
-     * @param  string|array  $columns
+     * @param string|array $columns
      * @return array|string
      */
     protected function formatId($columns)
@@ -217,7 +217,7 @@ abstract class AbstractFilter
     }
 
     /**
-     * @param  Filter  $filter
+     * @param Filter $filter
      */
     public function setParent(Filter $filter)
     {
@@ -237,12 +237,12 @@ abstract class AbstractFilter
     /**
      * Get siblings of current filter.
      *
-     * @param  null  $index
+     * @param null $index
      * @return AbstractFilter[]|mixed
      */
     public function siblings($index = null)
     {
-        if (! is_null($index)) {
+        if (!is_null($index)) {
             return Arr::get($this->parent->filters(), $index);
         }
 
@@ -252,7 +252,7 @@ abstract class AbstractFilter
     /**
      * Get previous filter.
      *
-     * @param  int  $step
+     * @param int $step
      * @return AbstractFilter[]|mixed
      */
     public function previous($step = 1)
@@ -265,7 +265,7 @@ abstract class AbstractFilter
     /**
      * Get next filter.
      *
-     * @param  int  $step
+     * @param int $step
      * @return AbstractFilter[]|mixed
      */
     public function next($step = 1)
@@ -278,7 +278,7 @@ abstract class AbstractFilter
     /**
      * Get query condition from filter.
      *
-     * @param  array  $inputs
+     * @param array $inputs
      * @return array|mixed|null
      */
     public function condition($inputs)
@@ -309,7 +309,7 @@ abstract class AbstractFilter
     /**
      * Select filter.
      *
-     * @param  array  $options
+     * @param array $options
      * @return Select
      */
     public function select($options = [])
@@ -318,7 +318,7 @@ abstract class AbstractFilter
     }
 
     /**
-     * @param  array|\Illuminate\Contracts\Support\Arrayable|\Closure  $options
+     * @param array|\Illuminate\Contracts\Support\Arrayable|\Closure $options
      * @return MultipleSelect
      */
     public function multipleSelect($options = [])
@@ -327,7 +327,7 @@ abstract class AbstractFilter
     }
 
     /**
-     * @param  LazyRenderable  $table
+     * @param LazyRenderable $table
      * @return Filter\Presenter\SelectTable
      */
     public function selectTable(LazyRenderable $table)
@@ -336,7 +336,7 @@ abstract class AbstractFilter
     }
 
     /**
-     * @param  LazyRenderable  $table
+     * @param LazyRenderable $table
      * @return Filter\Presenter\MultipleSelectTable
      */
     public function multipleSelectTable(LazyRenderable $table)
@@ -345,7 +345,7 @@ abstract class AbstractFilter
     }
 
     /**
-     * @param  array  $options
+     * @param array $options
      * @return Radio
      */
     public function radio($options = [])
@@ -354,7 +354,7 @@ abstract class AbstractFilter
     }
 
     /**
-     * @param  array  $options
+     * @param array $options
      * @return Checkbox
      */
     public function checkbox($options = [])
@@ -365,7 +365,7 @@ abstract class AbstractFilter
     /**
      * Datetime filter.
      *
-     * @param  array  $options
+     * @param array $options
      * @return DateTime
      */
     public function datetime($options = [])
@@ -426,7 +426,7 @@ abstract class AbstractFilter
     /**
      * Set presenter object of filter.
      *
-     * @param  Presenter  $presenter
+     * @param Presenter $presenter
      * @return mixed
      */
     public function setPresenter(Presenter $presenter)
@@ -445,7 +445,7 @@ abstract class AbstractFilter
      */
     protected function presenter()
     {
-        if (! $this->presenter) {
+        if (!$this->presenter) {
             $this->setupDefaultPresenter();
         }
 
@@ -455,7 +455,7 @@ abstract class AbstractFilter
     /**
      * Set default value for filter.
      *
-     * @param  null  $default
+     * @param null $default
      * @return $this
      */
     public function default($default = null)
@@ -485,7 +485,7 @@ abstract class AbstractFilter
     /**
      * Set element id.
      *
-     * @param  string  $id
+     * @param string $id
      * @return $this
      */
     public function setId($id)
@@ -511,7 +511,7 @@ abstract class AbstractFilter
     }
 
     /**
-     * @param  string  $column
+     * @param string $column
      * @return string
      */
     public function formatColumnClass($column)
@@ -538,7 +538,7 @@ abstract class AbstractFilter
     }
 
     /**
-     * @param  mixed  $value
+     * @param mixed $value
      * @return $this
      */
     public function setValue($value)
@@ -569,8 +569,8 @@ abstract class AbstractFilter
     }
 
     /**
-     * @param  string|callable  $relColumn
-     * @param  mixed  ...$params
+     * @param string|callable $relColumn
+     * @param mixed           ...$params
      * @return array
      */
     protected function buildRelationQuery($relColumn, ...$params)

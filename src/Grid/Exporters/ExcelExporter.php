@@ -8,6 +8,9 @@ use Dcat\EasyExcel\Excel;
 
 class ExcelExporter extends AbstractExporter
 {
+    /**
+     * @throws \Dcat\Admin\Exception\RuntimeException
+     */
     public function __construct($titles = [])
     {
         parent::__construct($titles);
@@ -18,9 +21,10 @@ class ExcelExporter extends AbstractExporter
     }
 
     /**
-     * {@inheritdoc}
+     * @return void
+     * @throws \Exception
      */
-    public function export()
+    public function export(): void
     {
         $filename = $this->getFilename().'.'.$this->extension;
 

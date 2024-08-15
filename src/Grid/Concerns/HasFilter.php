@@ -19,7 +19,7 @@ trait HasFilter
     protected Grid\Filter $filter;
 
     /**
-     * Setup grid filter.
+     * 初始化过滤器
      *
      * @return void
      */
@@ -49,7 +49,7 @@ trait HasFilter
     /**
      * Get or set the grid filter.
      *
-     * @param  \Closure|null  $callback
+     * @param \Closure|null $callback
      * @return $this|Grid\Filter
      */
     public function filter(Closure $callback = null): Grid\Filter|static
@@ -70,7 +70,7 @@ trait HasFilter
      */
     public function renderFilter(): string|View
     {
-        if (! $this->options['filter']) {
+        if (!$this->options['filter']) {
             return '';
         }
 
@@ -98,24 +98,24 @@ trait HasFilter
     {
         $this->filter->disableCollapse($disable);
 
-        return $this->option('filter', ! $disable);
+        return $this->option('filter', !$disable);
     }
 
     /**
      * Show grid filter.
      *
-     * @param  bool  $val
+     * @param bool $val
      * @return $this
      */
     public function showFilter(bool $val = true): static
     {
-        return $this->disableFilter(! $val);
+        return $this->disableFilter(!$val);
     }
 
     /**
      * Disable filter button.
      *
-     * @param  bool  $disable
+     * @param bool $disable
      * @return $this
      */
     public function disableFilterButton(bool $disable = true): static
@@ -128,12 +128,12 @@ trait HasFilter
     /**
      * Show filter button.
      *
-     * @param  bool  $val
+     * @param bool $val
      * @return $this
      */
     public function showFilterButton(bool $val = true): static
     {
-        return $this->disableFilterButton(! $val);
+        return $this->disableFilterButton(!$val);
     }
 
     /**
@@ -142,7 +142,7 @@ trait HasFilter
      */
     protected function addFilterScript(): void
     {
-        if (! $this->isAsyncRequest()) {
+        if (!$this->isAsyncRequest()) {
             return;
         }
 

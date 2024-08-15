@@ -18,17 +18,18 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @var \Dcat\Admin\Grid
      */
-    protected $grid;
+    protected Grid $grid;
 
     /**
      * @var Grid\Exporter
      */
-    protected $parent;
+    protected Grid\Exporter $parent;
 
+    protected $modelQueries;
     /**
      * @var \Closure
      */
-    protected $builder;
+    protected Closure $builder;
 
     /**
      * @var array
@@ -38,12 +39,12 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @var string
      */
-    protected $filename;
+    protected string $filename;
 
     /**
      * @var string
      */
-    protected $scope;
+    protected string $scope;
 
     /**
      * @var string
@@ -53,7 +54,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Create a new exporter instance.
      *
-     * @param  array  $titles
+     * @param array $titles
      */
     public function __construct(array $titles = [])
     {
@@ -65,7 +66,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Set the headings of excel sheet.
      *
-     * @param  false|array|null  $titles
+     * @param false|array|null $titles
      * @return $this|array
      */
     public function titles(false|array $titles = null): array|static
@@ -103,7 +104,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Set filename.
      *
-     * @param  string|\Closure  $filename
+     * @param string|\Closure $filename
      * @return $this
      */
     public function filename(string|Closure $filename): static
@@ -116,7 +117,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Set export data callback function.
      *
-     * @param  \Closure  $builder
+     * @param \Closure $builder
      * @return $this
      */
     public function rows(Closure $builder): static
@@ -151,10 +152,10 @@ abstract class AbstractExporter implements ExporterInterface
     }
 
     /**
-     * @param  string  $ext  e.g. csv/xlsx/ods
+     * @param string $ext e.g. csv/xlsx/ods
      * @return $this
      */
-    public function extension(string $ext)
+    public function extension(string $ext): static
     {
         $this->extension = $ext;
 
@@ -164,12 +165,12 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Set grid for exporter.
      *
-     * @param  Grid  $grid
+     * @param Grid $grid
      * @return $this
      */
-    public function setGrid(Grid $grid)
+    public function setGrid(Grid $grid): static
     {
-        $this->grid = $grid;
+        $this->grid   = $grid;
         $this->parent = $grid->exporter();
 
         return $this;
@@ -178,7 +179,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @return string
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename ?: (admin_trans_label().'-'.date('Ymd-His').'-'.Str::random(6));
     }
@@ -186,18 +187,18 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Get data with export query.
      *
-     * @param  int|null  $page
-     * @param  int|null  $perPage
+     * @param int|null $page
+     * @param int|null $perPage
      * @return array
      * @throws \Exception
      */
-    public function buildData(?int $page = null, ?int $perPage = null)
+    public function buildData(?int $page = null, ?int $perPage = null): array
     {
         $model = $this->getGridModel();
 
         // current page
         if ($this->scope === Grid\Exporter::SCOPE_CURRENT_PAGE) {
-            $page = $model->getCurrentPage();
+            $page    = $model->getCurrentPage();
             $perPage = $model->getPerPage();
         }
 
@@ -219,10 +220,10 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * 格式化待导出数据.
      *
-     * @param  Collection  $data
+     * @param Collection $data
      * @return array
      */
-    protected function normalize(Collection $data)
+    protected function normalize(Collection $data): array
     {
         $data = $data->toArray();
         foreach ($data as &$row) {
@@ -241,7 +242,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @return Grid\Model
      */
-    protected function getGridModel()
+    protected function getGridModel(): Grid\Model
     {
         $model = $this->grid->model();
 
@@ -257,7 +258,7 @@ abstract class AbstractExporter implements ExporterInterface
     }
 
     /**
-     * @param  Collection  $data
+     * @param Collection $data
      * @return array|\Illuminate\Support\Collection
      */
     protected function callBuilder(Collection &$data): array|Collection
@@ -280,14 +281,14 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Export data with scope.
      *
-     * @param  string  $scope
+     * @param string $scope
      * @return $this
      */
     public function withScope(string $scope): static
     {
-        $data = explode(':', $scope);
+        $data  = explode(':', $scope);
         $scope = $data[0] ?? '';
-        $args = $data[1] ?? '';
+        $args  = $data[1] ?? '';
 
         $this->scope = $scope;
 
@@ -300,10 +301,7 @@ abstract class AbstractExporter implements ExporterInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    abstract public function export();
+    abstract public function export(): void;
 
     /**
      * @param $method
@@ -320,7 +318,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Create a new exporter instance.
      *
-     * @param  null  $builder
+     * @param null $builder
      * @return \Dcat\Admin\Grid\Exporters\AbstractExporter
      */
     public static function make($builder = null): AbstractExporter

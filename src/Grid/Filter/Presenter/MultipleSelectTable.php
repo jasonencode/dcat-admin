@@ -10,12 +10,12 @@ class MultipleSelectTable extends SelectTable
         '@select2',
     ];
 
-    protected $view = 'admin::filter.selecttable';
+    protected string $view = 'admin::filter.selecttable';
 
     /**
      * @var int
      */
-    protected $max = 0;
+    protected int $max = 0;
 
     /**
      * 设置最大选择数量.
@@ -23,28 +23,28 @@ class MultipleSelectTable extends SelectTable
      * @param  int  $max
      * @return $this
      */
-    public function max(int $max)
+    public function max(int $max): static
     {
         $this->max = $max;
 
         return $this;
     }
 
-    protected function addScript()
+    protected function addScript(): void
     {
         $options = json_encode($this->options);
 
         Admin::script(
             <<<JS
-Dcat.init('#{$this->id}', function (self) {
+Dcat.init('#$this->id', function (self) {
     var dialogId = self.parent().find('{$this->dialog->getElementSelector()}').attr('id');
     Dcat.grid.SelectTable({
         dialog: '[data-id="' + dialogId + '"]',
-        container: '#{$this->id}',
-        input: '#hidden-{$this->id}',
+        container: '#$this->id',
+        input: '#hidden-$this->id',
         multiple: true,
-        max: {$this->max},
-        values: {$options},
+        max: $this->max,
+        values: $options,
     });
 })
 JS

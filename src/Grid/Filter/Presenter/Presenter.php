@@ -23,24 +23,24 @@ abstract class Presenter
     /**
      * @var AbstractFilter
      */
-    protected $filter;
+    protected AbstractFilter $filter;
 
     /**
      * @var string
      */
-    protected $view;
+    protected string $view = '';
 
     /**
-     * @var int
+     * @var int|null
      */
-    protected $width = null;
+    protected ?int $width = null;
 
     /**
      * Set parent filter.
      *
      * @param  AbstractFilter  $filter
      */
-    public function setParent(AbstractFilter $filter)
+    public function setParent(AbstractFilter $filter): void
     {
         $this->filter = $filter;
 
@@ -50,10 +50,10 @@ abstract class Presenter
     }
 
     /**
-     * @param  int  $width
+     * @param int $width
      * @return $this
      */
-    public function width($width)
+    public function width(int $width): static
     {
         $this->filter->width($width);
 
@@ -65,7 +65,7 @@ abstract class Presenter
      *
      * @return $this
      */
-    public function ignore()
+    public function ignore(): static
     {
         $this->filter->ignore();
 
@@ -86,7 +86,7 @@ abstract class Presenter
      * @param $default
      * @return $this
      */
-    public function default($default)
+    public function default($default): static
     {
         $this->filter->default($default);
 
@@ -98,7 +98,7 @@ abstract class Presenter
      *
      * @return array|string
      */
-    public function value()
+    public function value(): array|string
     {
         $value = $this->filter->getValue();
 
@@ -112,7 +112,7 @@ abstract class Presenter
     /**
      * Collect assets.
      */
-    public static function requireAssets()
+    public static function requireAssets(): void
     {
         if (static::$js) {
             Admin::js(static::$js);

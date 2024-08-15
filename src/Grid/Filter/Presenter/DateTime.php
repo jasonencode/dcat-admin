@@ -9,19 +9,19 @@ class DateTime extends Presenter
     /**
      * @var array
      */
-    protected $options = [];
+    protected mixed $options = [];
 
     /**
      * @var string
      */
-    protected $format = 'YYYY-MM-DD HH:mm:ss';
+    protected string $format = 'YYYY-MM-DD HH:mm:ss';
 
     /**
      * DateTime constructor.
      *
-     * @param  array  $options
+     * @param array $options
      */
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
         $this->options = $this->getOptions($options);
     }

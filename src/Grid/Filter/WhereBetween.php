@@ -9,7 +9,7 @@ class WhereBetween extends Between
     /**
      * {@inheritdoc}
      */
-    protected $view = 'admin::filter.between';
+    protected string $view = 'admin::filter.between';
 
     /**
      * Query closure.

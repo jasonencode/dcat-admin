@@ -9,7 +9,7 @@ class Lt extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    protected $view = 'admin::filter.lt';
+    protected string $view = 'admin::filter.lt';
 
     /**
      * Get condition of this filter.

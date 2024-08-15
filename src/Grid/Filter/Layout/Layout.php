@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid\Filter\Layout;
 
+use Closure;
 use Dcat\Admin\Grid\Filter;
 use Illuminate\Support\Collection;
 
@@ -10,17 +11,17 @@ class Layout
     /**
      * @var Collection
      */
-    protected $columns;
+    protected Collection $columns;
 
     /**
      * @var Column
      */
-    protected $current;
+    protected Column $current;
 
     /**
      * @var Filter
      */
-    protected $parent;
+    protected Filter $parent;
 
     /**
      * Layout constructor.
@@ -41,7 +42,7 @@ class Layout
      *
      * @param  Filter\AbstractFilter  $filter
      */
-    public function addFilter(Filter\AbstractFilter $filter)
+    public function addFilter(Filter\AbstractFilter $filter): void
     {
         $this->current->addFilter($filter);
     }
@@ -49,10 +50,10 @@ class Layout
     /**
      * Add a new column in layout.
      *
-     * @param  int  $width
-     * @param  \Closure  $closure
+     * @param int       $width
+     * @param  \Closure $closure
      */
-    public function column($width, \Closure $closure)
+    public function column(int $width, Closure $closure): void
     {
         if ($this->columns->isEmpty()) {
             $column = $this->current;
@@ -74,7 +75,7 @@ class Layout
      *
      * @return Collection
      */
-    public function columns()
+    public function columns(): Collection
     {
         if ($this->columns->isEmpty()) {
             $this->columns->push($this->current);

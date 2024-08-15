@@ -3,13 +3,14 @@
 namespace Dcat\Admin\Grid;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Fluent;
 
 abstract class RowAction extends GridAction
 {
     /**
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Fluent
      */
-    protected Model $row;
+    protected Model|Fluent $row;
 
     /**
      * @var Column
@@ -44,10 +45,10 @@ abstract class RowAction extends GridAction
     /**
      * Set row model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $row
+     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Fluent  $row
      * @return $this
      */
-    public function setRow(Model $row): static
+    public function setRow(Model|Fluent $row): RowAction
     {
         $this->row = $row;
 
