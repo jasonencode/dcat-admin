@@ -3,12 +3,12 @@
 namespace Dcat\Admin\Grid;
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Contracts\Repository;
 use Dcat\Admin\Exception\AdminException;
 use Dcat\Admin\Grid;
-use Dcat\Admin\Repositories\Repository;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -16,6 +16,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use stdClass;
 
 /**
  * @mixin Builder
@@ -27,36 +28,36 @@ class Model
     /**
      * @var Request
      */
-    protected $request;
+    protected Request $request;
 
     /**
      * @var Repository
      */
-    protected $repository;
+    protected Repository $repository;
 
     /**
-     * @var AbstractPaginator
+     * @var AbstractPaginator|null
      */
-    protected $paginator;
+    protected ?AbstractPaginator $paginator = null;
 
     /**
      * Array of queries of the model.
      *
      * @var \Illuminate\Support\Collection
      */
-    protected $queries;
+    protected Collection $queries;
 
     /**
      * Sort parameters of the model.
      *
-     * @var array
+     * @var array|null
      */
-    protected $sort;
+    protected ?array $sort = null;
 
     /**
-     * @var Collection
+     * @var Collection|null
      */
-    protected $data;
+    protected ?Collection $data = null;
 
     /**
      * @var callable
@@ -68,63 +69,63 @@ class Model
      *
      * @var int
      */
-    protected $perPage = 20;
+    protected int $perPage = 20;
 
     /**
      * @var string
      */
-    protected $pageName = 'page';
+    protected string $pageName = 'page';
 
     /**
      * @var int
      */
-    protected $currentPage;
+    protected int $currentPage = 1;
 
     /**
      * If the model use pagination.
      *
      * @var bool
      */
-    protected $usePaginate = true;
+    protected bool $usePaginate = true;
 
     /**
      * The query string variable used to store the per-page.
      *
      * @var string
      */
-    protected $perPageName = 'per_page';
+    protected string $perPageName = 'per_page';
 
     /**
      * The query string variable used to store the sort.
      *
      * @var string
      */
-    protected $sortName = '_sort';
+    protected string $sortName = '_sort';
 
     /**
      * @var bool
      */
-    protected $simple = false;
+    protected bool $simple = false;
 
     /**
      * @var Grid
      */
-    protected $grid;
+    protected Grid $grid;
 
     /**
      * @var Relation
      */
-    protected $relation;
+    protected Relation $relation;
 
     /**
      * @var array
      */
-    protected $eagerLoads = [];
+    protected array $eagerLoads = [];
 
     /**
      * @var array
      */
-    protected $constraints = [];
+    protected array $constraints = [];
 
     /**
      * Create a new grid model instance.
@@ -146,7 +147,7 @@ class Model
     /**
      * @return void
      */
-    protected function initQueries()
+    protected function initQueries(): void
     {
         $this->queries = new Collection();
     }
@@ -154,7 +155,7 @@ class Model
     /**
      * @return Repository|null
      */
-    public function repository()
+    public function repository(): ?Repository
     {
         return $this->repository;
     }
@@ -162,7 +163,7 @@ class Model
     /**
      * @return Collection
      */
-    public function getQueries()
+    public function getQueries(): Collection
     {
         return $this->queries = $this->queries->unique();
     }
@@ -171,13 +172,14 @@ class Model
      * @param  Collection  $query
      * @return void
      */
-    public function setQueries(Collection $query)
+    public function setQueries(Collection $query): void
     {
         $this->queries = $query;
     }
 
     /**
      * @return AbstractPaginator|LengthAwarePaginator
+     * @throws \Exception
      */
     public function paginator(): ?AbstractPaginator
     {
@@ -192,7 +194,7 @@ class Model
      * @param  bool  $value
      * @return $this
      */
-    public function simple(bool $value = true)
+    public function simple(bool $value = true): static
     {
         $this->simple = $value;
 
@@ -202,18 +204,22 @@ class Model
     /**
      * @return string
      */
-    public function getPaginateMethod()
+    public function getPaginateMethod(): string
     {
         return $this->simple ? 'simplePaginate' : 'paginate';
     }
 
     /**
      * @param  int  $total
-     * @param  Collection|array  $data
+     * @param  array|Collection  $data
+     * @param  string|null  $url
      * @return LengthAwarePaginator|Paginator
      */
-    public function makePaginator($total, $data, string $url = null)
-    {
+    public function makePaginator(
+        int $total,
+        array|Collection $data,
+        string $url = null
+    ): Paginator|LengthAwarePaginator {
         if ($this->simple) {
             $paginator = new Paginator($data, $this->getPerPage(), $this->getCurrentPage());
         } else {
@@ -235,7 +241,7 @@ class Model
      *
      * @return string|array
      */
-    public function getKeyName()
+    public function getKeyName(): array|string
     {
         return $this->grid->getKeyName();
     }
@@ -245,9 +251,10 @@ class Model
      *
      * @param  bool  $use
      *
+     * @return \Dcat\Admin\Grid\Model
      * @reutrn $this;
      */
-    public function usePaginate($use = true)
+    public function usePaginate(bool $use = true): static
     {
         $this->usePaginate = $use;
 
@@ -257,7 +264,7 @@ class Model
     /**
      * @return bool
      */
-    public function allowPagination()
+    public function allowPagination(): bool
     {
         return $this->usePaginate;
     }
@@ -267,7 +274,7 @@ class Model
      *
      * @return string
      */
-    public function getPerPageName()
+    public function getPerPageName(): string
     {
         return $this->grid->makeName($this->perPageName);
     }
@@ -276,7 +283,7 @@ class Model
      * @param  int  $perPage
      * @return \Dcat\Admin\Grid\Model
      */
-    public function setPerPage(int $perPage)
+    public function setPerPage(int $perPage): static
     {
         $this->perPage = $perPage;
 
@@ -286,7 +293,7 @@ class Model
     /**
      * @return string
      */
-    public function getPageName()
+    public function getPageName(): string
     {
         return $this->grid->makeName($this->pageName);
     }
@@ -295,7 +302,7 @@ class Model
      * @param  string  $name
      * @return $this
      */
-    public function setPageName($name)
+    public function setPageName(string $name): static
     {
         $this->pageName = $name;
 
@@ -307,7 +314,7 @@ class Model
      *
      * @return string
      */
-    public function getSortName()
+    public function getSortName(): string
     {
         return $this->grid->makeName($this->sortName);
     }
@@ -316,7 +323,7 @@ class Model
      * @param  string  $name
      * @return $this
      */
-    public function setSortName($name)
+    public function setSortName(string $name): static
     {
         $this->sortName = $name;
 
@@ -329,7 +336,7 @@ class Model
      * @param  Grid  $grid
      * @return $this
      */
-    public function setGrid(Grid $grid)
+    public function setGrid(Grid $grid): static
     {
         $this->grid = $grid;
 
@@ -341,7 +348,7 @@ class Model
      *
      * @return Grid
      */
-    public function grid()
+    public function grid(): Grid
     {
         return $this->grid;
     }
@@ -351,7 +358,7 @@ class Model
      *
      * @return Filter
      */
-    public function filter()
+    public function filter(): Filter
     {
         return $this->grid->filter();
     }
@@ -361,7 +368,7 @@ class Model
      *
      * @return array
      */
-    public function getConstraints()
+    public function getConstraints(): array
     {
         return $this->constraints;
     }
@@ -370,7 +377,7 @@ class Model
      * @param  array  $constraints
      * @return $this
      */
-    public function setConstraints(array $constraints)
+    public function setConstraints(array $constraints): static
     {
         $this->constraints = $constraints;
 
@@ -380,10 +387,10 @@ class Model
     /**
      * Build.
      *
-     * @return Collection
+     * @return \Illuminate\Support\Collection|null
      * @throws \Exception
      */
-    public function buildData()
+    public function buildData(): ?Collection
     {
         if (is_null($this->data)) {
             $this->setData($this->fetch());
@@ -393,10 +400,10 @@ class Model
     }
 
     /**
-     * @param  Collection|callable|array|AbstractPaginator  $data
+     * @param  callable|array|AbstractPaginator|Collection  $data
      * @return $this
      */
-    public function setData($data)
+    public function setData(callable|array|Collection|AbstractPaginator $data): static
     {
         if (is_callable($data)) {
             $this->builder = $data;
@@ -430,7 +437,7 @@ class Model
      * @param  array  $conditions
      * @return $this
      */
-    public function addConditions(array $conditions)
+    public function addConditions(array $conditions): static
     {
         foreach ($conditions as $condition) {
             call_user_func_array([$this, key($condition)], current($condition));
@@ -444,7 +451,7 @@ class Model
      *
      * @throws \Exception
      */
-    protected function fetch()
+    protected function fetch(): array|Collection
     {
         if ($this->paginator) {
             return $this->paginator->getCollection();
@@ -473,7 +480,7 @@ class Model
      * @param  AbstractPaginator  $paginator
      * @return void
      */
-    protected function setPaginator(AbstractPaginator $paginator)
+    protected function setPaginator(AbstractPaginator $paginator): void
     {
         $this->paginator = $paginator;
 
@@ -492,10 +499,10 @@ class Model
      * @param  Collection  $collection
      * @return Collection
      */
-    protected function stdObjToArray(Collection $collection)
+    protected function stdObjToArray(Collection $collection): Collection
     {
         return $collection->transform(function ($item) {
-            if ($item instanceof \stdClass) {
+            if ($item instanceof stdClass) {
                 return (array) $item;
             }
 
@@ -508,10 +515,10 @@ class Model
      *
      * @return int|null
      */
-    public function getCurrentPage()
+    public function getCurrentPage(): ?int
     {
         if (! $this->usePaginate) {
-            return;
+            return null;
         }
 
         return $this->currentPage ?: ($this->currentPage = ($this->request->get($this->getPageName()) ?: 1));
@@ -521,7 +528,7 @@ class Model
      * @param  int  $currentPage
      * @return \Dcat\Admin\Grid\Model
      */
-    public function setCurrentPage(int $currentPage)
+    public function setCurrentPage(int $currentPage): static
     {
         $this->currentPage = $currentPage;
 
@@ -533,10 +540,10 @@ class Model
      *
      * @return int|null
      */
-    public function getPerPage()
+    public function getPerPage(): ?int
     {
         if (! $this->usePaginate) {
-            return;
+            return null;
         }
 
         $perPage = $this->request->get($this->getPerPageName()) ?: $this->perPage;
@@ -553,16 +560,16 @@ class Model
      * @param $method
      * @return Collection
      */
-    public function findQueryByMethod($method)
+    public function findQueryByMethod($method): Collection
     {
         return $this->queries->where('method', $method);
     }
 
     /**
-     * @param  string|callable  $method
+     * @param  callable|string  $method
      * @return $this
      */
-    public function filterQueryBy($method)
+    public function filterQueryBy(callable|string $method): static
     {
         $this->queries = $this->queries->filter(function ($query, $k) use ($method) {
             if (
@@ -587,7 +594,7 @@ class Model
      *
      * @return array exp: ['name', 'desc']
      */
-    public function getSort()
+    public function getSort(): array
     {
         if (empty($this->sort)) {
             $this->sort = $this->request->get($this->getSortName());
@@ -601,10 +608,10 @@ class Model
     }
 
     /**
-     * @param  string|array  $method
+     * @param  array|string  $method
      * @return void
      */
-    public function rejectQuery($method)
+    public function rejectQuery(array|string $method): void
     {
         $this->queries = $this->queries->reject(function ($query) use ($method) {
             if (is_callable($method)) {
@@ -620,7 +627,7 @@ class Model
      *
      * @return void
      */
-    public function resetOrderBy()
+    public function resetOrderBy(): void
     {
         $this->rejectQuery(['orderBy', 'orderByDesc']);
     }
@@ -630,7 +637,7 @@ class Model
      * @param  array  $arguments
      * @return $this
      */
-    public function __call($method, $arguments)
+    public function __call(string $method, array $arguments)
     {
         return $this->addQuery($method, $arguments);
     }
@@ -640,7 +647,7 @@ class Model
      * @param  array  $arguments
      * @return $this
      */
-    public function addQuery(string $method, array $arguments = [])
+    public function addQuery(string $method, array $arguments = []): static
     {
         $this->queries->push([
             'method'    => $method,
@@ -658,7 +665,7 @@ class Model
             ->merge($this->findQueryByMethod('oldest'));
     }
 
-    public function getSortDescMethods()
+    public function getSortDescMethods(): array
     {
         return ['orderByDesc', 'latest'];
     }
@@ -666,10 +673,10 @@ class Model
     /**
      * @param  Builder  $query
      * @param  bool  $fetch
-     * @param  string[]  $columns
-     * @return Builder|Paginator|Collection
+     * @param  string[]|null  $columns
+     * @return \Illuminate\Database\Eloquent\Builder|mixed
      */
-    public function apply($query, bool $fetch = false, $columns = null)
+    public function apply(Builder $query, bool $fetch = false, array $columns = null): mixed
     {
         $this->getQueries()->unique()->each(function ($value) use (&$query, $fetch, $columns) {
             if (! $fetch && in_array($value['method'], ['paginate', 'simplePaginate', 'get'], true)) {
@@ -696,7 +703,7 @@ class Model
      * @param  mixed  $relations
      * @return $this|Model
      */
-    public function with($relations)
+    public function with(mixed $relations): Model|static
     {
         if (is_array($relations)) {
             if (Arr::isAssoc($relations)) {
@@ -728,10 +735,9 @@ class Model
     /**
      * @return void
      */
-    public function reset()
+    public function reset(): void
     {
-        $this->data  = null;
-        $this->model = null;
+        $this->data = null;
         $this->initQueries();
     }
 }

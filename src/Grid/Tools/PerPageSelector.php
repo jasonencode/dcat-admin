@@ -6,23 +6,24 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Widgets\Dropdown;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Collection;
 
 class PerPageSelector implements Renderable
 {
     /**
      * @var Grid
      */
-    protected $parent;
+    protected Grid $parent;
 
     /**
      * @var string
      */
-    protected $perPage;
+    protected string $perPage;
 
     /**
      * @var string
      */
-    protected $perPageName = '';
+    protected string $perPageName = '';
 
     /**
      * Create a new PerPageSelector instance.
@@ -41,7 +42,7 @@ class PerPageSelector implements Renderable
      *
      * @return void
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         $this->perPageName = $this->parent->model()->getPerPageName();
 
@@ -54,9 +55,8 @@ class PerPageSelector implements Renderable
     /**
      * Get options for selector.
      *
-     * @return static
      */
-    public function getOptions()
+    public function getOptions(): Collection
     {
         return collect($this->parent->getPerPages())
             ->push($this->parent->getPerPage())
@@ -77,7 +77,7 @@ class PerPageSelector implements Renderable
         $options = $this->getOptions()->map(function ($option) {
             $url = app('request')->fullUrlWithQuery([$this->perPageName => $option]);
 
-            return "<a href=\"{$url}\">$option</a>";
+            return "<a href=\"$url\">$option</a>";
         })->toArray();
 
         $dropdown = Dropdown::make($options)
@@ -97,7 +97,7 @@ EOT;
      *
      * @return string
      */
-    protected function script()
+    protected function script(): string
     {
         return <<<JS
 $('.{$this->parent->getPerPageName()}').change(function() {

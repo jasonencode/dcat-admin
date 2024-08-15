@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid\Concerns;
 
+use Closure;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Tools\Selector;
 use Dcat\Admin\Support\Helper;
@@ -12,15 +13,15 @@ use Dcat\Admin\Support\Helper;
 trait HasSelector
 {
     /**
-     * @var Selector
+     * @var Selector|null
      */
-    protected $_selector;
+    protected Selector|null $_selector = null;
 
     /**
-     * @param  \Closure  $closure
+     * @param  \Closure|null  $closure
      * @return $this|Selector
      */
-    public function selector(\Closure $closure = null)
+    public function selector(Closure $closure = null): Selector|static
     {
         if ($closure === null) {
             return $this->_selector;
@@ -41,8 +42,10 @@ trait HasSelector
      * Apply selector query to grid model query.
      *
      * @return $this
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    protected function applySelectorQuery()
+    protected function applySelectorQuery(): static
     {
         if (is_null($this->_selector)) {
             return $this;
@@ -84,9 +87,11 @@ trait HasSelector
     /**
      * Render grid selector.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function renderSelector()
+    public function renderSelector(): string
     {
         return $this->_selector->render();
     }

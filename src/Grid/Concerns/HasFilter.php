@@ -7,6 +7,7 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Collection;
+use Illuminate\View\View;
 
 trait HasFilter
 {
@@ -15,14 +16,14 @@ trait HasFilter
      *
      * @var Grid\Filter
      */
-    protected $filter;
+    protected Grid\Filter $filter;
 
     /**
      * Setup grid filter.
      *
      * @return void
      */
-    protected function setUpFilter()
+    protected function setUpFilter(): void
     {
         $this->filter = new Grid\Filter($this->model());
     }
@@ -30,10 +31,10 @@ trait HasFilter
     /**
      * Process the grid filter.
      *
-     * @param  bool  $toArray
      * @return Collection
+     * @throws \Exception
      */
-    public function processFilter()
+    public function processFilter(): Collection
     {
         $this->callBuilder();
         $this->handleExportRequest();
@@ -48,10 +49,10 @@ trait HasFilter
     /**
      * Get or set the grid filter.
      *
-     * @param  Closure  $callback
+     * @param  \Closure|null  $callback
      * @return $this|Grid\Filter
      */
-    public function filter(Closure $callback = null)
+    public function filter(Closure $callback = null): Grid\Filter|static
     {
         if ($callback === null) {
             return $this->filter;
@@ -65,9 +66,9 @@ trait HasFilter
     /**
      * Render the grid filter.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @throws \Throwable
      */
-    public function renderFilter()
+    public function renderFilter(): string|View
     {
         if (! $this->options['filter']) {
             return '';
@@ -81,7 +82,7 @@ trait HasFilter
      *
      * @return $this
      */
-    public function expandFilter()
+    public function expandFilter(): static
     {
         $this->filter->expand();
 
@@ -93,7 +94,7 @@ trait HasFilter
      *
      * @return $this
      */
-    public function disableFilter(bool $disable = true)
+    public function disableFilter(bool $disable = true): static
     {
         $this->filter->disableCollapse($disable);
 
@@ -106,7 +107,7 @@ trait HasFilter
      * @param  bool  $val
      * @return $this
      */
-    public function showFilter(bool $val = true)
+    public function showFilter(bool $val = true): static
     {
         return $this->disableFilter(! $val);
     }
@@ -117,7 +118,7 @@ trait HasFilter
      * @param  bool  $disable
      * @return $this
      */
-    public function disableFilterButton(bool $disable = true)
+    public function disableFilterButton(bool $disable = true): static
     {
         $this->tools->disableFilterButton($disable);
 
@@ -130,12 +131,16 @@ trait HasFilter
      * @param  bool  $val
      * @return $this
      */
-    public function showFilterButton(bool $val = true)
+    public function showFilterButton(bool $val = true): static
     {
         return $this->disableFilterButton(! $val);
     }
 
-    protected function addFilterScript()
+    /**
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    protected function addFilterScript(): void
     {
         if (! $this->isAsyncRequest()) {
             return;
@@ -151,6 +156,6 @@ JS
 
         $url = Helper::urlWithoutQuery($this->filter()->urlWithoutFilters(), ['_pjax', static::ASYNC_NAME]);
 
-        Admin::script("$('.grid-filter-form').attr('action', '{$url}');", true);
+        Admin::script("$('.grid-filter-form').attr('action', '$url');", true);
     }
 }

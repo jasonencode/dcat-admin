@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid\Concerns;
 
+use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Grid\Column;
 use Dcat\Admin\Grid\Events\ApplyQuickSearch;
@@ -20,20 +21,22 @@ use Illuminate\Support\Str;
 trait HasQuickSearch
 {
     /**
-     * @var array|string|\Closure
+     * @var Closure|array|string|null
      */
-    protected $search;
+    protected Closure|array|string|null $search;
 
     /**
-     * @var Tools\QuickSearch
+     * @var Tools\QuickSearch|null
      */
-    protected $quickSearch;
+    protected ?Tools\QuickSearch $quickSearch = null;
 
     /**
-     * @param array|string|\Closure
+     * @param  array|\Closure|string|null  $search
      * @return Tools\QuickSearch
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function quickSearch($search = null)
+    public function quickSearch(Closure|array|string $search = null): Tools\QuickSearch
     {
         if (func_num_args() > 1) {
             $this->search = func_get_args();
@@ -57,23 +60,20 @@ trait HasQuickSearch
     /**
      * @return bool
      */
-    public function allowQuickSearch()
+    public function allowQuickSearch(): bool
     {
-        return $this->quickSearch ? true : false;
+        return (bool) $this->quickSearch;
     }
 
     /**
      * @return Tools\QuickSearch
      */
-    public function getQuickSearch()
+    public function getQuickSearch(): Tools\QuickSearch
     {
         return $this->quickSearch;
     }
 
-    /**
-     * @return \Illuminate\View\View|string
-     */
-    public function renderQuickSearch()
+    public function renderQuickSearch(): string
     {
         if (! $this->quickSearch) {
             return '';
@@ -85,7 +85,7 @@ trait HasQuickSearch
     /**
      * Apply the search query to the query.
      *
-     * @return mixed|void
+     * @return \Dcat\Admin\Grid\Model|void
      */
     public function applyQuickSearch()
     {
@@ -108,7 +108,7 @@ trait HasQuickSearch
                 $this->quickSearch->getQueryName()
             );
 
-        if ($this->search instanceof \Closure) {
+        if ($this->search instanceof Closure) {
             return $this->model()->where(function ($q) use ($query) {
                 return call_user_func($this->search, $q, $query);
             });
@@ -136,7 +136,7 @@ trait HasQuickSearch
      *
      * @param  string  $query
      */
-    protected function addWhereBindings($query)
+    protected function addWhereBindings(string $query): void
     {
         $queries = preg_split('/\s(?=([^"]*"[^"]*")*[^"]*$)/', trim($query));
         if (! $queries = $this->parseQueryBindings($queries)) {
@@ -177,9 +177,8 @@ trait HasQuickSearch
                     continue;
                 }
 
-                if (preg_match('/(?<operator>>=?|<=?|!=|%){0,1}(?<value>.*)/', $condition, $match) !== 0) {
+                if (preg_match('/(?<operator>>=?|<=?|!=|%)?(?<value>.*)/', $condition, $match) !== 0) {
                     $this->addWhereBasicBinding($q, $column, $or, $match['operator'], $match['value']);
-                    continue;
                 }
             }
         });
@@ -191,11 +190,11 @@ trait HasQuickSearch
      * @param  array  $queries
      * @return array
      */
-    protected function parseQueryBindings(array $queries)
+    protected function parseQueryBindings(array $queries): array
     {
         $columnMap = $this->columns->mapWithKeys(function (Column $column) {
             $label = $column->getLabel();
-            $name = $column->getName();
+            $name  = $column->getName();
 
             return [$label => $name, $name => $name];
         });
@@ -210,7 +209,7 @@ trait HasQuickSearch
             [$column, $condition] = $segments;
 
             if (Str::startsWith($column, '|')) {
-                $or = true;
+                $or     = true;
                 $column = substr($column, 1);
             }
 
@@ -228,14 +227,14 @@ trait HasQuickSearch
      * Add where like binding to model query.
      *
      * @param  mixed  $query
-     * @param  string  $column
+     * @param  string|null  $column
      * @param  bool  $or
-     * @param  string  $pattern
+     * @param  string|null  $pattern
      */
-    protected function addWhereLikeBinding($query, ?string $column, ?bool $or, ?string $pattern)
+    protected function addWhereLikeBinding(mixed $query, ?string $column, ?bool $or, ?string $pattern): void
     {
         $likeOperator = 'like';
-        $method = $or ? 'orWhere' : 'where';
+        $method       = $or ? 'orWhere' : 'where';
 
         Helper::withQueryCondition($query, $column, $method, [$likeOperator, $pattern]);
     }
@@ -244,12 +243,12 @@ trait HasQuickSearch
      * Add where date time function binding to model query.
      *
      * @param  mixed  $query
-     * @param  string  $column
+     * @param  string|null  $column
      * @param  bool  $or
-     * @param  string  $function
-     * @param  string  $value
+     * @param  string|null  $function
+     * @param  string|null  $value
      */
-    protected function addWhereDatetimeBinding($query, ?string $column, ?bool $or, ?string $function, ?string $value)
+    protected function addWhereDatetimeBinding(mixed $query, ?string $column, ?bool $or, ?string $function, ?string $value): void
     {
         $method = ($or ? 'orWhere' : 'where').ucfirst($function);
 
@@ -260,12 +259,12 @@ trait HasQuickSearch
      * Add where in binding to the model query.
      *
      * @param  mixed  $query
-     * @param  string  $column
+     * @param  string|null  $column
      * @param  bool  $or
      * @param  bool  $not
-     * @param  string  $values
+     * @param  string|null  $values
      */
-    protected function addWhereInBinding($query, ?string $column, ?bool $or, ?bool $not, ?string $values)
+    protected function addWhereInBinding(mixed $query, ?string $column, ?bool $or, ?bool $not, ?string $values): void
     {
         $values = explode(',', $values);
 
@@ -275,7 +274,7 @@ trait HasQuickSearch
             }
         }
 
-        $where = $or ? 'orWhere' : 'where';
+        $where  = $or ? 'orWhere' : 'where';
         $method = $where.($not ? 'NotIn' : 'In');
 
         Helper::withQueryCondition($query, $column, $method, [$values]);
@@ -285,12 +284,12 @@ trait HasQuickSearch
      * Add where between binding to the model query.
      *
      * @param  mixed  $query
-     * @param  string  $column
+     * @param  string|null  $column
      * @param  bool  $or
-     * @param  string  $start
-     * @param  string  $end
+     * @param  string|null  $start
+     * @param  string|null  $end
      */
-    protected function addWhereBetweenBinding($query, ?string $column, ?bool $or, ?string $start, ?string $end)
+    protected function addWhereBetweenBinding(mixed $query, ?string $column, ?bool $or, ?string $start, ?string $end): void
     {
         $method = $or ? 'orWhereBetween' : 'whereBetween';
 
@@ -301,18 +300,18 @@ trait HasQuickSearch
      * Add where basic binding to the model query.
      *
      * @param  mixed  $query
-     * @param  string  $column
+     * @param  string|null  $column
      * @param  bool  $or
-     * @param  string  $operator
-     * @param  string  $value
+     * @param  string|null  $operator
+     * @param  string|null  $value
      */
-    protected function addWhereBasicBinding($query, ?string $column, ?bool $or, ?string $operator, ?string $value)
+    protected function addWhereBasicBinding(mixed $query, ?string $column, ?bool $or, ?string $operator, ?string $value): void
     {
-        $method = $or ? 'orWhere' : 'where';
+        $method   = $or ? 'orWhere' : 'where';
         $operator = $operator ?: '=';
         if ($operator == '%') {
             $operator = 'like';
-            $value = "%{$value}%";
+            $value    = "%$value%";
         }
 
         if ($value === 'NULL') {
@@ -326,7 +325,11 @@ trait HasQuickSearch
         Helper::withQueryCondition($query, $column, $method, [$operator, $value]);
     }
 
-    protected function addQuickSearchScript()
+    /**
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    protected function addQuickSearchScript(): void
     {
         if ($this->isAsyncRequest()) {
             $url = Helper::fullUrlWithoutQuery([
@@ -336,7 +339,7 @@ trait HasQuickSearch
                 $this->model()->getPageName(),
             ]);
 
-            Admin::script("$('.quick-search-form').attr('action', '{$url}');", true);
+            Admin::script("$('.quick-search-form').attr('action', '$url');", true);
         }
     }
 }

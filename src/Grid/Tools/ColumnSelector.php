@@ -14,12 +14,12 @@ class ColumnSelector extends AbstractTool
     /**
      * @var Grid
      */
-    protected $grid;
+    protected Grid $grid;
 
     /**
      * @var array
      */
-    protected $ignoredColumns = [
+    protected array $ignoredColumns = [
         Grid\Column::SELECT_COLUMN_NAME,
         Grid\Column::ACTION_COLUMN_NAME,
     ];
@@ -38,6 +38,9 @@ class ColumnSelector extends AbstractTool
      * {@inheritdoc}
      *
      * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Throwable
      */
     public function render(): string
     {
@@ -65,8 +68,10 @@ class ColumnSelector extends AbstractTool
 
     /**
      * @return array
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    protected function getVisibleColumnNames()
+    protected function getVisibleColumnNames(): array
     {
         $visible = $this->grid->getVisibleColumnsFromQuery();
 
@@ -88,7 +93,7 @@ class ColumnSelector extends AbstractTool
     /**
      * @return Collection
      */
-    protected function getGridColumns()
+    protected function getGridColumns(): Collection
     {
         $columns = $this->grid->getComplexHeaders() ?: $this->grid->columns();
 
@@ -109,7 +114,7 @@ class ColumnSelector extends AbstractTool
      * @param  string  $name
      * @return bool
      */
-    protected function isColumnIgnored($name)
+    protected function isColumnIgnored(string $name): bool
     {
         return in_array($name, $this->ignoredColumns);
     }
@@ -117,10 +122,10 @@ class ColumnSelector extends AbstractTool
     /**
      * Ignore a column to display in column selector.
      *
-     * @param  string|array  $name
+     * @param  array|string  $name
      * @return $this
      */
-    public function ignore($name)
+    public function ignore(array|string $name): static
     {
         $this->ignoredColumns = array_merge($this->ignoredColumns, (array) $name);
 

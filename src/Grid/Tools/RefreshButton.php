@@ -6,9 +6,9 @@ use Illuminate\Contracts\Support\Renderable;
 
 class RefreshButton implements Renderable
 {
-    protected $display = true;
+    protected bool $display = true;
 
-    public function display($value)
+    public function display($value): static
     {
         $this->display = $value;
 

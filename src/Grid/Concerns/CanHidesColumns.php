@@ -15,44 +15,46 @@ trait CanHidesColumns
      *
      * @var array
      */
-    public $hiddenColumns = [];
+    public array $hiddenColumns = [];
 
     /**
      * @var ColumnSelectorStore
      */
-    private $columnSelectorStorage;
+    private ColumnSelectorStore $columnSelectorStorage;
+
+    private array $visibleColumnsFromQuery;
 
     /**
      * Remove column selector on grid.
      *
      * @param  bool  $disable
-     * @return $this|mixed
      */
-    public function disableColumnSelector(bool $disable = true)
+    public function disableColumnSelector(bool $disable = true): void
     {
-        return $this->option('show_column_selector', ! $disable);
+        $this->option('show_column_selector', ! $disable);
+    }
+
+    /**
+     * @param  bool  $show
+     * @return void
+     */
+    public function showColumnSelector(bool $show = true): void
+    {
+        $this->disableColumnSelector(! $show);
     }
 
     /**
      * @return bool
      */
-    public function showColumnSelector(bool $show = true)
+    public function allowColumnSelector(): bool
     {
-        return $this->disableColumnSelector(! $show);
-    }
-
-    /**
-     * @return bool
-     */
-    public function allowColumnSelector()
-    {
-        return $this->option('show_column_selector');
+        return (bool) $this->option('show_column_selector');
     }
 
     /**
      * @return string
      */
-    public function renderColumnSelector()
+    public function renderColumnSelector(): string
     {
         if (! $this->allowColumnSelector()) {
             return '';
@@ -67,7 +69,7 @@ trait CanHidesColumns
      * @param  array|string  $columns
      * @return $this
      */
-    public function hideColumns($columns)
+    public function hideColumns(array|string $columns): static
     {
         if (func_num_args()) {
             $columns = (array) $columns;
@@ -83,7 +85,7 @@ trait CanHidesColumns
     /**
      * @return string
      */
-    public function getColumnSelectorQueryName()
+    public function getColumnSelectorQueryName(): string
     {
         return $this->makeName(ColumnSelector::SELECT_COLUMN_NAME);
     }
@@ -92,8 +94,10 @@ trait CanHidesColumns
      * Get visible columns from request query.
      *
      * @return array
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function getVisibleColumnsFromQuery()
+    public function getVisibleColumnsFromQuery(): array
     {
         if (! $this->allowColumnSelector()) {
             return [];
@@ -141,8 +145,10 @@ trait CanHidesColumns
 
     /**
      * @return mixed
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function getVisibleComplexHeaders()
+    public function getVisibleComplexHeaders(): mixed
     {
         $visible = $this->getVisibleColumnsFromQuery();
 
@@ -161,8 +167,10 @@ trait CanHidesColumns
      * Get all visible column instances.
      *
      * @return Collection|static
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function getVisibleColumns()
+    public function getVisibleColumns(): Collection|static
     {
         if (! $this->allowColumnSelector()) {
             return $this->columns;
@@ -187,8 +195,10 @@ trait CanHidesColumns
      * Get all visible column names.
      *
      * @return array
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function getVisibleColumnNames()
+    public function getVisibleColumnNames(): array
     {
         if (! $this->allowColumnSelector()) {
             return $this->columnNames;
@@ -214,7 +224,7 @@ trait CanHidesColumns
         return $this->request->has($this->getColumnSelectorQueryName());
     }
 
-    protected function storeVisibleColumns(array $input)
+    protected function storeVisibleColumns(array $input): void
     {
         if (! $this->hasColumnSelectorRequestInput()) {
             return;
@@ -223,7 +233,7 @@ trait CanHidesColumns
         $this->getColumnSelectorStorage()->store($input);
     }
 
-    protected function getVisibleColumnsFromStorage()
+    protected function getVisibleColumnsFromStorage(): ?array
     {
         return $this->getColumnSelectorStorage()->get();
     }
@@ -231,14 +241,14 @@ trait CanHidesColumns
     /**
      * @return ColumnSelectorStore
      */
-    public function getColumnSelectorStorage()
+    public function getColumnSelectorStorage(): ColumnSelectorStore
     {
         return $this->columnSelectorStorage ?: ($this->columnSelectorStorage = $this->makeColumnSelectorStorage());
     }
 
     protected function makeColumnSelectorStorage()
     {
-        $store = config('admin.grid.column_selector.store') ?: Grid\ColumnSelector\SessionStore::class;
+        $store  = config('admin.grid.column_selector.store') ?: Grid\ColumnSelector\SessionStore::class;
         $params = (array) config('admin.grid.column_selector.store_params') ?: [];
 
         $storage = app($store, $params);

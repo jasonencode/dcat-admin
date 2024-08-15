@@ -18,7 +18,7 @@ class Row implements Arrayable
     /**
      * @var Grid
      */
-    protected $grid;
+    protected Grid $grid;
 
     /**
      * Row data.
@@ -32,7 +32,7 @@ class Row implements Arrayable
      *
      * @var array
      */
-    protected $attributes = [];
+    protected array $attributes = [];
 
     public function __construct(Grid $grid, $data)
     {
@@ -43,9 +43,9 @@ class Row implements Arrayable
     /**
      * Get the value of the model's primary key.
      *
-     * @return mixed
+     * @return array|string
      */
-    public function getKey()
+    public function getKey(): array|string
     {
         return $this->data->{$this->grid->getKeyName()};
     }
@@ -55,7 +55,7 @@ class Row implements Arrayable
      *
      * @return string
      */
-    public function rowAttributes()
+    public function rowAttributes(): string
     {
         return $this->formatHtmlAttributes($this->attributes);
     }
@@ -66,7 +66,7 @@ class Row implements Arrayable
      * @param  string  $column
      * @return string
      */
-    public function columnAttributes($column)
+    public function columnAttributes(string $column): string
     {
         if (
             ($column = $this->grid->columns()->get($column))
@@ -84,7 +84,7 @@ class Row implements Arrayable
      * @param  array  $attributes
      * @return string
      */
-    private function formatHtmlAttributes($attributes = [])
+    private function formatHtmlAttributes(array $attributes = []): string
     {
         return Helper::buildHtmlAttributes($attributes);
     }
@@ -95,7 +95,7 @@ class Row implements Arrayable
      * @param  array  $attributes
      * @return \Dcat\Admin\Grid\Row
      */
-    public function setAttributes(array $attributes)
+    public function setAttributes(array $attributes): static
     {
         $this->attributes = $attributes;
 
@@ -107,7 +107,7 @@ class Row implements Arrayable
      *
      * @param  array|string  $style
      */
-    public function style($style)
+    public function style(array|string $style): void
     {
         if (is_array($style)) {
             $style = implode('', array_map(function ($key, $val) {
@@ -123,9 +123,9 @@ class Row implements Arrayable
     /**
      * Get data of this row.
      *
-     * @return Fluent|\Illuminate\Database\Eloquent\Model
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function model()
+    public function model(): \Illuminate\Database\Eloquent\Model
     {
         return $this->data;
     }
@@ -133,10 +133,10 @@ class Row implements Arrayable
     /**
      * Getter.
      *
-     * @param  mixed  $attr
+     * @param  string  $attr
      * @return mixed
      */
-    public function __get($attr)
+    public function __get(string $attr)
     {
         return $this->data->{$attr};
     }
@@ -144,11 +144,11 @@ class Row implements Arrayable
     /**
      * Setter.
      *
-     * @param  mixed  $attr
+     * @param  string  $attr
      * @param  mixed  $value
      * @return void
      */
-    public function __set($attr, $value)
+    public function __set(string $attr, mixed $value)
     {
         $this->data[$attr] = $value;
     }
@@ -157,10 +157,10 @@ class Row implements Arrayable
      * Get or set value of column in this row.
      *
      * @param  string  $name
-     * @param  mixed  $value
-     * @return $this
+     * @param  mixed|null  $value
+     * @return float|\Illuminate\Support\Carbon|bool|int|string|\Dcat\Admin\Grid\Row|null
      */
-    public function column($name, $value = null)
+    public function column(string $name, mixed $value = null): float|Carbon|bool|int|string|null|static
     {
         if (is_null($value)) {
             return $this->output(
@@ -180,7 +180,7 @@ class Row implements Arrayable
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->data->toArray();
     }
@@ -191,7 +191,7 @@ class Row implements Arrayable
      * @param  mixed  $value
      * @return bool|float|\Illuminate\Support\Carbon|int|string|null
      */
-    protected function output($value)
+    protected function output(mixed $value): float|Carbon|bool|int|string|null
     {
         if ($value instanceof Carbon) {
             return $value;

@@ -11,7 +11,7 @@ class ExportButton implements Renderable
     /**
      * @var Grid
      */
-    protected $grid;
+    protected Grid $grid;
 
     /**
      * Create a new Export button instance.
@@ -26,19 +26,18 @@ class ExportButton implements Renderable
     /**
      * Set up script for export button.
      */
-    protected function setUpScripts()
+    protected function setUpScripts(): void
     {
         $script = <<<JS
 $('.{$this->grid->getExportSelectedName()}').on('click', function (e) {
     e.preventDefault();
-    
+
     var rows = Dcat.grid.selected('{$this->grid->getName()}').join(',');
     if (! rows) {
         return false;
     }
-    
-    var href = $(this).attr('href').replace('__rows__', rows);
-    location.href = href;
+
+    location.href = $(this).attr('href').replace('__rows__', rows);
 });
 JS;
 
@@ -55,22 +54,22 @@ JS;
         }
         $all = trans('admin.all');
 
-        return "<li class='dropdown-item'><a href=\"{$this->grid->exportUrl('all')}\" target=\"_blank\">{$all}</a></li>";
+        return "<li class='dropdown-item'><a href=\"{$this->grid->exportUrl('all')}\" target=\"_blank\">$all</a></li>";
     }
 
     /**
      * @return string
      */
-    protected function renderExportCurrentPage()
+    protected function renderExportCurrentPage(): string
     {
         if (! $this->grid->exporter()->option('show_export_current_page')) {
-            return;
+            return '';
         }
 
         $page = $this->grid->model()->getCurrentPage() ?: 1;
         $currentPage = trans('admin.current_page');
 
-        return "<li class='dropdown-item'><a href=\"{$this->grid->exportUrl('page', $page)}\" target=\"_blank\">{$currentPage}</a></li>";
+        return "<li class='dropdown-item'><a href=\"{$this->grid->exportUrl('page', $page)}\" target=\"_blank\">$currentPage</a></li>";
     }
 
     /**
@@ -87,7 +86,7 @@ JS;
 
         $selectedRows = trans('admin.selected_rows');
 
-        return "<li class='dropdown-item'><a href=\"{$this->grid->exportUrl('selected', '__rows__')}\" target=\"_blank\" class='{$this->grid->getExportSelectedName()}'>{$selectedRows}</a></li>";
+        return "<li class='dropdown-item'><a href=\"{$this->grid->exportUrl('selected', '__rows__')}\" target=\"_blank\" class='{$this->grid->getExportSelectedName()}'>$selectedRows</a></li>";
     }
 
     /**
@@ -106,7 +105,7 @@ JS;
 <div class="btn-group dropdown" style="margin-right:3px">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
         <i class="feather icon-download"></i>
-        <span class="d-none d-sm-inline">&nbsp;{$export}&nbsp;</span>
+        <span class="d-none d-sm-inline">&nbsp;$export&nbsp;</span>
         <span class="caret"></span>
         <span class="sr-only"></span>
     </button>

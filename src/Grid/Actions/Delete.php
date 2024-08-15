@@ -30,12 +30,12 @@ class Delete extends RowAction
         return parent::render();
     }
 
-    protected function redirectUrl()
+    protected function redirectUrl(): string
     {
         return $this->parent->model()->withoutTreeQuery(request()->fullUrl());
     }
 
-    public function url()
+    public function url(): string
     {
         return "{$this->resource()}/{$this->getKey()}";
     }

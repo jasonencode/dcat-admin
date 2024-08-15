@@ -10,27 +10,27 @@ use Dcat\Admin\Grid\Tools;
 trait HasExporter
 {
     /**
-     * @var Exporter
+     * @var Exporter|null
      */
-    protected $exporter;
+    protected Exporter|null $exporter = null;
 
     /**
      * @var bool
      */
-    protected $enableExporter = false;
+    protected bool $enableExporter = false;
 
     /**
      * @var bool
      */
-    protected $exported = false;
+    protected bool $exported = false;
 
     /**
      * Set exporter driver for Grid to export.
      *
-     * @param  string|Grid\Exporters\AbstractExporter|array  $exporterDriver
+     * @param  \Dcat\Admin\Grid\Exporters\AbstractExporter|array|string|false|null  $exporterDriver
      * @return Exporter
      */
-    public function export($exporterDriver = null)
+    public function export(AbstractExporter|array|string|false $exporterDriver = null): Exporter
     {
         $this->enableExporter = true;
 
@@ -56,7 +56,7 @@ trait HasExporter
      * @param  bool  $forceExport
      * @return mixed
      */
-    public function handleExportRequest($forceExport = false)
+    public function handleExportRequest(bool $forceExport = false)
     {
         if (
             $this->exported
@@ -66,7 +66,7 @@ trait HasExporter
                 && ! $forceExport
             )
         ) {
-            return;
+            return '';
         }
 
         $this->exported = true;
@@ -88,7 +88,7 @@ trait HasExporter
     /**
      * @return Exporter
      */
-    public function exporter()
+    public function exporter(): Exporter
     {
         return $this->exporter ?: ($this->exporter = new Exporter($this));
     }
@@ -97,7 +97,7 @@ trait HasExporter
      * @param  string  $scope
      * @return AbstractExporter
      */
-    protected function resolveExportDriver($scope)
+    protected function resolveExportDriver(string $scope): AbstractExporter
     {
         return $this->exporter()->driver()->withScope($scope);
     }
@@ -109,7 +109,7 @@ trait HasExporter
      * @param  null  $args
      * @return string
      */
-    public function exportUrl($scope = 1, $args = null)
+    public function exportUrl(int $scope = 1, $args = null): string
     {
         $input = array_merge(request()->all(), $this->exporter()->formatExportQuery($scope, $args));
 
@@ -125,7 +125,7 @@ trait HasExporter
      *
      * @return string
      */
-    public function renderExportButton()
+    public function renderExportButton(): string
     {
         if (! $this->allowExporter()) {
             return '';
@@ -139,7 +139,7 @@ trait HasExporter
      *
      * @return bool
      */
-    public function allowExporter()
+    public function allowExporter(): bool
     {
         return $this->enableExporter;
     }

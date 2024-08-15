@@ -12,17 +12,18 @@ class Paginator implements Renderable
     /**
      * @var Grid
      */
-    protected $grid;
+    protected Grid $grid;
 
     /**
-     * @var \Illuminate\Pagination\LengthAwarePaginator
+     * @var \Illuminate\Pagination\LengthAwarePaginator|null
      */
-    public $paginator = null;
+    public ?LengthAwarePaginator $paginator = null;
 
     /**
      * Create a new Paginator instance.
      *
      * @param  Grid  $grid
+     * @throws \Exception
      */
     public function __construct(Grid $grid)
     {
@@ -35,8 +36,9 @@ class Paginator implements Renderable
      * Initialize work for Paginator.
      *
      * @return void
+     * @throws \Exception
      */
-    protected function initPaginator()
+    protected function initPaginator(): void
     {
         $this->paginator = $this->grid->model()->paginator();
 
@@ -50,7 +52,7 @@ class Paginator implements Renderable
      *
      * @return string
      */
-    protected function paginationLinks()
+    protected function paginationLinks(): string
     {
         return $this->paginator->render('admin::grid.pagination');
     }
@@ -58,12 +60,12 @@ class Paginator implements Renderable
     /**
      * Get per-page selector.
      *
-     * @return string|null
+     * @return string
      */
-    protected function perPageSelector()
+    protected function perPageSelector(): string
     {
         if (! $this->grid->getPerPages()) {
-            return;
+            return '';
         }
 
         return (new PerPageSelector($this->grid))->render();
@@ -71,10 +73,8 @@ class Paginator implements Renderable
 
     /**
      * Get range infomation of paginator.
-     *
-     * @return string|\Symfony\Component\Translation\TranslatorInterface
      */
-    protected function paginationRanger()
+    protected function paginationRanger(): string
     {
         $parameters = [
             'first' => $this->paginator->firstItem(),

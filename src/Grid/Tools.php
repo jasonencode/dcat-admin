@@ -56,7 +56,7 @@ class Tools implements Renderable
     /**
      * Append default tools.
      */
-    protected function appendDefaultTools()
+    protected function appendDefaultTools(): void
     {
         $this->append($this->makeBatchActions())
             ->append(new RefreshButton())
@@ -73,10 +73,10 @@ class Tools implements Renderable
     /**
      * Append tools.
      *
-     * @param  AbstractTool|string|\Closure|Renderable|Htmlable  $tool
+     * @param  \Closure|string|AbstractTool|Htmlable|Renderable  $tool
      * @return $this
      */
-    public function append($tool)
+    public function append(Renderable|Htmlable|Closure|string|AbstractTool $tool): static
     {
         $this->prepareAction($tool);
 
@@ -88,10 +88,10 @@ class Tools implements Renderable
     /**
      * Prepend a tool.
      *
-     * @param  AbstractTool|string|\Closure|Renderable|Htmlable  $tool
+     * @param  \Closure|string|AbstractTool|Htmlable|Renderable  $tool
      * @return $this
      */
-    public function prepend($tool)
+    public function prepend(Renderable|Htmlable|Closure|string|AbstractTool $tool): static
     {
         $this->prepareAction($tool);
 
@@ -104,7 +104,7 @@ class Tools implements Renderable
      * @param  mixed  $tool
      * @return void
      */
-    protected function prepareAction($tool)
+    protected function prepareAction(mixed $tool): void
     {
         if ($tool instanceof GridAction) {
             $tool->setGrid($this->grid);
@@ -114,7 +114,7 @@ class Tools implements Renderable
     /**
      * @return bool
      */
-    public function has()
+    public function has(): bool
     {
         return ! $this->tools->isEmpty();
     }
@@ -122,9 +122,10 @@ class Tools implements Renderable
     /**
      * Disable filter button.
      *
+     * @param  bool  $disable
      * @return void
      */
-    public function disableFilterButton(bool $disable = true)
+    public function disableFilterButton(bool $disable = true): void
     {
         $this->tools = $this->tools->map(function ($tool) use ($disable) {
             if ($tool instanceof FilterButton) {
@@ -139,7 +140,7 @@ class Tools implements Renderable
      * @param  bool  $value
      * @return $this
      */
-    public function withOutline(bool $value)
+    public function withOutline(bool $value): static
     {
         $this->outline = $value;
 
@@ -149,9 +150,10 @@ class Tools implements Renderable
     /**
      * Disable refresh button.
      *
+     * @param  bool  $disable
      * @return void
      */
-    public function disableRefreshButton(bool $disable = true)
+    public function disableRefreshButton(bool $disable = true): void
     {
         $this->tools = $this->tools->map(function ($tool) use ($disable) {
             if ($tool instanceof RefreshButton) {
@@ -165,9 +167,10 @@ class Tools implements Renderable
     /**
      * Disable batch actions.
      *
+     * @param  bool  $disable
      * @return void
      */
-    public function disableBatchActions(bool $disable = true)
+    public function disableBatchActions(bool $disable = true): void
     {
         $this->tools = $this->tools->map(function ($tool) use ($disable) {
             if ($tool instanceof BatchActions) {
@@ -181,7 +184,7 @@ class Tools implements Renderable
     /**
      * @param  \Closure|BatchAction|BatchAction[]  $value
      */
-    public function batch($value)
+    public function batch(array|BatchAction|Closure $value): void
     {
         /* @var BatchActions $batchActions */
         $batchActions = $this->tools->first(function ($tool) {
@@ -225,7 +228,7 @@ class Tools implements Renderable
      * @param  string  $value
      * @return string
      */
-    public function format(string $value)
+    public function format(string $value): string
     {
         return $this->addButtonOutline($value);
     }
@@ -234,7 +237,7 @@ class Tools implements Renderable
      * @param  string  $value
      * @return string
      */
-    protected function addButtonOutline($value)
+    protected function addButtonOutline(string $value): string
     {
         if (! $this->outline) {
             return $value;

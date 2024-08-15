@@ -13,32 +13,32 @@ class QuickSearch extends AbstractTool
     /**
      * @var string
      */
-    protected $view = 'admin::grid.quick-search';
+    protected string $view = 'admin::grid.quick-search';
+
+    /**
+     * @var string|null
+     */
+    protected ?string $placeholder = null;
 
     /**
      * @var string
      */
-    protected $placeholder = null;
-
-    /**
-     * @var string
-     */
-    protected $queryName = '_search_';
+    protected string $queryName = '_search_';
 
     /**
      * @var int rem
      */
-    protected $width = 18;
+    protected int $width = 18;
 
     /**
      * @var bool
      */
-    protected $autoSubmit = true;
+    protected bool $autoSubmit = true;
 
     /**
      * @return string
      */
-    public function getQueryName()
+    public function getQueryName(): string
     {
         return $this->parent->makeName($this->queryName);
     }
@@ -47,7 +47,7 @@ class QuickSearch extends AbstractTool
      * @param  int  $width
      * @return $this
      */
-    public function width(int $width)
+    public function width(int $width): static
     {
         $this->width = $width;
 
@@ -57,10 +57,10 @@ class QuickSearch extends AbstractTool
     /**
      * Set placeholder.
      *
-     * @param  string  $text
+     * @param  string|null  $text
      * @return $this
      */
-    public function placeholder(?string $text = '')
+    public function placeholder(?string $text = ''): static
     {
         $this->placeholder = $text;
 
@@ -70,7 +70,7 @@ class QuickSearch extends AbstractTool
     /**
      * @return string
      */
-    public function value()
+    public function value(): string
     {
         return trim(request($this->getQueryName()) ?? '');
     }
@@ -78,7 +78,7 @@ class QuickSearch extends AbstractTool
     /**
      * @return string
      */
-    public function formAction()
+    public function formAction(): string
     {
         return Helper::fullUrlWithoutQuery([
             $this->getQueryName(),
@@ -91,7 +91,7 @@ class QuickSearch extends AbstractTool
      * @param  bool  $value
      * @return $this
      */
-    public function auto(bool $value = true)
+    public function auto(bool $value = true): static
     {
         $this->autoSubmit = $value;
 
@@ -99,7 +99,7 @@ class QuickSearch extends AbstractTool
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return string
      */
     public function render(): string
     {
@@ -117,7 +117,7 @@ class QuickSearch extends AbstractTool
         return view($this->view, $data);
     }
 
-    protected function setupScript()
+    protected function setupScript(): void
     {
         $script = <<<'JS'
 (function () {
@@ -157,7 +157,7 @@ class QuickSearch extends AbstractTool
         $ipt.on('keyup', function (e) {
             toggleBtn.apply(this);
 
-            ignoreKeys.indexOf(e.keyCode) == -1 && submit(this)
+            ignoreKeys.indexOf(e.keyCode) === -1 && submit(this)
         })
     }
 

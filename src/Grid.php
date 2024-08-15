@@ -192,9 +192,9 @@ class Grid
      *
      * Grid constructor.
      *
-     * @param null          $repository
-     * @param null|\Closure $builder
-     * @param null          $request
+     * @param  null  $repository
+     * @param  null|\Closure  $builder
+     * @param  null  $request
      * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
     public function __construct($repository = null, ?Closure $builder = null, $request = null)
@@ -469,6 +469,7 @@ class Grid
      * @return void
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Exception
      */
     public function build(): void
     {
@@ -684,6 +685,7 @@ class Grid
      * Render grid header.
      *
      * @return string
+     * @throws \Exception
      */
     public function renderHeader(): string
     {
@@ -696,6 +698,9 @@ class Grid
 HTML;
     }
 
+    /**
+     * @throws \Exception
+     */
     protected function renderHeaderOrFooter($callbacks): string
     {
         $target  = [$this->processFilter(), $this];
@@ -729,6 +734,7 @@ HTML;
      * Render grid footer.
      *
      * @return string
+     * @throws \Exception
      */
     public function renderFooter(): string
     {
@@ -854,7 +860,7 @@ HTML;
     /**
      * Create a grid instance.
      *
-     * @param mixed ...$params
+     * @param  mixed  ...$params
      * @return $this
      * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
@@ -1101,6 +1107,11 @@ JS
         return $this->addColumn($method, $parameters[0] ?? null);
     }
 
+    /**
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Throwable
+     */
     public function __toString()
     {
         return $this->render();

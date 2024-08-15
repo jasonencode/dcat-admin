@@ -13,22 +13,22 @@ class BatchActions extends AbstractTool
     use Macroable;
     use HasVariables;
 
-    protected $view = 'admin::grid.batch-actions';
+    protected string $view = 'admin::grid.batch-actions';
 
     /**
      * @var Collection
      */
-    protected $actions;
+    protected Collection $actions;
 
     /**
      * @var bool
      */
-    protected $enableDelete = true;
+    protected bool $enableDelete = true;
 
     /**
      * @var bool
      */
-    protected $isHoldSelectAllCheckbox = false;
+    protected bool $isHoldSelectAllCheckbox = false;
 
     /**
      * BatchActions constructor.
@@ -45,7 +45,7 @@ class BatchActions extends AbstractTool
      *
      * return void
      */
-    protected function appendDefaultAction()
+    protected function appendDefaultAction(): void
     {
         $this->add($this->makeBatchDelete(), '_delete_');
     }
@@ -62,14 +62,14 @@ class BatchActions extends AbstractTool
      *
      * @return $this
      */
-    public function disableDelete(bool $disable = true)
+    public function disableDelete(bool $disable = true): static
     {
         $this->enableDelete = ! $disable;
 
         return $this;
     }
 
-    public function divider()
+    public function divider(): BatchActions|static
     {
         return $this->add(new ActionDivider());
     }
@@ -79,7 +79,7 @@ class BatchActions extends AbstractTool
      *
      * @return $this
      */
-    public function disableDeleteAndHideSelectAll()
+    public function disableDeleteAndHideSelectAll(): static
     {
         $this->enableDelete = false;
 
@@ -95,7 +95,7 @@ class BatchActions extends AbstractTool
      * @param  ?string  $key
      * @return $this
      */
-    public function add(BatchAction $action, ?string $key = null)
+    public function add(BatchAction $action, ?string $key = null): static
     {
         $action->selectorPrefix = '.grid-batch-action-'.$this->actions->count();
 
@@ -113,14 +113,14 @@ class BatchActions extends AbstractTool
      *
      * @return void
      */
-    protected function prepareActions()
+    protected function prepareActions(): void
     {
         foreach ($this->actions as $action) {
             $action->setGrid($this->parent);
         }
     }
 
-    protected function defaultVariables()
+    protected function defaultVariables(): array
     {
         return [
             'actions'                 => $this->actions,
@@ -134,6 +134,7 @@ class BatchActions extends AbstractTool
      * Render BatchActions button groups.
      *
      * @return string
+     * @throws \Throwable
      */
     public function render(): string
     {

@@ -10,16 +10,16 @@ use Illuminate\Support\Collection;
 trait CanFixColumns
 {
     /**
-     * @var FixColumns
+     * @var FixColumns|null
      */
-    protected $fixColumns;
+    protected ?FixColumns $fixColumns = null;
 
     /**
      * @param  int  $head
      * @param  int  $tail
      * @return FixColumns
      */
-    public function fixColumns(int $head, int $tail = -1)
+    public function fixColumns(int $head, int $tail = -1): FixColumns
     {
         $this->fixColumns = new FixColumns($this, $head, $tail);
 
@@ -28,12 +28,12 @@ trait CanFixColumns
         return $this->fixColumns;
     }
 
-    public function hasFixColumns()
+    public function hasFixColumns(): ?FixColumns
     {
         return $this->fixColumns;
     }
 
-    protected function resetActions()
+    protected function resetActions(): void
     {
         $actions = $this->getActionClass();
 
@@ -42,7 +42,7 @@ trait CanFixColumns
         }
     }
 
-    protected function applyFixColumns()
+    protected function applyFixColumns(): void
     {
         if ($this->fixColumns) {
             if (! $this->options['bordered'] && ! $this->options['table_collapse']) {
@@ -56,7 +56,7 @@ trait CanFixColumns
     /**
      * @return Collection
      */
-    public function leftVisibleColumns()
+    public function leftVisibleColumns(): Collection
     {
         return $this->fixColumns->leftColumns();
     }
@@ -64,7 +64,7 @@ trait CanFixColumns
     /**
      * @return Collection
      */
-    public function rightVisibleColumns()
+    public function rightVisibleColumns(): Collection
     {
         return $this->fixColumns->rightColumns();
     }
@@ -72,7 +72,7 @@ trait CanFixColumns
     /**
      * @return Collection
      */
-    public function leftVisibleComplexColumns()
+    public function leftVisibleComplexColumns(): Collection
     {
         return $this->fixColumns->leftComplexColumns();
     }
@@ -80,7 +80,7 @@ trait CanFixColumns
     /**
      * @return Collection
      */
-    public function rightVisibleComplexColumns()
+    public function rightVisibleComplexColumns(): Collection
     {
         return $this->fixColumns->rightComplexColumns();
     }

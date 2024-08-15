@@ -2,19 +2,19 @@
 
 namespace Dcat\Admin\Grid;
 
-use Illuminate\Support\Fluent;
+use Illuminate\Database\Eloquent\Model;
 
 abstract class RowAction extends GridAction
 {
     /**
-     * @var Fluent
+     * @var \Illuminate\Database\Eloquent\Model
      */
-    protected $row;
+    protected Model $row;
 
     /**
      * @var Column
      */
-    protected $column;
+    protected Column $column;
 
     /**
      * Get primary key value of current row.
@@ -23,20 +23,16 @@ abstract class RowAction extends GridAction
      */
     public function getKey(): mixed
     {
-        if ($this->row) {
-            return $this->row->{$this->parent->getKeyName()};
-        }
-
-        return parent::getKey();
+        return $this->row->{$this->parent->getKeyName()};
     }
 
     /**
      * Set row model.
      *
-     * @param  mixed  $key
+     * @param  mixed|null  $key
      * @return \Illuminate\Database\Eloquent\Model|mixed
      */
-    public function row($key = null)
+    public function row(mixed $key = null): mixed
     {
         if (func_num_args() == 0) {
             return $this->row;
@@ -48,17 +44,17 @@ abstract class RowAction extends GridAction
     /**
      * Set row model.
      *
-     * @param  Fluent|\Illuminate\Database\Eloquent\Model  $row
+     * @param  \Illuminate\Database\Eloquent\Model  $row
      * @return $this
      */
-    public function setRow($row)
+    public function setRow(Model $row): static
     {
         $this->row = $row;
 
         return $this;
     }
 
-    public function getRow()
+    public function getRow(): Model
     {
         return $this->row;
     }
@@ -67,7 +63,7 @@ abstract class RowAction extends GridAction
      * @param  Column  $column
      * @return $this
      */
-    public function setColumn(Column $column)
+    public function setColumn(Column $column): static
     {
         $this->column = $column;
 

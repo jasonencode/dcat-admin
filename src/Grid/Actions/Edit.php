@@ -21,7 +21,7 @@ class Edit extends RowAction
     /**
      * @return string
      */
-    public function href()
+    public function href(): string
     {
         return $this->parent->getEditUrl($this->getKey());
     }

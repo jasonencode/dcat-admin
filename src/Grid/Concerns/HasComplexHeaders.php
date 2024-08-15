@@ -12,17 +12,18 @@ trait HasComplexHeaders
     /**
      * @var ComplexHeader[]|Collection
      */
-    protected $complexHeaders;
+    protected Collection|array|null $complexHeaders = null;
 
     /**
      * Merge cells.
      *
      * @param  string  $column
      * @param  array  $columnNames
-     * @param  string  $label
+     * @param  string|null  $label
      * @return ComplexHeader
+     * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
-    public function combine(string $column, array $columnNames, string $label = null)
+    public function combine(string $column, array $columnNames, string $label = null): ComplexHeader
     {
         if (count($columnNames) < 2) {
             throw new InvalidArgumentException('Invalid column names.');
@@ -40,7 +41,7 @@ trait HasComplexHeaders
     /**
      * @return ComplexHeader[]
      */
-    public function getComplexHeaderNames()
+    public function getComplexHeaderNames(): array
     {
         if (! $this->complexHeaders) {
             return [];
@@ -54,7 +55,7 @@ trait HasComplexHeaders
     /**
      * @return ComplexHeader[]|Collection|null
      */
-    public function getComplexHeaders()
+    public function getComplexHeaders(): Collection|array|null
     {
         return $this->complexHeaders;
     }
@@ -62,7 +63,7 @@ trait HasComplexHeaders
     /**
      * Reorder the headers.
      */
-    protected function sortHeaders()
+    protected function sortHeaders(): void
     {
         if (! $this->complexHeaders) {
             return;
@@ -117,7 +118,7 @@ trait HasComplexHeaders
         );
     }
 
-    protected function createHeaderWithColumns(array $columns)
+    protected function createHeaderWithColumns(array $columns): array
     {
         $headers = [];
 

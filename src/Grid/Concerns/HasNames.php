@@ -4,9 +4,6 @@ namespace Dcat\Admin\Grid\Concerns;
 
 use Dcat\Admin\Grid;
 
-/**
- * @method Grid\Model model()
- */
 trait HasNames
 {
     /**
@@ -14,7 +11,7 @@ trait HasNames
      *
      * @var string
      */
-    protected $_name;
+    protected string $_name = '';
 
     /**
      * Set name to grid.
@@ -22,9 +19,9 @@ trait HasNames
      * @param  string  $name
      * @return $this
      */
-    public function setName($name)
+    public function setName(string $name): static
     {
-        $this->_name = $name;
+        $this->_name   = $name;
         $this->tableId = $this->makeName($this->tableId);
 
         return $this;
@@ -35,7 +32,7 @@ trait HasNames
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->_name;
     }
@@ -45,8 +42,10 @@ trait HasNames
      *
      * @param  string  $key
      * @return mixed
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function getRequestInput($key)
+    public function getRequestInput(string $key): mixed
     {
         return $this->request->get($this->makeName($key));
     }
@@ -55,7 +54,7 @@ trait HasNames
      * @param  string  $key
      * @return string
      */
-    public function makeName($key)
+    public function makeName(string $key): string
     {
         return $this->getNamePrefix().$key;
     }
@@ -63,10 +62,10 @@ trait HasNames
     /**
      * @return string
      */
-    public function getNamePrefix()
+    public function getNamePrefix(): string
     {
         if (! $name = $this->getName()) {
-            return;
+            return '';
         }
 
         return $name.'_';
@@ -75,7 +74,7 @@ trait HasNames
     /**
      * @return string
      */
-    public function getRowName()
+    public function getRowName(): string
     {
         return $this->makeName('grid-row');
     }
@@ -83,7 +82,7 @@ trait HasNames
     /**
      * @return string
      */
-    public function getSelectAllName()
+    public function getSelectAllName(): string
     {
         return $this->makeName('grid-select-all');
     }
@@ -91,7 +90,7 @@ trait HasNames
     /**
      * @return string
      */
-    public function getPerPageName()
+    public function getPerPageName(): string
     {
         return $this->makeName('grid-per-page');
     }
@@ -99,7 +98,7 @@ trait HasNames
     /**
      * @return string
      */
-    public function getExportSelectedName()
+    public function getExportSelectedName(): string
     {
         return $this->makeName('export-selected');
     }

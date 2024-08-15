@@ -14,27 +14,27 @@ class Selector
     /**
      * @var Grid
      */
-    protected $grid;
+    protected Grid $grid;
 
     /**
      * @var Request
      */
-    protected $request;
+    protected mixed $request;
 
     /**
      * @var array|Collection
      */
-    protected $selectors = [];
+    protected Collection|array $selectors = [];
 
     /**
      * @var array
      */
-    protected $selected;
+    protected array $selected;
 
     /**
      * @var string
      */
-    protected $queryNameSuffix = '_selector';
+    protected string $queryNameSuffix = '_selector';
 
     /**
      * Selector constructor.
@@ -48,24 +48,24 @@ class Selector
 
     /**
      * @param  string  $column
-     * @param  string|array  $label
+     * @param  array|string  $label
      * @param  array|\Closure  $options
      * @param  null|\Closure  $query
      * @return $this
      */
-    public function select(string $column, $label, $options = [], ?Closure $query = null)
+    public function select(string $column, array|string $label, array|Closure $options = [], ?Closure $query = null): static
     {
         return $this->addSelector($column, $label, $options, $query);
     }
 
     /**
      * @param  string  $column
-     * @param  string|array  $label
+     * @param  array|string  $label
      * @param  array  $options
      * @param  null|\Closure  $query
      * @return $this
      */
-    public function selectOne(string $column, $label, $options = [], ?Closure $query = null)
+    public function selectOne(string $column, array|string $label, array $options = [], ?Closure $query = null): static
     {
         return $this->addSelector($column, $label, $options, $query, 'one');
     }
@@ -74,11 +74,11 @@ class Selector
      * @param  string  $column
      * @param  string  $label
      * @param  array  $options
-     * @param  null  $query
+     * @param  \Closure|null  $query
      * @param  string  $type
      * @return $this
      */
-    protected function addSelector(string $column, $label, $options = [], ?Closure $query = null, $type = 'many')
+    protected function addSelector(string $column, string $label, array $options = [], ?Closure $query = null, string $type = 'many'): static
     {
         if (is_array($label)) {
             if ($options instanceof Closure) {
@@ -102,7 +102,7 @@ class Selector
     /**
      * @return string
      */
-    public function getQueryName()
+    public function getQueryName(): string
     {
         return $this->grid->makeName($this->queryNameSuffix);
     }
@@ -113,7 +113,7 @@ class Selector
      * @param  bool  $formatKey
      * @return array|Collection
      */
-    public function all(bool $formatKey = false)
+    public function all(bool $formatKey = false): array|Collection
     {
         if ($formatKey) {
             return $this->selectors->mapWithKeys(function ($v, $k) {
@@ -129,7 +129,7 @@ class Selector
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function parseSelected()
+    public function parseSelected(): array
     {
         if (! is_null($this->selected)) {
             return $this->selected;
@@ -148,27 +148,27 @@ class Selector
             $value = explode(',', $value);
 
             foreach ($value as &$v) {
-                $v = (string) $v;
+                $v = $v;
             }
         }
 
         return $this->selected = $selected;
     }
 
-    public function formatKey($column)
+    public function formatKey($column): array|string
     {
         return str_replace('.', '_', $column);
     }
 
     /**
      * @param  string  $column
-     * @param  mixed  $value
+     * @param  mixed|null  $value
      * @param  bool  $add
      * @return string
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function url($column, $value = null, $add = false)
+    public function url(string $column, mixed $value = null, bool $add = false): string
     {
         $column = $this->formatKey($column);
 
@@ -192,7 +192,7 @@ class Selector
             if ($add) {
                 $options = [];
             }
-            array_push($options, $value);
+            $options[] = $value;
         }
 
         if (! empty($options)) {

@@ -4,7 +4,6 @@ namespace Dcat\Admin\Grid\Concerns;
 
 use Closure;
 use Dcat\Admin\Grid;
-use Illuminate\Contracts\Support\Renderable;
 
 trait HasActions
 {
@@ -13,13 +12,13 @@ trait HasActions
      *
      * @var Closure[]
      */
-    protected $actionsCallback = [];
+    protected array $actionsCallback = [];
 
     /**
      * @param  string  $actionClass
      * @return $this
      */
-    public function setActionClass(string $actionClass)
+    public function setActionClass(string $actionClass): static
     {
         $this->options['actions_class'] = $actionClass;
 
@@ -29,9 +28,9 @@ trait HasActions
     /**
      * Get action display class.
      *
-     * @return \Illuminate\Config\Repository|mixed|string
+     * @return string
      */
-    public function getActionClass()
+    public function getActionClass(): string
     {
         if ($this->options['actions_class']) {
             return $this->options['actions_class'];
@@ -45,12 +44,14 @@ trait HasActions
     }
 
     /**
-     * Set grid action callback or add actions.
+     * Notes   : 设置操作按钮
      *
-     * @param  Closure|array|string|Renderable|Grid\RowAction  $callback
+     * @Date   : 2024/8/15 17:07
+     * @Author : <Jason.C>
+     * @param  \Closure|array  $callback
      * @return $this
      */
-    public function actions($callback)
+    public function actions(Closure|array $callback): static
     {
         if (! $callback instanceof Closure) {
             $action = $callback;
@@ -76,7 +77,7 @@ trait HasActions
      *
      * @return void
      */
-    protected function appendActionsColumn()
+    protected function appendActionsColumn(): void
     {
         if (! $this->options['actions']) {
             return;
@@ -91,115 +92,118 @@ trait HasActions
     }
 
     /**
-     * Disable all actions.
+     * 禁用所有操作
      *
+     * @param  bool  $disable
      * @return $this
      */
-    public function disableActions(bool $disable = true)
+    public function disableActions(bool $disable = true): static
     {
-        return $this->option('actions', ! $disable);
+        $this->option('actions', ! $disable);
+        return $this;
     }
 
     /**
-     * Show all actions.
+     * Notes   : 显示操作。。。
      *
+     * @Date   : 2024/8/15 17:05
+     * @Author : <Jason.C>
+     * @param  bool  $val
      * @return $this
      */
-    public function showActions(bool $val = true)
+    public function showActions(bool $val = true): static
     {
         return $this->disableActions(! $val);
     }
 
     /**
-     * Disable edit.
+     * 禁用编辑按钮
      *
      * @param  bool  $disable
      * @return $this
      */
-    public function disableEditButton(bool $disable = true)
+    public function disableEditButton(bool $disable = true): static
     {
         $this->options['edit_button'] = ! $disable;
-
         return $this;
     }
 
     /**
-     * Show edit.
+     * 显示编辑按钮
      *
      * @param  bool  $val
      * @return $this
      */
-    public function showEditButton(bool $val = true)
+    public function showEditButton(bool $val = true): static
     {
         return $this->disableEditButton(! $val);
     }
 
     /**
-     * Disable quick edit.
+     * 禁用快捷编辑
      *
-     * @return $this.
+     * @param  bool  $disable
+     * @return $this
      */
-    public function disableQuickEditButton(bool $disable = true)
+    public function disableQuickEditButton(bool $disable = true): static
     {
         $this->options['quick_edit_button'] = ! $disable;
-
         return $this;
     }
 
     /**
-     * Show quick edit button.
+     * 显示快捷编辑
      *
-     * @return $this.
+     * @param  bool  $val
+     * @return $this
      */
-    public function showQuickEditButton(bool $val = true)
+    public function showQuickEditButton(bool $val = true): static
     {
         return $this->disableQuickEditButton(! $val);
     }
 
     /**
-     * Disable view action.
+     * 禁用详情按钮
      *
      * @param  bool  $disable
      * @return $this
      */
-    public function disableViewButton(bool $disable = true)
+    public function disableViewButton(bool $disable = true): static
     {
         $this->options['view_button'] = ! $disable;
-
         return $this;
     }
 
     /**
-     * Show view action.
+     * 显示详情按钮
      *
-     * @param  bool  $disable
+     * @param  bool  $val
      * @return $this
      */
-    public function showViewButton(bool $val = true)
+    public function showViewButton(bool $val = true): static
     {
         return $this->disableViewButton(! $val);
     }
 
     /**
-     * Disable delete.
+     * 禁用删除按钮
      *
      * @param  bool  $disable
      * @return $this
      */
-    public function disableDeleteButton(bool $disable = true)
+    public function disableDeleteButton(bool $disable = true): static
     {
         $this->options['delete_button'] = ! $disable;
-
         return $this;
     }
 
     /**
-     * Show delete button.
+     * 显示删除按钮
      *
-     * @param  bool  $disable
+     * @param  bool  $val
      * @return $this
      */
-    public function showDeleteButton(bool $val = true)
+    public function showDeleteButton(bool $val = true): static
     {
         return $this->disableDeleteButton(! $val);
     }

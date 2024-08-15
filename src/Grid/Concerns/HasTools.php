@@ -16,12 +16,12 @@ trait HasTools
      *
      * @var Tools
      */
-    protected $tools;
+    protected Tools $tools;
 
     /**
      * Setup grid tools.
      */
-    public function setUpTools()
+    public function setUpTools(): void
     {
         $this->tools = new Tools($this);
     }
@@ -30,7 +30,7 @@ trait HasTools
      * @param  bool  $value
      * @return $this
      */
-    public function toolsWithOutline(bool $value = true)
+    public function toolsWithOutline(bool $value = true): static
     {
         $this->tools->withOutline($value);
 
@@ -40,11 +40,11 @@ trait HasTools
     /**
      * Get or setup grid tools.
      *
-     * @param  Closure|array|Action|Tools\AbstractTool|Renderable|Htmlable|string  $value
+     * @param  Closure|array|Action|Tools\AbstractTool|Renderable|Htmlable|string|null  $value
      * @return $this|Tools
      */
-    public function tools($value = null)
-    {
+    public function tools(Renderable|Htmlable|Closure|array|Action|string|Tools\AbstractTool $value = null
+    ): Tools|static {
         if ($value === null) {
             return $this->tools;
         }
@@ -72,7 +72,7 @@ trait HasTools
      * @param  Closure|BatchAction|BatchAction[]  $value
      * @return $this
      */
-    public function batchActions($value)
+    public function batchActions(array|BatchAction|Closure $value): static
     {
         $this->tools(function (Tools $tools) use ($value) {
             $tools->batch($value);
@@ -86,7 +86,7 @@ trait HasTools
      *
      * @return string
      */
-    public function renderTools()
+    public function renderTools(): string
     {
         return $this->tools->render();
     }
@@ -95,7 +95,7 @@ trait HasTools
      * @param  bool  $val
      * @return mixed
      */
-    public function disableToolbar(bool $val = true)
+    public function disableToolbar(bool $val = true): mixed
     {
         return $this->option('toolbar', ! $val);
     }
@@ -104,7 +104,7 @@ trait HasTools
      * @param  bool  $val
      * @return mixed
      */
-    public function showToolbar(bool $val = true)
+    public function showToolbar(bool $val = true): mixed
     {
         return $this->disableToolbar(! $val);
     }
@@ -115,7 +115,7 @@ trait HasTools
      * @param  bool  $disable
      * @return $this
      */
-    public function disableBatchActions(bool $disable = true)
+    public function disableBatchActions(bool $disable = true): static
     {
         $this->tools->disableBatchActions($disable);
 
@@ -128,7 +128,7 @@ trait HasTools
      * @param  bool  $val
      * @return $this
      */
-    public function showBatchActions(bool $val = true)
+    public function showBatchActions(bool $val = true): static
     {
         return $this->disableBatchActions(! $val);
     }
@@ -139,7 +139,7 @@ trait HasTools
      * @param  bool  $disable
      * @return $this
      */
-    public function disableBatchDelete(bool $disable = true)
+    public function disableBatchDelete(bool $disable = true): static
     {
         $this->tools->batch(function ($action) use ($disable) {
             $action->disableDelete($disable);
@@ -154,7 +154,7 @@ trait HasTools
      * @param  bool  $val
      * @return $this
      */
-    public function showBatchDelete(bool $val = true)
+    public function showBatchDelete(bool $val = true): static
     {
         return $this->disableBatchDelete(! $val);
     }
@@ -165,7 +165,7 @@ trait HasTools
      * @param  bool  $disable
      * @return $this
      */
-    public function disableRefreshButton(bool $disable = true)
+    public function disableRefreshButton(bool $disable = true): static
     {
         $this->tools->disableRefreshButton($disable);
 
@@ -178,7 +178,7 @@ trait HasTools
      * @param  bool  $val
      * @return $this
      */
-    public function showRefreshButton(bool $val = true)
+    public function showRefreshButton(bool $val = true): static
     {
         return $this->disableRefreshButton(! $val);
     }
@@ -188,7 +188,7 @@ trait HasTools
      *
      * @return bool
      */
-    public function allowToolbar()
+    public function allowToolbar(): bool
     {
         if (
             $this->option('toolbar')

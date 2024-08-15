@@ -3,27 +3,29 @@
 namespace Dcat\Admin\Grid\Concerns;
 
 use Dcat\Admin\Grid\Tools;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 trait HasPaginator
 {
     /**
-     * @var Tools\Paginator
+     * @var \Dcat\Admin\Grid\Tools\Paginator|null
      */
-    protected $paginator;
+    protected Tools\Paginator|null $paginator = null;
 
     /**
      * Per-page options.
      *
      * @var array
      */
-    protected $perPages = [10, 20, 30, 50, 100, 200];
+    protected array $perPages = [10, 20, 30, 50, 100, 200];
 
     /**
      * Default items count per-page.
      *
      * @var int
      */
-    protected $perPage = 20;
+    protected int $perPage = 20;
 
     /**
      * Paginate the grid.
@@ -31,7 +33,7 @@ trait HasPaginator
      * @param  int  $perPage
      * @return void
      */
-    public function paginate(int $perPage = 20)
+    public function paginate(int $perPage = 20): void
     {
         $this->perPage = $perPage;
 
@@ -44,7 +46,7 @@ trait HasPaginator
      * @param  bool  $value
      * @return $this
      */
-    public function simplePaginate(bool $value = true)
+    public function simplePaginate(bool $value = true): static
     {
         $this->model()->simple($value);
 
@@ -54,7 +56,7 @@ trait HasPaginator
     /**
      * @return int
      */
-    public function getPerPage()
+    public function getPerPage(): int
     {
         return $this->perPage;
     }
@@ -63,7 +65,7 @@ trait HasPaginator
      * @param  string  $paginator
      * @return $this
      */
-    public function setPaginatorClass(string $paginator)
+    public function setPaginatorClass(string $paginator): static
     {
         $this->options['paginator_class'] = $paginator;
 
@@ -75,7 +77,7 @@ trait HasPaginator
      *
      * @return \Dcat\Admin\Grid\Tools\Paginator
      */
-    public function paginator()
+    public function paginator(): Tools\Paginator
     {
         if (! $this->paginator) {
             $paginatorClass = $this->options['paginator_class'] ?: (config('admin.grid.paginator_class') ?: Tools\Paginator::class);
@@ -91,7 +93,7 @@ trait HasPaginator
      *
      * @return bool
      */
-    public function allowPagination()
+    public function allowPagination(): bool
     {
         return $this->options['pagination'];
     }
@@ -100,8 +102,9 @@ trait HasPaginator
      * Set per-page options.
      *
      * @param  array  $perPages
+     * @return $this
      */
-    public function perPages(array $perPages)
+    public function perPages(array $perPages): static
     {
         $this->perPages = $perPages;
 
@@ -111,7 +114,7 @@ trait HasPaginator
     /**
      * @return $this
      */
-    public function disablePerPages()
+    public function disablePerPages(): static
     {
         return $this->perPages([]);
     }
@@ -121,7 +124,7 @@ trait HasPaginator
      *
      * @return array
      */
-    public function getPerPages()
+    public function getPerPages(): array
     {
         return $this->perPages;
     }
@@ -131,7 +134,7 @@ trait HasPaginator
      *
      * @return $this
      */
-    public function disablePagination(bool $disable = true)
+    public function disablePagination(bool $disable = true): static
     {
         $this->model->usePaginate(! $disable);
 
@@ -144,15 +147,19 @@ trait HasPaginator
      * @param  bool  $val
      * @return $this
      */
-    public function showPagination(bool $val = true)
+    public function showPagination(bool $val = true): static
     {
         return $this->disablePagination(! $val);
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View|string
+     * Notes   : 渲染分页
+     *
+     * @Date   : 2024/8/15 17:11
+     * @Author : <Jason.C>
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function renderPagination()
+    public function renderPagination(): Factory|View
     {
         return view('admin::grid.table-pagination', ['grid' => $this]);
     }

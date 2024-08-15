@@ -27,7 +27,9 @@ abstract class LazyRenderable extends Renderable
     abstract public function grid(): Grid;
 
     /**
-     * {@inheritdoc}
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Throwable
      */
     public function render(): string
     {

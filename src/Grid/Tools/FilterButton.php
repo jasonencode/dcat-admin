@@ -11,17 +11,17 @@ class FilterButton extends AbstractTool
     /**
      * @var string
      */
-    protected $view = 'admin::filter.button';
+    protected string $view = 'admin::filter.button';
 
     /**
      * @var string
      */
-    protected $btnClassName;
+    protected string $btnClassName = '';
 
     /**
      * @return \Dcat\Admin\Grid\Filter
      */
-    protected function filter()
+    protected function filter(): Filter
     {
         return $this->parent->filter();
     }
@@ -31,7 +31,7 @@ class FilterButton extends AbstractTool
      *
      * @return string
      */
-    protected function getElementClassName()
+    protected function getElementClassName(): string
     {
         if (! $this->btnClassName) {
             $this->btnClassName = 'filter-btn-'.Str::random(8);
@@ -43,10 +43,10 @@ class FilterButton extends AbstractTool
     /**
      * Set up script for filter button.
      */
-    protected function addScript()
+    protected function addScript(): void
     {
         $filter = $this->filter();
-        $id = $filter->filterID();
+        $id     = $filter->filterID();
 
         if ($filter->mode() === Filter::MODE_RIGHT_SIDE) {
             if ($filter->grid()->model()->getCurrentPage() > 1) {
@@ -58,11 +58,11 @@ class FilterButton extends AbstractTool
             $script = <<<JS
 (function () {
     var slider,
-        expand = {$expand};
+        expand = $expand;
 
      function initSlider() {
         slider = new Dcat.Slider({
-            target: '#{$id}',
+            target: '#$id',
         });
 
         slider
@@ -102,7 +102,7 @@ JS;
         } else {
             $script = <<<JS
 $('.{$this->getElementClassName()}').on('click', function(){
-    $('#{$id}').parent().toggleClass('d-none');
+    $('#$id').parent().toggleClass('d-none');
 });
 JS;
         }
@@ -113,7 +113,7 @@ JS;
     /**
      * @return mixed
      */
-    protected function renderScopes()
+    protected function renderScopes(): mixed
     {
         return $this->filter()->scopes()->map->render()->implode("\r\n");
     }
@@ -123,7 +123,7 @@ JS;
      *
      * @return string
      */
-    protected function currentScopeLabel()
+    protected function currentScopeLabel(): string
     {
         if ($scope = $this->filter()->getCurrentScope()) {
             return "&nbsp;{$scope->getLabel()}&nbsp;";
@@ -134,13 +134,14 @@ JS;
 
     /**
      * {@inheritdoc}
+     * @throws \Throwable
      */
     public function render(): string
     {
         $filter = $this->filter();
 
-        $scopres = $filter->scopes();
-        $filters = $filter->filters();
+        $scopres    = $filter->scopes();
+        $filters    = $filter->filters();
         $valueCount = $filter->countConditions();
 
         if ($scopres->isEmpty() && ! $filters) {
@@ -149,7 +150,7 @@ JS;
 
         $this->addScript();
 
-        $onlyScopes = ((! $filters || $this->parent->option('filter') === false) && ! $scopres->isEmpty()) ? true : false;
+        $onlyScopes = (! $filters || $this->parent->option('filter') === false) && ! $scopres->isEmpty();
 
         $variables = [
             'scopes'        => $scopres,

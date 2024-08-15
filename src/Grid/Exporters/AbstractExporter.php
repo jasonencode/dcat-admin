@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid\Exporters;
 
+use Closure;
 use Dcat\Admin\Grid;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -32,7 +33,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @var array
      */
-    protected $titles = [];
+    protected array $titles = [];
 
     /**
      * @var string
@@ -47,14 +48,14 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @var string
      */
-    protected $extension = 'xlsx';
+    protected string $extension = 'xlsx';
 
     /**
      * Create a new exporter instance.
      *
      * @param  array  $titles
      */
-    public function __construct($titles = [])
+    public function __construct(array $titles = [])
     {
         if ($titles) {
             $this->titles($titles);
@@ -64,10 +65,10 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Set the headings of excel sheet.
      *
-     * @param  array|false  $titles
+     * @param  false|array|null  $titles
      * @return $this|array
      */
-    public function titles($titles = null)
+    public function titles(false|array $titles = null): array|static
     {
         if ($titles === null) {
             return $this->titles ?: ($this->titles = $this->defaultTitles());
@@ -85,7 +86,7 @@ abstract class AbstractExporter implements ExporterInterface
      *
      * @return array
      */
-    protected function defaultTitles()
+    protected function defaultTitles(): array
     {
         return $this
             ->grid
@@ -105,7 +106,7 @@ abstract class AbstractExporter implements ExporterInterface
      * @param  string|\Closure  $filename
      * @return $this
      */
-    public function filename($filename)
+    public function filename(string|Closure $filename): static
     {
         $this->filename = value($filename);
 
@@ -118,7 +119,7 @@ abstract class AbstractExporter implements ExporterInterface
      * @param  \Closure  $builder
      * @return $this
      */
-    public function rows(\Closure $builder)
+    public function rows(Closure $builder): static
     {
         $this->builder = $builder;
 
@@ -128,7 +129,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @return $this
      */
-    public function xlsx()
+    public function xlsx(): static
     {
         return $this->extension('xlsx');
     }
@@ -136,7 +137,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @return $this
      */
-    public function csv()
+    public function csv(): static
     {
         return $this->extension('csv');
     }
@@ -144,7 +145,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @return $this
      */
-    public function ods()
+    public function ods(): static
     {
         return $this->extension('ods');
     }
@@ -185,9 +186,10 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Get data with export query.
      *
-     * @param  int  $page
-     * @param  int  $perPage
-     * @return array|\Illuminate\Support\Collection|mixed
+     * @param  int|null  $page
+     * @param  int|null  $perPage
+     * @return array
+     * @throws \Exception
      */
     public function buildData(?int $page = null, ?int $perPage = null)
     {
@@ -256,9 +258,9 @@ abstract class AbstractExporter implements ExporterInterface
 
     /**
      * @param  Collection  $data
-     * @return array
+     * @return array|\Illuminate\Support\Collection
      */
-    protected function callBuilder(Collection &$data)
+    protected function callBuilder(Collection &$data): array|Collection
     {
         if ($data && $this->builder) {
             return ($this->builder)($data);
@@ -270,7 +272,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @return int
      */
-    protected function getChunkSize()
+    protected function getChunkSize(): int
     {
         return $this->parent->option('chunk_size') ?: 5000;
     }
@@ -281,7 +283,7 @@ abstract class AbstractExporter implements ExporterInterface
      * @param  string  $scope
      * @return $this
      */
-    public function withScope($scope)
+    public function withScope(string $scope): static
     {
         $data = explode(':', $scope);
         $scope = $data[0] ?? '';
@@ -306,7 +308,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @param $method
      * @param $arguments
-     * @return mixed
+     * @return \Dcat\Admin\Grid\Exporters\AbstractExporter
      */
     public function __call($method, $arguments)
     {
@@ -318,9 +320,10 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Create a new exporter instance.
      *
-     * @param  \Closure|array  $closure
+     * @param  null  $builder
+     * @return \Dcat\Admin\Grid\Exporters\AbstractExporter
      */
-    public static function make($builder = null)
+    public static function make($builder = null): AbstractExporter
     {
         return new static($builder);
     }

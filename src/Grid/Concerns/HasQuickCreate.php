@@ -8,15 +8,15 @@ use Dcat\Admin\Grid\Tools\QuickCreate;
 trait HasQuickCreate
 {
     /**
-     * @var QuickCreate
+     * @var QuickCreate|null
      */
-    protected $quickCreate;
+    protected ?QuickCreate $quickCreate = null;
 
     /**
      * @param  Closure  $callback
      * @return $this
      */
-    public function quickCreate(\Closure $callback)
+    public function quickCreate(Closure $callback): static
     {
         $this->quickCreate = new QuickCreate($this);
 
@@ -30,7 +30,7 @@ trait HasQuickCreate
      *
      * @return bool
      */
-    public function hasQuickCreate()
+    public function hasQuickCreate(): bool
     {
         return ! is_null($this->quickCreate);
     }
@@ -38,9 +38,10 @@ trait HasQuickCreate
     /**
      * Render quick-create form.
      *
-     * @return array|string
+     * @return string
+     * @throws \Throwable
      */
-    public function renderQuickCreate()
+    public function renderQuickCreate(): string
     {
         $columnCount = $this->columns->count();
 

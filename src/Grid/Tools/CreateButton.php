@@ -11,9 +11,9 @@ class CreateButton implements Renderable
     /**
      * @var Grid
      */
-    protected $grid;
+    protected Grid $grid;
 
-    protected $mode;
+    protected mixed $mode;
 
     public function __construct(Grid $grid)
     {
@@ -21,37 +21,37 @@ class CreateButton implements Renderable
         $this->mode = $grid->option('create_mode');
     }
 
-    protected function renderDialogCreateButton()
+    protected function renderDialogCreateButton(): string
     {
         if ($this->mode !== Grid::CREATE_MODE_DIALOG) {
-            return;
+            return '';
         }
 
-        $new = trans('admin.new');
-        $url = $this->grid->getCreateUrl();
+        $new   = trans('admin.new');
+        $url   = $this->grid->getCreateUrl();
         $class = $this->grid->makeName('dialog-create');
 
         [$width, $height] = $this->grid->option('dialog_form_area');
 
         Form::dialog($new)
-            ->click(".{$class}")
+            ->click(".$class")
             ->success('Dcat.reload()')
             ->dimensions($width, $height);
 
-        return "<button data-url='$url' class='btn btn-primary {$class}'><i class='feather icon-plus'></i><span class='d-none d-sm-inline'>&nbsp; $new</span></button>";
+        return "<button data-url='$url' class='btn btn-primary $class'><i class='feather icon-plus'></i><span class='d-none d-sm-inline'>&nbsp; $new</span></button>";
     }
 
-    protected function renderCreateButton()
+    protected function renderCreateButton(): string
     {
         if ($this->mode && $this->mode !== Grid::CREATE_MODE_DEFAULT) {
-            return;
+            return '';
         }
 
         $new = trans('admin.new');
         $url = $this->grid->getCreateUrl();
 
-        return "<a href='{$url}' class='btn btn-primary'>
-    <i class='feather icon-plus'></i><span class='d-none d-sm-inline'>&nbsp;&nbsp;{$new}</span>
+        return "<a href='$url' class='btn btn-primary'>
+    <i class='feather icon-plus'></i><span class='d-none d-sm-inline'>&nbsp;&nbsp;$new</span>
 </a>";
     }
 
