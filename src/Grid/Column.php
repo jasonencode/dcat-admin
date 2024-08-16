@@ -184,7 +184,7 @@ class Column
     protected static Model $model;
 
     /**
-     * @var Grid\Column\Condition
+     * @var array|\Dcat\Admin\Grid\Column\Condition
      */
     protected array|Column\Condition $conditions = [];
 
@@ -192,7 +192,7 @@ class Column
      * @param  string  $name
      * @param  string  $label
      */
-    public function __construct($name, $label)
+    public function __construct(string $name, string $label)
     {
         $this->name = $this->formatName($name);
 
@@ -212,7 +212,7 @@ class Column
      * @param $name
      * @param $displayer
      */
-    public static function extend($name, $displayer)
+    public static function extend($name, $displayer): void
     {
         static::$displayers[$name] = $displayer;
     }
@@ -220,7 +220,7 @@ class Column
     /**
      * @return array
      */
-    public static function extensions()
+    public static function extensions(): array
     {
         return static::$displayers;
     }
@@ -230,7 +230,7 @@ class Column
      *
      * @param  Grid  $grid
      */
-    public function setGrid(Grid $grid)
+    public function setGrid(Grid $grid): void
     {
         $this->grid = $grid;
     }
@@ -238,7 +238,7 @@ class Column
     /**
      * @return Grid
      */
-    public function grid()
+    public function grid(): Grid
     {
         return $this->grid;
     }
@@ -248,7 +248,7 @@ class Column
      *
      * @param  Collection  $collection
      */
-    public static function setOriginalGridModels(Collection $collection)
+    public static function setOriginalGridModels(Collection $collection): void
     {
         static::$originalGridModels = $collection->map(function ($row) {
             if (is_object($row)) {
@@ -262,10 +262,10 @@ class Column
     /**
      * Set width for column.
      *
-     * @param  string  $width
+     * @param  string|null  $width
      * @return $this
      */
-    public function width(?string $width)
+    public function width(?string $width): static
     {
         $this->titleHtmlAttributes['width'] = $width;
 
@@ -273,7 +273,7 @@ class Column
     }
 
     /**
-     * @param  \Closure  $condition
+     * @param  \Closure|null  $condition
      * @return Column\Condition
      * @example
      *     $grid->column('...')
@@ -302,9 +302,8 @@ class Column
      *         ->display('')
      *         ->end()
      *         ->modal()
-     *
      */
-    public function if(Closure $condition = null)
+    public function if(Closure $condition = null): Column\Condition
     {
         $condition = $condition ?: function ($column) {
             return $column->getValue();
@@ -319,7 +318,7 @@ class Column
      * @param  array  $attributes
      * @return $this
      */
-    public function setAttributes(array $attributes = [])
+    public function setAttributes(array $attributes = []): static
     {
         $this->htmlAttributes = array_merge($this->htmlAttributes, $attributes);
 
@@ -331,7 +330,7 @@ class Column
      *
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->htmlAttributes;
     }
@@ -339,7 +338,7 @@ class Column
     /**
      * @return $this
      */
-    public function hide()
+    public function hide(): static
     {
         $this->grid->hideColumns($this->getName());
 
@@ -352,7 +351,7 @@ class Column
      * @param  string  $style
      * @return Column
      */
-    public function style($style)
+    public function style(string $style): static
     {
         return $this->setAttributes(compact('style'));
     }
@@ -362,7 +361,7 @@ class Column
      *
      * @return mixed
      */
-    public function getName()
+    public function getName(): mixed
     {
         return $this->name;
     }
@@ -370,7 +369,7 @@ class Column
     /**
      * @param  array|Model  $model
      */
-    public function setOriginalModel($model)
+    public function setOriginalModel(Model|array $model): void
     {
         if (is_array($model)) {
             $model = new Fluent($model);
@@ -380,9 +379,9 @@ class Column
     }
 
     /**
-     * @return Fluent
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Fluent
      */
-    public function getOriginalModel()
+    public function getOriginalModel(): Model|Fluent
     {
         return $this->originalModel;
     }
@@ -390,7 +389,7 @@ class Column
     /**
      * @return mixed
      */
-    public function getOriginal()
+    public function getOriginal(): mixed
     {
         return $this->original;
     }
@@ -399,7 +398,7 @@ class Column
      * @param  mixed  $value
      * @return void
      */
-    public function setOriginal($value)
+    public function setOriginal(mixed $value): void
     {
         $this->original = $value;
     }
@@ -407,7 +406,7 @@ class Column
     /**
      * @return mixed
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
@@ -416,7 +415,7 @@ class Column
      * @param  mixed  $value
      * @return void
      */
-    public function setValue($value)
+    public function setValue(mixed $value): void
     {
         $this->value = $value;
     }
@@ -427,7 +426,7 @@ class Column
      * @param  string  $label
      * @return mixed
      */
-    protected function formatLabel($label)
+    protected function formatLabel(string $label): mixed
     {
         return $label ?: str_replace('_', ' ', admin_trans_field($this->name));
     }
@@ -437,7 +436,7 @@ class Column
      *
      * @return mixed
      */
-    public function getLabel()
+    public function getLabel(): mixed
     {
         return $this->label;
     }
@@ -446,7 +445,7 @@ class Column
      * @param  string  $label
      * @return $this
      */
-    public function setLabel($label)
+    public function setLabel(string $label): static
     {
         $this->label = $label;
 
@@ -460,7 +459,7 @@ class Column
      * @param  array  $params
      * @return $this
      */
-    public function display($callback, ...$params)
+    public function display(Closure|string $callback, ...$params): static
     {
         $this->displayCallbacks[] = [&$callback, &$params];
 
@@ -472,7 +471,7 @@ class Column
      *
      * @return bool
      */
-    public function hasDisplayCallbacks()
+    public function hasDisplayCallbacks(): bool
     {
         return ! empty($this->displayCallbacks);
     }
@@ -481,7 +480,7 @@ class Column
      * @param  array  $callbacks
      * @return void
      */
-    public function setDisplayCallbacks(array $callbacks)
+    public function setDisplayCallbacks(array $callbacks): void
     {
         $this->displayCallbacks = $callbacks;
     }
@@ -489,7 +488,7 @@ class Column
     /**
      * @return \Closure[]
      */
-    public function getDisplayCallbacks()
+    public function getDisplayCallbacks(): array
     {
         return $this->displayCallbacks;
     }
@@ -500,7 +499,7 @@ class Column
      * @param  mixed  $value
      * @return mixed
      */
-    protected function callDisplayCallbacks($value)
+    protected function callDisplayCallbacks(mixed $value): mixed
     {
         foreach ($this->displayCallbacks as $callback) {
             [$callback, $params] = $callback;
@@ -534,7 +533,7 @@ class Column
      * @param  Closure  $callback
      * @return Closure
      */
-    protected function bindOriginalRowModel(Closure $callback)
+    protected function bindOriginalRowModel(Closure $callback): Closure
     {
         return $callback->bindTo($this->getOriginalModel());
     }
@@ -544,7 +543,7 @@ class Column
      *
      * @param  \Illuminate\Support\Collection  $data
      */
-    public function fill($data)
+    public function fill(Collection $data): void
     {
         $i = 0;
 
@@ -590,7 +589,7 @@ class Column
      * @param  array|Model  $row
      * @return array|\Illuminate\Database\Eloquent\Model
      */
-    protected function convertModelToArray(&$row)
+    protected function convertModelToArray(Model|array $row): Model|array
     {
         if (is_array($row)) {
             return $row;
@@ -604,7 +603,7 @@ class Column
     /**
      * @return void
      */
-    protected function processConditions()
+    protected function processConditions(): void
     {
         foreach ($this->conditions as $condition) {
             $condition->reset();
@@ -621,7 +620,7 @@ class Column
      * @param  array|string  $item
      * @return mixed
      */
-    protected function htmlEntityEncode($item)
+    protected function htmlEntityEncode(array|string $item): mixed
     {
         return Helper::htmlEntityEncode($item);
     }
@@ -633,7 +632,7 @@ class Column
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    protected function isSorted()
+    protected function isSorted(): bool
     {
         $this->sort = app('request')->get($this->grid->model()->getSortName());
 
@@ -651,7 +650,7 @@ class Column
      * @param  array  $arguments
      * @return Column
      */
-    protected function resolveDisplayer($abstract, $arguments)
+    protected function resolveDisplayer(string $abstract, array $arguments): Column|static
     {
         if (isset(static::$displayers[$abstract])) {
             return $this->callBuiltinDisplayer(static::$displayers[$abstract], $arguments);
@@ -667,7 +666,7 @@ class Column
      * @param  array  $arguments
      * @return Column
      */
-    protected function callSupportDisplayer($abstract, $arguments)
+    protected function callSupportDisplayer(string $abstract, array $arguments): static
     {
         return $this->display(function ($value) use ($abstract, $arguments) {
             if (is_array($value) || $value instanceof Arrayable) {
@@ -689,7 +688,7 @@ class Column
      * @param  array  $arguments
      * @return Column
      */
-    protected function callBuiltinDisplayer($abstract, $arguments)
+    protected function callBuiltinDisplayer(string $abstract, array $arguments): static
     {
         if ($abstract instanceof Closure) {
             return $this->display(function ($value) use ($abstract, $arguments) {
@@ -717,7 +716,7 @@ class Column
      * @param  array  $attributes
      * @return $this
      */
-    public function setHeaderAttributes(array $attributes = [])
+    public function setHeaderAttributes(array $attributes = []): static
     {
         $this->titleHtmlAttributes = array_merge($this->titleHtmlAttributes, $attributes);
 
@@ -730,7 +729,7 @@ class Column
      * @param  array  $attributes
      * @return $this
      */
-    public function setDefaultHeaderAttribute(array $attributes)
+    public function setDefaultHeaderAttribute(array $attributes): static
     {
         foreach ($attributes as $key => $value) {
             if (isset($this->titleHtmlAttributes[$key])) {
@@ -746,7 +745,7 @@ class Column
     /**
      * @return string
      */
-    public function formatTitleAttributes()
+    public function formatTitleAttributes(): string
     {
         $attrArr = [];
         foreach ($this->titleHtmlAttributes as $name => $val) {
@@ -759,9 +758,9 @@ class Column
     /**
      * @param  mixed  $value
      * @param  callable  $callback
-     * @return $this|mixed
+     * @return $this
      */
-    public function when($value, $callback)
+    public function when(mixed $value, callable $callback): static
     {
         if ($value) {
             return $callback($this, $value) ?: $this;
