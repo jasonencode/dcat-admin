@@ -191,7 +191,7 @@ trait HasTools
     public function allowToolbar(): bool
     {
         if (
-            $this->option('toolbar')
+            $this->options['toolbar']
             && (
                 $this->tools()->has()
                 || $this->allowExporter()

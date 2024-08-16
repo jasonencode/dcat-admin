@@ -259,7 +259,7 @@ HTML
      *
      * @return int|mixed
      */
-    public function getDefaultParentId()
+    public function getDefaultParentId(): mixed
     {
         if ($this->defaultParentId !== null) {
             return $this->defaultParentId;

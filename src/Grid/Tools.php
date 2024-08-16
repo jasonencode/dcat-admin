@@ -65,7 +65,7 @@ class Tools implements Renderable
 
     protected function makeBatchActions()
     {
-        $class = $this->grid->option('batch_actions_class') ?: (config('admin.grid.batch_action_class') ?: BatchActions::class);
+        $class = $this->grid->getOption('batch_actions_class') ?: (config('admin.grid.batch_action_class') ?: BatchActions::class);
 
         return new $class();
     }

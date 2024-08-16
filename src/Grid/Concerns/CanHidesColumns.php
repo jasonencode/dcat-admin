@@ -28,19 +28,20 @@ trait CanHidesColumns
      * Remove column selector on grid.
      *
      * @param  bool  $disable
+     * @return $this
      */
-    public function disableColumnSelector(bool $disable = true): void
+    public function disableColumnSelector(bool $disable = true): static
     {
-        $this->option('show_column_selector', ! $disable);
+        return $this->option('show_column_selector', ! $disable);
     }
 
     /**
      * @param  bool  $show
-     * @return void
+     * @return $this
      */
-    public function showColumnSelector(bool $show = true): void
+    public function showColumnSelector(bool $show = true): static
     {
-        $this->disableColumnSelector(! $show);
+        return $this->disableColumnSelector(! $show);
     }
 
     /**
@@ -48,7 +49,7 @@ trait CanHidesColumns
      */
     public function allowColumnSelector(): bool
     {
-        return (bool) $this->option('show_column_selector');
+        return (bool) $this->options['show_column_selector'];
     }
 
     /**

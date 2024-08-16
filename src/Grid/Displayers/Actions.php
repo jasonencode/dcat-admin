@@ -194,10 +194,10 @@ class Actions extends AbstractDisplayer
      */
     protected function resetDefaultActions(): void
     {
-        $this->view($this->grid->option('view_button'));
-        $this->edit($this->grid->option('edit_button'));
-        $this->quickEdit($this->grid->option('quick_edit_button'));
-        $this->delete($this->grid->option('delete_button'));
+        $this->view($this->grid->getOption('view_button'));
+        $this->edit($this->grid->getOption('edit_button'));
+        $this->quickEdit($this->grid->getOption('quick_edit_button'));
+        $this->delete($this->grid->getOption('delete_button'));
     }
 
     /**

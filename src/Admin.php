@@ -221,12 +221,12 @@ class Admin
     /**
      * 创建数据仓库实例.
      *
-     * @param       $repository
-     * @param array $args
+     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder|\Dcat\Admin\Contracts\Repository|string  $repository
+     * @param  array  $args
      * @return Repository
      * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
-    public static function repository($repository, array $args = []): Repository
+    public static function repository(Model|Builder|Repository|string $repository, array $args = []): Repository
     {
         if (is_string($repository)) {
             $repository = new $repository($args);

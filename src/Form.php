@@ -116,7 +116,7 @@ class Form implements Renderable
      *
      * @var array
      */
-    protected static $availableFields = [
+    protected static array $availableFields = [
         'button'              => Field\Button::class,
         'checkbox'            => Field\Checkbox::class,
         'currency'            => Field\Currency::class,
@@ -190,14 +190,14 @@ class Form implements Renderable
     public static array $fieldAlias = [];
 
     /**
-     * @var Repository
+     * @var Repository|null
      */
-    protected $repository;
+    protected ?Repository $repository;
 
     /**
-     * @var Closure
+     * @var Closure|null
      */
-    protected $callback;
+    protected ?Closure $callback;
 
     /**
      * @var Request

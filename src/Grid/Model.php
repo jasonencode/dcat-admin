@@ -17,7 +17,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use stdClass;
-
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 /**
  * @mixin Builder
  */
@@ -31,9 +31,9 @@ class Model
     protected Request $request;
 
     /**
-     * @var Repository
+     * @var Repository|null
      */
-    protected Repository $repository;
+    protected ?Repository $repository = null;
 
     /**
      * @var AbstractPaginator|null
@@ -131,10 +131,10 @@ class Model
      * Create a new grid model instance.
      *
      * @param  Request  $request
-     * @param  null  $repository
+     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder|\Dcat\Admin\Contracts\Repository|string|null  $repository
      * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
-    public function __construct(Request $request, $repository = null)
+    public function __construct(Request $request, EloquentModel|Builder|Repository|string|null $repository = null)
     {
         if ($repository) {
             $this->repository = Admin::repository($repository);
@@ -153,7 +153,7 @@ class Model
     }
 
     /**
-     * @return Repository|null
+     * @return \Dcat\Admin\Contracts\Repository|null
      */
     public function repository(): ?Repository
     {

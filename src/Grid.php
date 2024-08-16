@@ -20,6 +20,7 @@ class Grid
 {
     use HasBuilderEvents;
     use HasVariables;
+    use Concerns\HasOptions;
     use Concerns\HasEvents;
     use Concerns\HasNames;
     use Concerns\HasFilter;
@@ -159,25 +160,26 @@ class Grid
      * @var array
      */
     protected array $options = [
-        'actions'             => true,
-        'actions_class'       => null,
-        'batch_actions_class' => null,
-        'bordered'            => false,
-        'create_button'       => true,
-        'create_mode'         => self::CREATE_MODE_DEFAULT,
-        'delete_button'       => true,
-        'dialog_form_area'    => ['700px', '670px'],
-        'edit_button'         => true,
-        'filter'              => true,
-        'pagination'          => true,
-        'paginator_class'     => null,
-        'quick_edit_button'   => false,
-        'row_selector'        => true,
-        'scrollbar_x'         => false,
-        'table_class'         => ['table', 'custom-data-table', 'data-table'],
-        'table_collapse'      => true,
-        'toolbar'             => true,
-        'view_button'         => true,
+        'actions'              => true,
+        'actions_class'        => null,
+        'batch_actions_class'  => null,
+        'bordered'             => false,
+        'create_button'        => true,
+        'create_mode'          => self::CREATE_MODE_DEFAULT,
+        'delete_button'        => true,
+        'dialog_form_area'     => ['700px', '670px'],
+        'edit_button'          => true,
+        'filter'               => true,
+        'pagination'           => true,
+        'paginator_class'      => null,
+        'quick_edit_button'    => false,
+        'row_selector'         => true,
+        'scrollbar_x'          => false,
+        'show_column_selector' => true,
+        'table_class'          => ['table', 'custom-data-table', 'data-table'],
+        'table_collapse'       => true,
+        'toolbar'              => true,
+        'view_button'          => true,
     ];
 
     /**
@@ -206,9 +208,9 @@ class Grid
      *
      * Grid constructor.
      *
-     * @param null          $repository 资源
-     * @param null|\Closure $builder    构建器
-     * @param null          $request    请求
+     * @param  null  $repository  资源
+     * @param  null|\Closure  $builder  构建器
+     * @param  null  $request  请求
      * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
     public function __construct($repository = null, ?Closure $builder = null, $request = null)
@@ -246,7 +248,7 @@ class Grid
     /**
      * 设置主键名称
      *
-     * @param string|array $name
+     * @param  string|array  $name
      * @return $this
      */
     public function setKeyName($name): static
@@ -269,8 +271,8 @@ class Grid
     /**
      * 增加列
      *
-     * @param string $name
-     * @param string $label
+     * @param  string  $name
+     * @param  string  $label
      * @return Column
      */
     public function column(string $name, string $label = ''): Column
@@ -281,7 +283,7 @@ class Grid
     /**
      * 添加行号显示列
      *
-     * @param null|string $label
+     * @param  null|string  $label
      * @return Column
      */
     public function number(?string $label = null): Column
@@ -292,7 +294,7 @@ class Grid
     /**
      * 启用异步渲染功能.
      *
-     * @param bool $async
+     * @param  bool  $async
      * @return $this
      */
     public function async(bool $async = true): static
@@ -315,7 +317,7 @@ class Grid
      */
     public function buildable(): bool
     {
-        return !$this->async || $this->isAsyncRequest();
+        return ! $this->async || $this->isAsyncRequest();
     }
 
     /**
@@ -351,7 +353,7 @@ class Grid
     /**
      * 删除列
      *
-     * @param string|Column $column
+     * @param  string|Column  $column
      * @return $this
      */
     public function dropColumn(string|Column $column): static
@@ -369,8 +371,8 @@ class Grid
     /**
      * 增加列
      *
-     * @param string $field
-     * @param string $label
+     * @param  string  $field
+     * @param  string  $label
      * @return Column
      */
     protected function addColumn(string $field, string $label = ''): Column
@@ -386,8 +388,8 @@ class Grid
     /**
      * 在前面插入列
      *
-     * @param string $field
-     * @param string $label
+     * @param  string  $field
+     * @param  string  $label
      * @return Column
      */
     public function prependColumn(string $field, string $label = ''): Column
@@ -401,8 +403,8 @@ class Grid
     }
 
     /**
-     * @param string $field
-     * @param string $label
+     * @param  string  $field
+     * @param  string  $label
      * @return Column
      */
     public function newColumn(string $field, string $label = ''): Column
@@ -444,24 +446,6 @@ class Grid
     }
 
     /**
-     * @param string|array $class
-     * @return void
-     */
-    public function addTableClass(string|array $class): void
-    {
-        $this->options['table_class'] = array_merge((array)$this->options['table_class'], (array)$class);
-    }
-
-    public function formatTableClass(): string
-    {
-        if ($this->options['bordered']) {
-            $this->addTableClass(['table-bordered', 'complex-headers', 'data-table']);
-        }
-
-        return implode(' ', array_unique((array)$this->options['table_class']));
-    }
-
-    /**
      * 构建表格
      *
      * @return void
@@ -471,7 +455,7 @@ class Grid
      */
     public function build(): void
     {
-        if (!$this->buildable()) {
+        if (! $this->buildable()) {
             $this->callBuilder();
             $this->handleExportRequest();
 
@@ -510,7 +494,7 @@ class Grid
      */
     public function callBuilder(): void
     {
-        if ($this->builder && !$this->built) {
+        if ($this->builder && ! $this->built) {
             call_user_func($this->builder, $this);
         }
 
@@ -520,7 +504,7 @@ class Grid
     /**
      * Build the grid rows.
      *
-     * @param Collection $data
+     * @param  Collection  $data
      * @return void
      */
     protected function buildRows(Collection $data): void
@@ -561,7 +545,7 @@ class Grid
     }
 
     /**
-     * @param string $key
+     * @param  string  $key
      * @return string
      */
     public function getEditUrl($key): string
@@ -570,7 +554,7 @@ class Grid
     }
 
     /**
-     * @param string|null $url
+     * @param  string|null  $url
      * @return string
      */
     public function urlWithConstraints(?string $url): string
@@ -599,7 +583,7 @@ class Grid
      */
     protected function prependRowSelectorColumn(): void
     {
-        if (!$this->options['row_selector']) {
+        if (! $this->options['row_selector']) {
             return;
         }
 
@@ -614,23 +598,13 @@ class Grid
     }
 
     /**
-     * @param string $width
-     * @param string $height
-     * @return void
-     */
-    public function setDialogFormDimensions(string $width, string $height): void
-    {
-        $this->options['dialog_form_area'] = [$width, $height];
-    }
-
-    /**
      * Render create button for grid.
      *
      * @return string
      */
     public function renderCreateButton(): string
     {
-        if (!$this->options['create_button']) {
+        if (! $this->options['create_button']) {
             return '';
         }
 
@@ -638,38 +612,9 @@ class Grid
     }
 
     /**
-     * @param bool $value
-     * @return void
-     */
-    public function withBorder(bool $value = true): void
-    {
-        $this->options['bordered'] = $value;
-    }
-
-    /**
-     * @param bool $value
-     * @return void
-     */
-    public function tableCollapse(bool $value = true): void
-    {
-        $this->options['table_collapse'] = $value;
-    }
-
-    /**
-     * 显示横轴滚动条.
-     *
-     * @param bool $value
-     * @return void
-     */
-    public function scrollbar(bool $value = true): void
-    {
-        $this->options['table_scrollbar'] = $value;
-    }
-
-    /**
      * Set grid header.
      *
-     * @param Closure|Renderable|string $content
+     * @param  Closure|Renderable|string  $content
      * @return $this
      */
     public function header(Closure|Renderable|string $content): static
@@ -687,7 +632,7 @@ class Grid
      */
     public function renderHeader(): string
     {
-        if (!$this->header) {
+        if (! $this->header) {
             return '';
         }
 
@@ -718,7 +663,7 @@ HTML;
     /**
      * Set grid footer.
      *
-     * @param Closure|string|Renderable $content
+     * @param  Closure|string|Renderable  $content
      * @return $this
      */
     public function footer(Closure|Renderable|string $content): static
@@ -736,113 +681,13 @@ HTML;
      */
     public function renderFooter(): string
     {
-        if (!$this->footer) {
+        if (! $this->footer) {
             return '';
         }
 
         return <<<HTML
 <div class="box-footer clearfix">{$this->renderHeaderOrFooter($this->footer)}</div>
 HTML;
-    }
-
-    /**
-     * Get or set option for grid.
-     *
-     * @param string|array $key
-     * @param mixed        $value
-     * @return mixed|void
-     */
-    public function option($key, $value = null)
-    {
-        if (is_null($value)) {
-            return $this->options[$key] ?? null;
-        }
-
-        if (is_array($key)) {
-            $this->options = array_merge($this->options, $key);
-        } else {
-            $this->options[$key] = $value;
-        }
-    }
-
-    protected function setUpOptions(): void
-    {
-        if ($this->options['bordered']) {
-            $this->tableCollapse(false);
-        }
-    }
-
-    /**
-     * Disable row selector.
-     *
-     * @param bool $disable
-     * @return void
-     */
-    public function disableRowSelector(bool $disable = true): void
-    {
-        $this->tools->disableBatchActions($disable);
-
-        $this->option('row_selector', !$disable);
-    }
-
-    /**
-     * Show row selector.
-     *
-     * @param bool $val
-     * @return void
-     */
-    public function showRowSelector(bool $val = true): void
-    {
-        $this->disableRowSelector(!$val);
-    }
-
-    /**
-     * Remove create button on grid.
-     *
-     * @param bool $disable
-     * @return void
-     */
-    public function disableCreateButton(bool $disable = true): void
-    {
-        $this->option('create_button', !$disable);
-    }
-
-    /**
-     * Show create button.
-     *
-     * @param bool $val
-     * @return void
-     */
-    public function showCreateButton(bool $val = true): void
-    {
-        $this->disableCreateButton(!$val);
-    }
-
-    /**
-     * If allow creation.
-     *
-     * @return bool
-     */
-    public function allowCreateButton(): bool
-    {
-        return $this->options['create_button'];
-    }
-
-    /**
-     * @param string $mode
-     * @return \Dcat\Admin\Grid|null
-     */
-    public function createMode(string $mode): null|static
-    {
-        return $this->option('create_mode', $mode);
-    }
-
-    /**
-     * @return \Dcat\Admin\Grid|null
-     */
-    public function enableDialogCreate(): null|static
-    {
-        return $this->createMode(self::CREATE_MODE_DIALOG);
     }
 
     /**
@@ -868,7 +713,7 @@ HTML;
     }
 
     /**
-     * @param Closure $closure
+     * @param  Closure  $closure
      * @return $this;
      */
     public function wrap(Closure $closure): static
@@ -883,13 +728,13 @@ HTML;
      */
     public function hasWrapper(): bool
     {
-        return (bool)$this->wrapper;
+        return (bool) $this->wrapper;
     }
 
     /**
      * Add variables to grid view.
      *
-     * @param array $variables
+     * @param  array  $variables
      * @return $this
      */
     public function with(array $variables): static
@@ -913,7 +758,7 @@ HTML;
     /**
      * 设置渲染模板
      *
-     * @param string $view
+     * @param  string  $view
      * @return $this
      */
     public function view(string $view): static
@@ -926,7 +771,7 @@ HTML;
     /**
      * 设置表格标题
      *
-     * @param string $title
+     * @param  string  $title
      * @return $this
      */
     public function title(string $title): static
@@ -939,7 +784,7 @@ HTML;
     /**
      * Set grid description.
      *
-     * @param string $description
+     * @param  string  $description
      * @return $this
      */
     public function description(string $description): static
@@ -952,7 +797,7 @@ HTML;
     /**
      * Set resource path for grid.
      *
-     * @param string $path
+     * @param  string  $path
      * @return $this
      */
     public function setResource(string $path): static
@@ -965,7 +810,7 @@ HTML;
     /**
      * 设置是否显示.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return $this
      */
     public function show(bool $value = true): static
@@ -976,25 +821,12 @@ HTML;
     }
 
     /**
-     * 是否显示横向滚动条.
-     *
-     * @param bool $value
-     * @return $this
-     */
-    public function scrollbarX(bool $value = true): static
-    {
-        $this->options['scrollbar_x'] = $value;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function formatTableParentClass(): string
     {
-        $tableCollaps = $this->option('table_collapse') ? 'table-collapse' : '';
-        $scrollbarX   = $this->option('scrollbar_x') ? 'table-scrollbar-x' : '';
+        $tableCollaps = $this->getOption('table_collapse') ? 'table-collapse' : '';
+        $scrollbarX   = $this->getOption('scrollbar_x') ? 'table-scrollbar-x' : '';
 
         return "table-responsive table-wrapper complex-container table-middle mt-1 $tableCollaps $scrollbarX";
     }
@@ -1034,7 +866,7 @@ HTML;
      */
     protected function addScript(): void
     {
-        if ($this->async && !$this->isAsyncRequest()) {
+        if ($this->async && ! $this->isAsyncRequest()) {
             $query = static::ASYNC_NAME;
             $url   = Helper::fullUrlWithoutQuery(['_pjax']);
             $url   = Helper::urlWithQuery($url, [static::ASYNC_NAME => 1]);
@@ -1065,13 +897,13 @@ JS
      */
     protected function doWrap(): string
     {
-        if (!$this->show) {
+        if (! $this->show) {
             return '';
         }
 
         $view = view($this->getView(), $this->variables());
 
-        if (!$wrapper = $this->wrapper) {
+        if (! $wrapper = $this->wrapper) {
             return $view->render();
         }
 
@@ -1081,7 +913,7 @@ JS
     /**
      * Add column to grid.
      *
-     * @param string $name
+     * @param  string  $name
      * @return Column
      */
     public function __get(string $name)
@@ -1092,7 +924,7 @@ JS
     /**
      * Dynamically add columns to the grid view.
      *
-     * @param string $method
+     * @param  string  $method
      * @param        $parameters
      * @return Column
      */

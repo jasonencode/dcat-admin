@@ -21,7 +21,7 @@ class QuickEdit extends RowAction
 
     public function render(): string
     {
-        [$width, $height] = $this->parent->option('dialog_form_area');
+        [$width, $height] = $this->parent->getOption('dialog_form_area');
 
         $title = trans('admin.edit');
 

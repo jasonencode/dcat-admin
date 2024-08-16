@@ -18,7 +18,7 @@ class CreateButton implements Renderable
     public function __construct(Grid $grid)
     {
         $this->grid = $grid;
-        $this->mode = $grid->option('create_mode');
+        $this->mode = $grid->getOption('create_mode');
     }
 
     protected function renderDialogCreateButton(): string
@@ -31,7 +31,7 @@ class CreateButton implements Renderable
         $url   = $this->grid->getCreateUrl();
         $class = $this->grid->makeName('dialog-create');
 
-        [$width, $height] = $this->grid->option('dialog_form_area');
+        [$width, $height] = $this->grid->getOption('dialog_form_area');
 
         Form::dialog($new)
             ->click(".$class")

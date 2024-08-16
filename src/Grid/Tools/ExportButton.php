@@ -78,7 +78,7 @@ JS;
     protected function renderExportSelectedRows()
     {
         if (
-            ! $this->grid->option('row_selector')
+            ! $this->grid->getOption('row_selector')
             || ! $this->grid->exporter()->option('show_export_selected_rows')
         ) {
             return;
