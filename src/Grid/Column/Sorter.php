@@ -7,29 +7,13 @@ use Illuminate\Contracts\Support\Renderable;
 
 class Sorter implements Renderable
 {
-    /**
-     * @var Grid
-     */
-    protected $grid;
+    protected Grid $grid;
 
-    /**
-     * Sort arguments.
-     *
-     * @var array
-     */
-    protected $sort;
+    protected array $sort;
 
-    /**
-     * Cast Name.
-     *
-     * @var array
-     */
-    protected $cast;
+    protected string $cast;
 
-    /**
-     * @var string
-     */
-    protected $columnName;
+    protected string $columnName;
 
     /**
      * Sorter constructor.
@@ -38,19 +22,21 @@ class Sorter implements Renderable
      * @param  string  $columnName
      * @param  string  $cast
      */
-    public function __construct(Grid $grid, $columnName, $cast)
+    public function __construct(Grid $grid, string $columnName, string $cast)
     {
-        $this->grid = $grid;
+        $this->grid       = $grid;
         $this->columnName = $columnName;
-        $this->cast = $cast;
+        $this->cast       = $cast;
     }
 
     /**
      * Determine if this column is currently sorted.
      *
      * @return bool
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    protected function isSorted()
+    protected function isSorted(): bool
     {
         $this->sort = app('request')->get($this->getSortName());
 
@@ -61,22 +47,24 @@ class Sorter implements Renderable
         return isset($this->sort['column']) && $this->sort['column'] == $this->columnName;
     }
 
-    protected function getSortName()
+    protected function getSortName(): string
     {
         return $this->grid->model()->getSortName();
     }
 
     /**
      * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function render(): string
     {
-        $type = 'desc';
-        $icon = 'down';
+        $type   = 'desc';
+        $icon   = 'down';
         $active = '';
 
         if ($this->isSorted()) {
-            $type = $this->sort['type'] == 'desc' ? 'asc' : 'desc';
+            $type   = $this->sort['type'] == 'desc' ? 'asc' : 'desc';
             $active = 'active';
 
             if ($this->sort['type'] === 'asc') {
@@ -100,6 +88,6 @@ class Sorter implements Renderable
             ]);
         }
 
-        return "&nbsp;<a href='{$url}' class='grid-sort feather icon-arrow-{$icon} {$active}'></a>";
+        return "&nbsp;<a href='$url' class='grid-sort feather icon-arrow-$icon $active'></a>";
     }
 }

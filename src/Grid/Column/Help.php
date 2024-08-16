@@ -11,27 +11,29 @@ class Help implements Renderable
     /**
      * @var string
      */
-    protected $message = '';
+    protected mixed $message = '';
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $style;
+    protected ?string $style = null;
 
     /**
-     * @var null
+     * @var string|null
      */
-    protected $placement;
+    protected ?string $placement = null;
 
     /**
      * Help constructor.
      *
      * @param  string  $message
+     * @param  string|null  $style
+     * @param  string|null  $placement
      */
-    public function __construct($message = '', ?string $style = null, ?string $placement = null)
+    public function __construct(string $message = '', ?string $style = null, ?string $placement = null)
     {
-        $this->message = value($message);
-        $this->style = $style;
+        $this->message   = value($message);
+        $this->style     = $style;
         $this->placement = $placement;
     }
 
@@ -55,7 +57,7 @@ class Help implements Renderable
         }
 
         return <<<HELP
-&nbsp;<a href="javascript:void(0);" class="{$class} feather icon-help-circle" data-title="{$this->message}"></a>
+&nbsp;<a href="javascript:void(0);" class="$class feather icon-help-circle" data-title="$this->message"></a>
 HELP;
     }
 }

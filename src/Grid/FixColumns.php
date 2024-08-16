@@ -11,47 +11,47 @@ class FixColumns
     /**
      * @var Grid
      */
-    protected $grid;
+    protected Grid $grid;
 
     /**
      * @var int
      */
-    public $head;
+    public int $head;
 
     /**
      * @var int
      */
-    public $tail;
+    public int $tail;
 
     /**
      * @var Collection
      */
-    protected $left;
+    protected Collection $left;
 
     /**
      * @var Collection
      */
-    protected $right;
+    protected Collection $right;
 
     /**
      * @var Collection
      */
-    protected $complexLeft;
+    protected Collection $complexLeft;
 
     /**
      * @var Collection
      */
-    protected $complexRight;
+    protected Collection $complexRight;
 
     /**
      * @var string
      */
-    protected $view = 'admin::grid.fixed-table';
+    protected string $view = 'admin::grid.fixed-table';
 
     /**
      * @var int
      */
-    protected $height;
+    protected int $height;
 
     /**
      * FixColumns constructor.
@@ -60,7 +60,7 @@ class FixColumns
      * @param  int  $head
      * @param  int  $tail
      */
-    public function __construct(Grid $grid, $head, $tail = -1)
+    public function __construct(Grid $grid, int $head, int $tail = -1)
     {
         $this->grid = $grid;
         $this->head = $head;
@@ -75,7 +75,7 @@ class FixColumns
     /**
      * @return Collection
      */
-    public function leftColumns()
+    public function leftColumns(): Collection
     {
         return $this->left;
     }
@@ -83,7 +83,7 @@ class FixColumns
     /**
      * @return Collection
      */
-    public function rightColumns()
+    public function rightColumns(): Collection
     {
         return $this->right;
     }
@@ -91,7 +91,7 @@ class FixColumns
     /**
      * @return Collection
      */
-    public function leftComplexColumns()
+    public function leftComplexColumns(): Collection
     {
         return $this->complexLeft;
     }
@@ -99,7 +99,7 @@ class FixColumns
     /**
      * @return Collection
      */
-    public function rightComplexColumns()
+    public function rightComplexColumns(): Collection
     {
         return $this->complexRight;
     }
@@ -108,7 +108,7 @@ class FixColumns
      * @param  int  $height  px
      * @return $this
      */
-    public function height(int $height)
+    public function height(int $height): static
     {
         $this->height = $height;
 
@@ -116,9 +116,11 @@ class FixColumns
     }
 
     /**
-     * @return \Closure
+     * @return void
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function apply()
+    public function apply(): void
     {
         $this->grid->view($this->view);
         $this->grid->with(['tableHeight' => $this->height]);
@@ -163,7 +165,7 @@ class FixColumns
     /**
      * @return $this
      */
-    protected function addScript()
+    protected function addScript(): static
     {
         $script = <<<'JS'
 
@@ -236,7 +238,7 @@ JS;
     /**
      * @return $this
      */
-    protected function addStyle()
+    protected function addStyle(): static
     {
         $style = <<<'CSS'
 .tables-container {

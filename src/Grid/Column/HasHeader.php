@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid\Column;
 
+use Closure;
 use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Model;
@@ -15,22 +16,22 @@ use Illuminate\Contracts\Support\Renderable;
 trait HasHeader
 {
     /**
-     * @var Filter
+     * @var Filter|null
      */
-    public $filter;
+    public ?Filter $filter = null;
 
     /**
      * @var array
      */
-    protected $headers = [];
+    protected array $headers = [];
 
     /**
      * Add contents to column header.
      *
-     * @param  string|Renderable|Htmlable  $header
+     * @param  string|Htmlable|Renderable  $header
      * @return $this
      */
-    public function addHeader($header)
+    public function addHeader(Renderable|Htmlable|string $header): static
     {
         if ($header instanceof Filter) {
             $header->setParent($this);
@@ -45,11 +46,11 @@ trait HasHeader
     /**
      * Add a column sortable to column header.
      *
-     * @param  string  $columnName
-     * @param  string  $cast
+     * @param  string|null  $columnName
+     * @param  string|null  $cast
      * @return $this
      */
-    public function sortable($columnName = null, $cast = null)
+    public function sortable(string $columnName = null, string $cast = null): static
     {
         $sorter = new Sorter($this->grid, $columnName ?: $this->getName(), $cast);
 
@@ -59,6 +60,9 @@ trait HasHeader
     /**
      * Set column filter.
      *
+     * @param  null  $filter
+     * @return $this
+     * @throws \Dcat\Admin\Exception\RuntimeException
      * @example
      *      $grid->username()->filter();
      *
@@ -76,12 +80,10 @@ trait HasHeader
      *          Grid\Column\Filter\Equal::make(__('admin.created_at'))->date()
      *      );
      *
-     * @param  Grid\Column\Filter|string  $filter
-     * @return $this
      */
-    public function filter($filter = null)
+    public function filter($filter = null): static
     {
-        $valueKey = is_string($filter) || $filter instanceof \Closure ? $filter : null;
+        $valueKey = is_string($filter) || $filter instanceof Closure ? $filter : null;
 
         if (! $filter || $valueKey) {
             $filter = Grid\Column\Filter\Equal::make()->valueFilter($valueKey);
@@ -95,10 +97,11 @@ trait HasHeader
     }
 
     /**
-     * @param  string|\Closure  $valueKey
+     * @param  null  $valueKey
      * @return $this
+     * @throws \Dcat\Admin\Exception\RuntimeException
      */
-    public function filterByValue($valueKey = null)
+    public function filterByValue($valueKey = null): static
     {
         return $this->filter(
             Grid\Column\Filter\Equal::make()
@@ -115,7 +118,7 @@ trait HasHeader
      * @param  null|string  $placement  'bottom', 'left', 'right', 'top'
      * @return $this
      */
-    public function help($message, ?string $style = null, ?string $placement = null)
+    public function help(string|Closure $message, ?string $style = null, ?string $placement = null): static
     {
         return $this->addHeader(new Help($message, $style, $placement));
     }
@@ -125,11 +128,9 @@ trait HasHeader
      *
      * @param  Model  $model
      */
-    public function bindFilterQuery(Model $model)
+    public function bindFilterQuery(Model $model): void
     {
-        if ($this->filter) {
-            $this->filter->addBinding($this->filter->value(), $model);
-        }
+        $this->filter?->addBinding($this->filter->value(), $model);
     }
 
     /**
@@ -137,7 +138,7 @@ trait HasHeader
      *
      * @return string
      */
-    public function renderHeader()
+    public function renderHeader(): string
     {
         if (! $this->headers) {
             return '';

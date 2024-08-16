@@ -106,7 +106,7 @@ class Column
      *
      * @var Collection
      */
-    protected static $originalGridModels;
+    protected static Collection $originalGridModels;
 
     /**
      * @var Grid
@@ -118,75 +118,75 @@ class Column
      *
      * @var string
      */
-    protected $name;
+    protected mixed $name;
 
     /**
      * @var array
      */
-    protected $htmlAttributes = [];
+    protected array $htmlAttributes = [];
 
     /**
      * Label of column.
      *
      * @var string
      */
-    protected $label;
+    protected mixed $label;
 
     /**
-     * @var Fluent
+     * @var \Illuminate\Database\Eloquent\Model|Fluent
      */
-    protected $originalModel;
+    protected Fluent|Model $originalModel;
 
     /**
      * Original value of column.
      *
      * @var mixed
      */
-    protected $original;
+    protected mixed $original;
 
     /**
      * @var mixed
      */
-    protected $value;
+    protected mixed $value;
 
     /**
      * Sort arguments.
      *
      * @var array
      */
-    protected $sort;
+    protected array $sort;
 
     /**
      * @var string
      */
-    protected $width;
+    protected string $width;
 
     /**
      * Attributes of column.
      *
      * @var array
      */
-    protected $attributes = [];
+    protected array $attributes = [];
 
     /**
      * @var Closure[]
      */
-    protected $displayCallbacks = [];
+    protected array $displayCallbacks = [];
 
     /**
      * @var array
      */
-    protected $titleHtmlAttributes = [];
+    protected array $titleHtmlAttributes = [];
 
     /**
      * @var Model
      */
-    protected static $model;
+    protected static Model $model;
 
     /**
      * @var Grid\Column\Condition
      */
-    protected $conditions = [];
+    protected array|Column\Condition $conditions = [];
 
     /**
      * @param  string  $name

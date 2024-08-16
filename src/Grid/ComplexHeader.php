@@ -12,7 +12,7 @@ class ComplexHeader extends Widget
     /**
      * @var Grid
      */
-    protected $grid;
+    protected Grid $grid;
 
     /**
      * @var string

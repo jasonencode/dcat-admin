@@ -25,7 +25,7 @@ trait HasDisplayers
      * @param  array  $arguments
      * @return Column
      */
-    public function displayUsing($abstract, $arguments = [])
+    public function displayUsing(string $abstract, array $arguments = []): Column
     {
         $grid   = $this->grid;
         $column = $this;
@@ -44,7 +44,7 @@ trait HasDisplayers
      * @param  null  $default
      * @return $this
      */
-    public function using(array $values, $default = null)
+    public function using(array $values, $default = null): static
     {
         return $this->display(function ($value) use ($values, $default) {
             if (is_null($value)) {
@@ -60,10 +60,10 @@ trait HasDisplayers
     }
 
     /**
-     * @param  string  $color
+     * @param  string|null  $color
      * @return $this
      */
-    public function bold($color = null)
+    public function bold(string $color = null): static
     {
         $color = $color ?: Admin::color()->dark80();
 
@@ -82,7 +82,7 @@ trait HasDisplayers
      * @param  null  $default
      * @return $this
      */
-    public function long2ip($default = null)
+    public function long2ip($default = null): static
     {
         return $this->display(function ($value) use ($default) {
             if (! $value) {
@@ -99,7 +99,7 @@ trait HasDisplayers
      * @param  string  $view
      * @return $this
      */
-    public function view($view)
+    public function view(string $view): static
     {
         $name = $this->name;
 
@@ -114,7 +114,7 @@ trait HasDisplayers
      * @param  \Closure|string  $val
      * @return $this
      */
-    public function prepend($val)
+    public function prepend(Closure|string $val): static
     {
         return $this->display(function ($v, $column) use (&$val) {
             if ($val instanceof Closure) {
@@ -137,7 +137,7 @@ trait HasDisplayers
      * @param  \Closure|string  $val
      * @return $this
      */
-    public function append($val)
+    public function append(Closure|string $val): static
     {
         return $this->display(function ($v, $column) use (&$val) {
             if ($val instanceof Closure) {
@@ -162,7 +162,7 @@ trait HasDisplayers
      * @param  string  $d
      * @return $this
      */
-    public function explode(string $d = ',')
+    public function explode(string $d = ','): static
     {
         return $this->display(function ($v) use ($d) {
             if (is_array($v) || $v instanceof Arrayable) {
@@ -179,7 +179,7 @@ trait HasDisplayers
      * @param  int  $size
      * @return $this
      */
-    public function gravatar($size = 30)
+    public function gravatar(int $size = 30): static
     {
         return $this->display(function ($value) use ($size) {
             $src = sprintf(
@@ -199,7 +199,7 @@ trait HasDisplayers
      * @param  string  $default
      * @return $this
      */
-    public function dot($options = [], $default = 'default')
+    public function dot(array $options = [], string $default = 'default'): static
     {
         return $this->prepend(function ($_, $original) use ($options, $default) {
             $style = $default;
@@ -225,10 +225,10 @@ trait HasDisplayers
      *
      * @param  bool  $showAll
      * @param  bool  $sortable
-     * @param  mixed  $defaultParentId
+     * @param  mixed|null  $defaultParentId
      * @return $this
      */
-    public function tree(bool $showAll = false, bool $sortable = true, $defaultParentId = null)
+    public function tree(bool $showAll = false, bool $sortable = true, mixed $defaultParentId = null): static
     {
         $this->grid->model()->enableTree($showAll, $sortable, $defaultParentId);
 
@@ -253,7 +253,7 @@ trait HasDisplayers
      * @return $this
      * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
-    public function action($action)
+    public function action(string $action): static
     {
         if (! is_subclass_of($action, RowAction::class)) {
             throw new InvalidArgumentException("Action class [$action] must be sub-class of [Dcat\Admin\Grid\RowAction]");
@@ -281,7 +281,7 @@ trait HasDisplayers
      * @param  bool  $default
      * @return $this
      */
-    public function bool(array $map = [], $default = false)
+    public function bool(array $map = [], bool $default = false): static
     {
         return $this->display(function ($value) use ($map, $default) {
             $bool = empty($map) ? $value : Arr::get($map, $value, $default);
