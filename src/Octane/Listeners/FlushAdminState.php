@@ -7,7 +7,7 @@ use Illuminate\Container\Container;
 
 class FlushAdminState
 {
-    protected $adminServices = [
+    protected array $adminServices = [
         'admin.app',
         'admin.asset',
         'admin.color',
@@ -23,7 +23,7 @@ class FlushAdminState
         'admin.translator',
     ];
 
-    protected $app;
+    protected Container $app;
 
     public function __construct(Container $container)
     {
@@ -40,7 +40,7 @@ class FlushAdminState
         $provider->boot();
     }
 
-    protected function forgetServiceInstances()
+    protected function forgetServiceInstances(): void
     {
         foreach ($this->adminServices as $service) {
             $this->app->forgetInstance($service);

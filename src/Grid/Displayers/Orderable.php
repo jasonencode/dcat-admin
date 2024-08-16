@@ -27,7 +27,7 @@ class Orderable extends AbstractDisplayer
 EOT;
     }
 
-    protected function script()
+    protected function script(): string
     {
         return <<<JS
         Dcat.grid.Orderable({

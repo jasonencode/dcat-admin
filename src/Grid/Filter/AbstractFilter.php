@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid\Filter;
 
+use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Grid\Filter;
@@ -152,10 +153,10 @@ abstract class AbstractFilter
     /**
      * Set the column width.
      *
-     * @param int|string $width
+     * @param  int|string  $width
      * @return $this
      */
-    public function width($width)
+    public function width(int|string $width): static
     {
         if (is_numeric($width)) {
             $this->width = $width;
@@ -170,7 +171,7 @@ abstract class AbstractFilter
     /**
      * @return string
      */
-    public function getElementName()
+    public function getElementName(): string
     {
         return $this->parent->grid()->makeName($this->originalColumn());
     }
@@ -178,10 +179,10 @@ abstract class AbstractFilter
     /**
      * Format name.
      *
-     * @param string $column
+     * @param  string  $column
      * @return string
      */
-    protected function formatName($column)
+    protected function formatName(string $column): string
     {
         $columns = explode('.', $column);
 
@@ -200,10 +201,10 @@ abstract class AbstractFilter
     /**
      * Format id.
      *
-     * @param string|array $columns
+     * @param  array|string  $columns
      * @return array|string
      */
-    protected function formatId($columns)
+    protected function formatId(array|string $columns): array|string
     {
         if (is_array($columns)) {
             foreach ($columns as &$column) {
@@ -219,7 +220,7 @@ abstract class AbstractFilter
     /**
      * @param Filter $filter
      */
-    public function setParent(Filter $filter)
+    public function setParent(Filter $filter): void
     {
         $this->parent = $filter;
 
@@ -229,7 +230,7 @@ abstract class AbstractFilter
     /**
      * @return Filter
      */
-    public function parent()
+    public function parent(): Filter
     {
         return $this->parent;
     }
@@ -240,7 +241,7 @@ abstract class AbstractFilter
      * @param null $index
      * @return AbstractFilter[]|mixed
      */
-    public function siblings($index = null)
+    public function siblings($index = null): mixed
     {
         if (!is_null($index)) {
             return Arr::get($this->parent->filters(), $index);
@@ -252,10 +253,10 @@ abstract class AbstractFilter
     /**
      * Get previous filter.
      *
-     * @param int $step
+     * @param  int  $step
      * @return AbstractFilter[]|mixed
      */
-    public function previous($step = 1)
+    public function previous(int $step = 1): mixed
     {
         return $this->siblings(
             array_search($this, $this->parent->filters()) - $step
@@ -265,10 +266,10 @@ abstract class AbstractFilter
     /**
      * Get next filter.
      *
-     * @param int $step
+     * @param  int  $step
      * @return AbstractFilter[]|mixed
      */
-    public function next($step = 1)
+    public function next(int $step = 1): mixed
     {
         return $this->siblings(
             array_search($this, $this->parent->filters()) + $step
@@ -278,10 +279,10 @@ abstract class AbstractFilter
     /**
      * Get query condition from filter.
      *
-     * @param array $inputs
-     * @return array|mixed|null
+     * @param  array  $inputs
+     * @return void
      */
-    public function condition($inputs)
+    public function condition(array $inputs)
     {
         $value = Arr::get($inputs, $this->column);
 
@@ -299,7 +300,7 @@ abstract class AbstractFilter
      *
      * @return $this
      */
-    public function ignore()
+    public function ignore(): static
     {
         $this->ignore = true;
 
@@ -309,55 +310,55 @@ abstract class AbstractFilter
     /**
      * Select filter.
      *
-     * @param array $options
-     * @return Select
+     * @param  array  $options
+     * @return \Dcat\Admin\Grid\Filter\Presenter\Select|\Dcat\Admin\Grid\Filter\Presenter\Presenter
      */
-    public function select($options = [])
+    public function select(array $options = []): Select|Presenter
     {
         return $this->setPresenter(new Select($options));
     }
 
     /**
-     * @param array|\Illuminate\Contracts\Support\Arrayable|\Closure $options
-     * @return MultipleSelect
+     * @param  array  $options
+     * @return \Dcat\Admin\Grid\Filter\Presenter\Presenter|\Dcat\Admin\Grid\Filter\Presenter\MultipleSelect
      */
-    public function multipleSelect($options = [])
+    public function multipleSelect(array $options = []): Presenter|MultipleSelect
     {
         return $this->setPresenter(new MultipleSelect($options));
     }
 
     /**
-     * @param LazyRenderable $table
-     * @return Filter\Presenter\SelectTable
+     * @param  LazyRenderable  $table
+     * @return \Dcat\Admin\Grid\Filter\Presenter\Presenter|mixed
      */
-    public function selectTable(LazyRenderable $table)
+    public function selectTable(LazyRenderable $table): mixed
     {
         return $this->setPresenter(new Filter\Presenter\SelectTable($table));
     }
 
     /**
-     * @param LazyRenderable $table
-     * @return Filter\Presenter\MultipleSelectTable
+     * @param  LazyRenderable  $table
+     * @return \Dcat\Admin\Grid\Filter\Presenter\Presenter|mixed
      */
-    public function multipleSelectTable(LazyRenderable $table)
+    public function multipleSelectTable(LazyRenderable $table): mixed
     {
         return $this->setPresenter(new Filter\Presenter\MultipleSelectTable($table));
     }
 
     /**
-     * @param array $options
-     * @return Radio
+     * @param  array  $options
+     * @return \Dcat\Admin\Grid\Filter\Presenter\Presenter|\Dcat\Admin\Grid\Filter\Presenter\Radio
      */
-    public function radio($options = [])
+    public function radio(array $options = []): Presenter|Radio
     {
         return $this->setPresenter(new Radio($options));
     }
 
     /**
-     * @param array $options
-     * @return Checkbox
+     * @param  array  $options
+     * @return \Dcat\Admin\Grid\Filter\Presenter\Checkbox|\Dcat\Admin\Grid\Filter\Presenter\Presenter
      */
-    public function checkbox($options = [])
+    public function checkbox(array $options = []): Checkbox|Presenter
     {
         return $this->setPresenter(new Checkbox($options));
     }
@@ -365,10 +366,10 @@ abstract class AbstractFilter
     /**
      * Datetime filter.
      *
-     * @param array $options
-     * @return DateTime
+     * @param  array  $options
+     * @return \Dcat\Admin\Grid\Filter\Presenter\DateTime|\Dcat\Admin\Grid\Filter\Presenter\Presenter
      */
-    public function datetime($options = [])
+    public function datetime(array $options = []): DateTime|Presenter
     {
         return $this->setPresenter(new DateTime($options));
     }
@@ -378,7 +379,7 @@ abstract class AbstractFilter
      *
      * @return DateTime
      */
-    public function date()
+    public function date(): DateTime
     {
         return $this->datetime(['format' => 'YYYY-MM-DD']);
     }
@@ -388,7 +389,7 @@ abstract class AbstractFilter
      *
      * @return DateTime
      */
-    public function time()
+    public function time(): DateTime
     {
         return $this->datetime(['format' => 'HH:mm:ss']);
     }
@@ -398,7 +399,7 @@ abstract class AbstractFilter
      *
      * @return DateTime
      */
-    public function day()
+    public function day(): DateTime
     {
         return $this->datetime(['format' => 'DD']);
     }
@@ -408,7 +409,7 @@ abstract class AbstractFilter
      *
      * @return DateTime
      */
-    public function month()
+    public function month(): DateTime
     {
         return $this->datetime(['format' => 'YYYY-MM']);
     }
@@ -418,7 +419,7 @@ abstract class AbstractFilter
      *
      * @return DateTime
      */
-    public function year()
+    public function year(): DateTime
     {
         return $this->datetime(['format' => 'YYYY']);
     }
@@ -429,7 +430,7 @@ abstract class AbstractFilter
      * @param Presenter $presenter
      * @return mixed
      */
-    public function setPresenter(Presenter $presenter)
+    public function setPresenter(Presenter $presenter): Presenter
     {
         $presenter->setParent($this);
 
@@ -441,9 +442,9 @@ abstract class AbstractFilter
     /**
      * Get presenter object of filter.
      *
-     * @return Presenter
+     * @return \Dcat\Admin\Grid\Filter\Presenter\Presenter|null
      */
-    protected function presenter()
+    protected function presenter(): ?Presenter
     {
         if (!$this->presenter) {
             $this->setupDefaultPresenter();
@@ -458,7 +459,7 @@ abstract class AbstractFilter
      * @param null $default
      * @return $this
      */
-    public function default($default = null)
+    public function default($default = null): static
     {
         if (filled($default)) {
             $this->defaultValue = $default;
@@ -467,7 +468,7 @@ abstract class AbstractFilter
         return $this;
     }
 
-    public function getDefault()
+    public function getDefault(): array|string|null
     {
         return $this->defaultValue;
     }
@@ -477,7 +478,7 @@ abstract class AbstractFilter
      *
      * @return array|string
      */
-    public function getId()
+    public function getId(): array|string
     {
         return $this->id;
     }
@@ -485,10 +486,10 @@ abstract class AbstractFilter
     /**
      * Set element id.
      *
-     * @param string $id
+     * @param  string  $id
      * @return $this
      */
-    public function setId($id)
+    public function setId(string $id): static
     {
         $this->id = $this->formatId($id);
 
@@ -500,21 +501,21 @@ abstract class AbstractFilter
      *
      * @return string
      */
-    public function column()
+    public function column(): string
     {
         return $this->formatColumnClass($this->column);
     }
 
-    public function originalColumn()
+    public function originalColumn(): string
     {
         return $this->column;
     }
 
     /**
-     * @param string $column
+     * @param  string  $column
      * @return string
      */
-    public function formatColumnClass($column)
+    public function formatColumnClass(string $column): string
     {
         return $this->parent->grid()->makeName(str_replace('.', '-', $column));
     }
@@ -522,7 +523,7 @@ abstract class AbstractFilter
     /**
      * @return string
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         return $this->label;
     }
@@ -530,9 +531,9 @@ abstract class AbstractFilter
     /**
      * Get value of current filter.
      *
-     * @return array|string
+     * @return array|string|null
      */
-    public function getValue()
+    public function getValue(): array|string|null
     {
         return $this->value;
     }
@@ -541,7 +542,7 @@ abstract class AbstractFilter
      * @param mixed $value
      * @return $this
      */
-    public function setValue($value)
+    public function setValue(mixed $value): static
     {
         $this->value = $value;
 
@@ -551,12 +552,13 @@ abstract class AbstractFilter
     /**
      * Build conditions of filter.
      *
-     * @return mixed
+     * @param  mixed  ...$params
+     * @return string|array
      */
-    protected function buildCondition(...$params)
+    protected function buildCondition(...$params): string|array
     {
         if ($this->ignore) {
-            return;
+            return '';
         }
 
         $column = explode('.', $this->column);
@@ -569,11 +571,11 @@ abstract class AbstractFilter
     }
 
     /**
-     * @param string|callable $relColumn
+     * @param  callable|string  $relColumn
      * @param mixed           ...$params
      * @return array
      */
-    protected function buildRelationQuery($relColumn, ...$params)
+    protected function buildRelationQuery(callable|string $relColumn, ...$params): array
     {
         $column = explode('.', $this->column);
 
@@ -597,7 +599,7 @@ abstract class AbstractFilter
      *
      * @return array
      */
-    protected function defaultVariables()
+    protected function defaultVariables(): array
     {
         return array_merge([
             'id'    => $this->id,
@@ -622,6 +624,7 @@ abstract class AbstractFilter
      * Render this filter.
      *
      * @return string
+     * @throws \Throwable
      */
     public function render(): string
     {
@@ -633,11 +636,11 @@ abstract class AbstractFilter
     }
 
     /**
-     * @return string
+     * @return \Closure
      *
      * @throws \Throwable
      */
-    protected function renderPresenter()
+    protected function renderPresenter(): Closure
     {
         return function () {
             return Admin::view($this->presenter->view(), $this->variables());
@@ -647,7 +650,8 @@ abstract class AbstractFilter
     /**
      * Render this filter.
      *
-     * @return \Illuminate\View\View|string
+     * @return string
+     * @throws \Throwable
      */
     public function __toString()
     {

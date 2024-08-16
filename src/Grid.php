@@ -628,7 +628,8 @@ class Grid
      * Render grid header.
      *
      * @return string
-     * @throws \Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function renderHeader(): string
     {
@@ -642,7 +643,10 @@ HTML;
     }
 
     /**
-     * @throws \Exception
+     * @param $callbacks
+     * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     protected function renderHeaderOrFooter($callbacks): string
     {
@@ -677,7 +681,8 @@ HTML;
      * Render grid footer.
      *
      * @return string
-     * @throws \Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function renderFooter(): string
     {

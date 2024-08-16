@@ -51,7 +51,7 @@ class DialogTree extends AbstractDisplayer
      * @param  array  $data
      * @return $this
      */
-    public function nodes($data): static
+    public function nodes(array $data): static
     {
         if ($data instanceof Arrayable) {
             $data = $data->toArray();
@@ -87,7 +87,7 @@ class DialogTree extends AbstractDisplayer
      * @param  array  $options
      * @return $this
      */
-    public function options($options = []): static
+    public function options(array $options = []): static
     {
         if ($options instanceof Arrayable) {
             $options = $options->toArray();
@@ -138,6 +138,9 @@ class DialogTree extends AbstractDisplayer
         return $this;
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function display($callbackOrNodes = null): string
     {
         if (is_array($callbackOrNodes) || $callbackOrNodes instanceof Arrayable) {
@@ -161,6 +164,6 @@ class DialogTree extends AbstractDisplayer
 
     protected function format($val): string
     {
-        return implode(',', Helper::array($val, true));
+        return implode(',', Helper::array($val));
     }
 }

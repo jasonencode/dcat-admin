@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid\Concerns;
 
+use Closure;
 use Dcat\Admin\Grid\Events;
 use Illuminate\Support\Facades\Event;
 
@@ -18,7 +19,7 @@ trait HasEvents
      * @param  string  $class
      * @param  \Closure  $callback
      */
-    public function listen(string $class, \Closure $callback): void
+    public function listen(string $class, Closure $callback): void
     {
         Event::listen($class, function (Events\Event $event) use ($callback) {
             if ($event->grid !== $this) {

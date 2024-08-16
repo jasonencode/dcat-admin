@@ -9,9 +9,9 @@ class Sorter implements Renderable
 {
     protected Grid $grid;
 
-    protected array $sort;
+    protected ?array $sort = null;
 
-    protected string $cast;
+    protected ?string $cast = null;
 
     protected string $columnName;
 
@@ -20,9 +20,9 @@ class Sorter implements Renderable
      *
      * @param  Grid  $grid
      * @param  string  $columnName
-     * @param  string  $cast
+     * @param  string|null  $cast
      */
-    public function __construct(Grid $grid, string $columnName, string $cast)
+    public function __construct(Grid $grid, string $columnName, ?string $cast = null)
     {
         $this->grid       = $grid;
         $this->columnName = $columnName;

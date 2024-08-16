@@ -2,7 +2,10 @@
 
 namespace Dcat\Admin\Grid\Displayers;
 
+use Dcat\Admin\Actions\Action;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Contracts\Support\Renderable;
 
 class DropdownActions extends Actions
 {
@@ -13,7 +16,7 @@ class DropdownActions extends Actions
      */
     protected array $default = [];
 
-    public function prepend($action): static
+    public function prepend(Renderable|Htmlable|Action|string $action): static
     {
         return $this->append($action);
     }
@@ -22,7 +25,7 @@ class DropdownActions extends Actions
      * @param  mixed  $action
      * @return string
      */
-    protected function prepareAction(&$action): string
+    protected function prepareAction(mixed &$action): string
     {
         parent::prepareAction($action);
 
@@ -33,7 +36,7 @@ class DropdownActions extends Actions
      * @param  mixed  $action
      * @return string
      */
-    protected function wrapCustomAction($action): string
+    protected function wrapCustomAction(mixed $action): string
     {
         $action = Helper::render($action);
 
@@ -47,14 +50,14 @@ class DropdownActions extends Actions
     /**
      * Prepend default `edit` `view` `delete` actions.
      */
-    protected function prependDefaultActions()
+    protected function prependDefaultActions(): void
     {
         foreach ($this->actions as $action => $enable) {
             if (! $enable) {
                 continue;
             }
 
-            array_push($this->default, $this->{'render'.ucfirst($action)}());
+            $this->default[] = $this->{'render'.ucfirst($action)}();
         }
     }
 
@@ -84,15 +87,18 @@ class DropdownActions extends Actions
         return '';
     }
 
-    protected function getEditLabel()
+    protected function getEditLabel(): string
     {
+        return '';
     }
 
-    protected function getQuickEditLabel()
+    protected function getQuickEditLabel(): string
     {
+        return '';
     }
 
-    protected function getDeleteLabel()
+    protected function getDeleteLabel(): string
     {
+        return '';
     }
 }

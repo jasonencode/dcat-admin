@@ -3,6 +3,7 @@
 namespace Dcat\Admin\Grid\Concerns;
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Events\Fetched;
 use Dcat\Admin\Grid\Events\Fetching;
 use Dcat\Admin\Repositories\EloquentRepository;
@@ -13,49 +14,49 @@ use Illuminate\Support\Collection;
  * Trait HasTree.
  *
  *
- * @method \Dcat\Admin\Grid grid()
+ * @method Grid grid()
  */
 trait HasTree
 {
     /**
      * @var string
      */
-    protected $parentIdQueryName = '_parent_id_';
+    protected string $parentIdQueryName = '_parent_id_';
 
     /**
      * @var string
      */
-    protected $depthQueryName = '_depth_';
+    protected string $depthQueryName = '_depth_';
 
     /**
      * @var bool
      */
-    protected $showAllChildrenNodes = false;
+    protected bool $showAllChildrenNodes = false;
 
     /**
      * @var bool
      */
-    protected $allowedTreeQuery = true;
+    protected bool $allowedTreeQuery = true;
 
     /**
      * @var array
      */
-    protected $treeIgnoreQueryNames = [];
+    protected array $treeIgnoreQueryNames = [];
 
     /**
      * @var mixed
      */
-    protected $defaultParentId;
+    protected mixed $defaultParentId;
 
     /**
      * 开启树形表格功能.
      *
      * @param  bool  $showAll
      * @param  bool  $sortable
-     * @param  mixed  $defaultParentId
+     * @param  mixed|null  $defaultParentId
      * @return void
      */
-    public function enableTree(bool $showAll, bool $sortable, $defaultParentId = null)
+    public function enableTree(bool $showAll, bool $sortable, mixed $defaultParentId = null): void
     {
         $this->showAllChildrenNodes = $showAll;
         $this->defaultParentId = $defaultParentId;
@@ -89,7 +90,7 @@ trait HasTree
     /**
      * 设置保存为"前一个页面地址"时需要忽略的参数.
      */
-    protected function addIgnoreQueries()
+    protected function addIgnoreQueries(): void
     {
         Admin::addIgnoreQueryName([
             $this->getParentIdQueryName(),
@@ -103,7 +104,7 @@ trait HasTree
      *
      * @return $this
      */
-    public function disableBindTreeQuery()
+    public function disableBindTreeQuery(): static
     {
         $this->allowedTreeQuery = false;
 
@@ -123,10 +124,10 @@ trait HasTree
     /**
      * 设置子节点查询链接需要忽略的字段.
      *
-     * @param  string|array  $keys
+     * @param  array|string  $keys
      * @return $this
      */
-    public function treeUrlWithoutQuery($keys)
+    public function treeUrlWithoutQuery(array|string $keys): static
     {
         $this->treeIgnoreQueryNames = array_merge(
             $this->treeIgnoreQueryNames,
@@ -136,7 +137,7 @@ trait HasTree
         return $this;
     }
 
-    public function generateTreeUrl()
+    public function generateTreeUrl(): string
     {
         return Helper::urlWithoutQuery(
             $this->grid()->filter()->urlWithoutFilters(),
@@ -144,21 +145,24 @@ trait HasTree
         );
     }
 
-    protected function buildChildrenNodesPagination()
+    /**
+     * @throws \Exception
+     */
+    protected function buildChildrenNodesPagination(): void
     {
         if ($this->grid()->allowPagination()) {
             $nextPage = $this->getCurrentChildrenPage() + 1;
 
             Admin::html(
                 <<<HTML
-<next-page class="hidden">{$nextPage}</next-page>
+<next-page class="hidden">$nextPage</next-page>
 <last-page class="hidden">{$this->paginator()->lastPage()}</last-page>
 HTML
             );
         }
     }
 
-    protected function sortTree(bool $sortable)
+    protected function sortTree(bool $sortable): void
     {
         if (
             $sortable
@@ -171,7 +175,7 @@ HTML
         }
     }
 
-    protected function bindChildrenNodesQuery()
+    protected function bindChildrenNodesQuery(): void
     {
         if (! $this->allowedTreeQuery) {
             return;
@@ -183,7 +187,7 @@ HTML
     /**
      * @return mixed
      */
-    public function getChildrenQueryNamePrefix()
+    public function getChildrenQueryNamePrefix(): mixed
     {
         return $this->grid->getName();
     }
@@ -192,7 +196,7 @@ HTML
      * @param  mixed  $parentId
      * @return string
      */
-    public function getChildrenPageName($parentId)
+    public function getChildrenPageName(mixed $parentId): string
     {
         return $this->getChildrenQueryNamePrefix().'_children_page_'.$parentId;
     }
@@ -200,7 +204,7 @@ HTML
     /**
      * @return int
      */
-    public function getCurrentChildrenPage()
+    public function getCurrentChildrenPage(): int
     {
         return $this->request->get(
             $this->getChildrenPageName(
@@ -212,7 +216,7 @@ HTML
     /**
      * @return string
      */
-    public function getParentIdQueryName()
+    public function getParentIdQueryName(): string
     {
         return $this->getChildrenQueryNamePrefix().$this->parentIdQueryName;
     }
@@ -220,7 +224,7 @@ HTML
     /**
      * @return int
      */
-    public function getParentIdFromRequest()
+    public function getParentIdFromRequest(): int
     {
         return $this->request->get(
             $this->getParentIdQueryName()
@@ -233,7 +237,7 @@ HTML
      * @param  string  $url
      * @return string
      */
-    public function withoutTreeQuery($url)
+    public function withoutTreeQuery(string $url): string
     {
         if (! $url) {
             return $url;
@@ -277,7 +281,7 @@ HTML
     /**
      * @return string
      */
-    public function getDepthQueryName()
+    public function getDepthQueryName(): string
     {
         return $this->getChildrenQueryNamePrefix().$this->depthQueryName;
     }
@@ -285,7 +289,7 @@ HTML
     /**
      * @return int
      */
-    public function getDepthFromRequest()
+    public function getDepthFromRequest(): int
     {
         return $this->request->get(
             $this->getDepthQueryName()
@@ -295,7 +299,7 @@ HTML
     /**
      * @return bool
      */
-    public function showAllChildrenNodes()
+    public function showAllChildrenNodes(): bool
     {
         return $this->showAllChildrenNodes;
     }

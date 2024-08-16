@@ -4,7 +4,9 @@ namespace Dcat\Admin\Http\Repositories;
 
 use Dcat\Admin\Grid;
 use Dcat\Admin\Repositories\EloquentRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\Collection;
 
 class Administrator extends EloquentRepository
 {
@@ -15,7 +17,7 @@ class Administrator extends EloquentRepository
         parent::__construct($relations);
     }
 
-    public function get(Grid\Model $model)
+    public function get(Grid\Model $model): LengthAwarePaginator|array|Collection
     {
         $results = parent::get($model);
 

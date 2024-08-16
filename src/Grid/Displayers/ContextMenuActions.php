@@ -12,7 +12,7 @@ class ContextMenuActions extends DropdownActions
     {
         $script = <<<JS
 (function () {
-    var id = '#{$this->elementId}';
+    var id = '#$this->elementId';
 
     $("body").on("contextmenu", "#{$this->grid->getTableId()} tr", function(e) {
          $(id + ' .dropdown-menu').hide();
@@ -35,7 +35,7 @@ class ContextMenuActions extends DropdownActions
     });
 
     if (! $(id).length) {
-        $("body").append('<div id="{$this->elementId}" class="dropdown" style="display: contents"></div>');
+        $("body").append('<div id="$this->elementId" class="dropdown" style="display: contents"></div>');
     }
 
     $(document).on('click',function(){

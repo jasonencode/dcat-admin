@@ -22,7 +22,7 @@ class Menu extends Model implements Sortable
     use HasDateTimeFormatter,
         MenuCache,
         ModelTree {
-        allNodes as treeAllNodes;
+        ModelTree::allNodes as treeAllNodes;
         ModelTree::boot as treeBoot;
     }
 
@@ -138,6 +138,8 @@ class Menu extends Model implements Sortable
      * Detach models from the relationship.
      *
      * @return void
+     * @throws \Dcat\Admin\Exception\AdminException
+     * @throws \Dcat\Admin\Exception\InvalidArgumentException
      */
     protected static function boot(): void
     {

@@ -42,6 +42,10 @@ trait CanFixColumns
         }
     }
 
+    /**
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
     protected function applyFixColumns(): void
     {
         if ($this->fixColumns) {

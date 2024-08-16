@@ -12,7 +12,7 @@ class Hidden extends AbstractFilter
     /**
      * @var string|array
      */
-    protected string|array $value;
+    protected string|array|null $value;
 
     /**
      * Hidden constructor.
@@ -30,7 +30,7 @@ class Hidden extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function condition($inputs)
+    public function condition(array $inputs)
     {
     }
 

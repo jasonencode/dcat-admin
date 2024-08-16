@@ -43,7 +43,7 @@ class Group extends AbstractFilter
     /**
      * @param  Filter  $filter
      */
-    public function setParent(Filter $filter)
+    public function setParent(Filter $filter): void
     {
         parent::setParent($filter);
 
@@ -246,7 +246,7 @@ class Group extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function condition($inputs)
+    public function condition(array $inputs)
     {
         $value = Arr::get($inputs, $this->column);
 
@@ -285,7 +285,7 @@ JS;
     /**
      * {@inheritdoc}
      */
-    public function defaultVariables()
+    public function defaultVariables(): array
     {
         $select = request("{$this->id}_group");
 

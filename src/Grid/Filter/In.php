@@ -22,7 +22,7 @@ class In extends AbstractFilter
      * @param  array  $inputs
      * @return mixed
      */
-    public function condition($inputs)
+    public function condition(array $inputs)
     {
         $value = Arr::get($inputs, $this->column);
 

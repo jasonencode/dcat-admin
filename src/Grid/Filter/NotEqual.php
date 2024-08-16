@@ -9,7 +9,7 @@ class NotEqual extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function condition($inputs)
+    public function condition(array $inputs)
     {
         $value = Arr::get($inputs, $this->column);
 

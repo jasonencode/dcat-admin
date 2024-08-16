@@ -32,6 +32,8 @@ trait HasFilter
      * Process the grid filter.
      *
      * @return Collection
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Exception
      */
     public function processFilter(): Collection

@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid\Displayers;
 
+use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Contracts\LazyRenderable;
 use Dcat\Admin\Support\Helper;
@@ -23,7 +24,7 @@ class Expand extends AbstractDisplayer
         $html = $this->value;
         $remoteUrl = '';
 
-        if ($callbackOrButton && $callbackOrButton instanceof \Closure) {
+        if ($callbackOrButton && $callbackOrButton instanceof Closure) {
             $callbackOrButton = $callbackOrButton->call($this->row, $this);
 
             if (! $callbackOrButton instanceof LazyRenderable) {

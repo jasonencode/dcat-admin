@@ -36,7 +36,7 @@ class Select extends Presenter
     /**
      * @var string
      */
-    protected string $placeholder;
+    protected string $placeholder = '';
 
     /**
      * @var bool

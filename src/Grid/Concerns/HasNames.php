@@ -2,8 +2,6 @@
 
 namespace Dcat\Admin\Grid\Concerns;
 
-use Dcat\Admin\Grid;
-
 trait HasNames
 {
     /**

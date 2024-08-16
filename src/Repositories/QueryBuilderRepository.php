@@ -17,27 +17,27 @@ class QueryBuilderRepository extends Repository implements TreeRepository
     /**
      * @var string
      */
-    protected $table;
+    protected string $table;
 
     /**
      * @var string
      */
-    protected $connection;
+    protected string $connection;
 
     /**
      * @var string
      */
-    protected $createdAtColumn = 'created_at';
+    protected string $createdAtColumn = 'created_at';
 
     /**
      * @var string
      */
-    protected $updatedAtColumn = 'updated_at';
+    protected string $updatedAtColumn = 'updated_at';
 
     /**
      * @var Builder
      */
-    protected $queryBuilder;
+    protected Builder $queryBuilder;
 
     /**
      * QueryBuilderRepository constructor.
@@ -50,7 +50,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
     /**
      * 初始化.
      */
-    protected function initQueryBuilder()
+    protected function initQueryBuilder(): void
     {
         $this->queryBuilder = $this->connection
             ? DB::connection($this->connection)->table($this->getTable())

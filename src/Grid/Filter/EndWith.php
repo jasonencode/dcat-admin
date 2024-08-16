@@ -12,9 +12,9 @@ class EndWith extends AbstractFilter
      * Get condition of this filter.
      *
      * @param  array  $inputs
-     * @return array|mixed|void
+     * @return array|string|void
      */
-    public function condition($inputs)
+    public function condition(array $inputs)
     {
         $value = Arr::get($inputs, $this->column);
 
@@ -27,7 +27,7 @@ class EndWith extends AbstractFilter
         return $this->buildCondition($this->column, $this->type, "%$this->value");
     }
 
-    public function ilike()
+    public function ilike(): static
     {
         $this->type = 'ilike';
 

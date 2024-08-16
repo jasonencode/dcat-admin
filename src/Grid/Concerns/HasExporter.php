@@ -54,7 +54,7 @@ trait HasExporter
      * Handle export request.
      *
      * @param  bool  $forceExport
-     * @return mixed
+     * @return string|void|null
      */
     public function handleExportRequest(bool $forceExport = false)
     {

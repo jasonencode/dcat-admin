@@ -8,7 +8,7 @@ class Newline extends AbstractFilter
     {
     }
 
-    public function condition($inputs)
+    public function condition(array $inputs)
     {
     }
 

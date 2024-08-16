@@ -22,7 +22,8 @@ class ExcelExporter extends AbstractExporter
 
     /**
      * @return void
-     * @throws \Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function export(): void
     {

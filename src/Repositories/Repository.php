@@ -6,7 +6,10 @@ use Dcat\Admin\Contracts\Repository as RepositoryInterface;
 use Dcat\Admin\Contracts\TreeRepository;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Show;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Macroable;
 use RuntimeException;
@@ -18,19 +21,19 @@ abstract class Repository implements RepositoryInterface, TreeRepository
     /**
      * @var string
      */
-    protected $keyName = 'id';
+    protected string $keyName = 'id';
 
     /**
      * @var bool
      */
-    protected $isSoftDeletes = false;
+    protected bool $isSoftDeletes = false;
 
     /**
      * 获取主键名称.
      *
      * @return string
      */
-    public function getKeyName()
+    public function getKeyName(): string
     {
         return $this->keyName ?: 'id';
     }
@@ -38,9 +41,9 @@ abstract class Repository implements RepositoryInterface, TreeRepository
     /**
      * 设置主键名称.
      *
-     * @param  string|array  $keyName
+     * @param  array|string  $keyName
      */
-    public function setKeyName($keyName)
+    public function setKeyName(array|string $keyName): void
     {
         $this->keyName = $keyName;
     }
@@ -50,7 +53,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      *
      * @return string
      */
-    public function getCreatedAtColumn()
+    public function getCreatedAtColumn(): string
     {
         return 'created_at';
     }
@@ -60,7 +63,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      *
      * @return string
      */
-    public function getUpdatedAtColumn()
+    public function getUpdatedAtColumn(): string
     {
         return 'updated_at';
     }
@@ -70,7 +73,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      *
      * @return bool
      */
-    public function isSoftDeletes()
+    public function isSoftDeletes(): bool
     {
         return $this->isSoftDeletes;
     }
@@ -78,7 +81,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
     /**
      * @param  bool  $isSoftDeletes
      */
-    public function setIsSoftDeletes(?bool $isSoftDeletes)
+    public function setIsSoftDeletes(?bool $isSoftDeletes): void
     {
         $this->isSoftDeletes = $isSoftDeletes;
     }
@@ -89,7 +92,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * @param  Grid\Model  $model
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Collection|array
      */
-    public function get(Grid\Model $model)
+    public function get(Grid\Model $model): LengthAwarePaginator|array|Collection
     {
         throw new RuntimeException('This repository does not support "get" method.');
     }
@@ -100,7 +103,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * @param  Form  $form
      * @return array|\Illuminate\Contracts\Support\Arrayable
      */
-    public function edit(Form $form)
+    public function edit(Form $form): array|Arrayable
     {
         throw new RuntimeException('This repository does not support "edit" method.');
     }
@@ -111,7 +114,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * @param  Show  $show
      * @return array|\Illuminate\Contracts\Support\Arrayable
      */
-    public function detail(Show $show)
+    public function detail(Show $show): array|Arrayable
     {
         throw new RuntimeException('This repository does not support "detail" method.');
     }
@@ -122,7 +125,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * @param  Form  $form
      * @return int|bool|\Dcat\Admin\Http\JsonResponse
      */
-    public function store(Form $form)
+    public function store(Form $form): bool|int|JsonResponse
     {
         throw new RuntimeException('This repository does not support "store" method.');
     }
@@ -133,7 +136,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * @param  Form  $form
      * @return array|\Illuminate\Contracts\Support\Arrayable
      */
-    public function updating(Form $form)
+    public function updating(Form $form): array|Arrayable
     {
         throw new RuntimeException('This repository does not support "updating" method.');
     }
@@ -144,7 +147,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * @param  Form  $form
      * @return bool|\Dcat\Admin\Http\JsonResponse
      */
-    public function update(Form $form)
+    public function update(Form $form): bool|JsonResponse
     {
         throw new RuntimeException('This repository does not support "update" method.');
     }
@@ -156,7 +159,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * @param  array  $deletingData
      * @return bool|int|\Dcat\Admin\Http\JsonResponse
      */
-    public function delete(Form $form, array $deletingData)
+    public function delete(Form $form, array $deletingData): bool|int|JsonResponse
     {
         throw new RuntimeException('This repository does not support "destroy" method.');
     }
@@ -167,7 +170,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * @param  Form  $form
      * @return array
      */
-    public function deleting(Form $form)
+    public function deleting(Form $form): array
     {
         throw new RuntimeException('This repository does not support "deleting" method.');
     }
@@ -177,7 +180,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      *
      * @return string
      */
-    public function getPrimaryKeyColumn()
+    public function getPrimaryKeyColumn(): string
     {
         return $this->getKeyName();
     }
@@ -187,7 +190,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      *
      * @return string
      */
-    public function getParentColumn()
+    public function getParentColumn(): string
     {
         return 'parent_id';
     }
@@ -197,7 +200,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      *
      * @return string
      */
-    public function getTitleColumn()
+    public function getTitleColumn(): string
     {
         return 'title';
     }
@@ -207,7 +210,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      *
      * @return string
      */
-    public function getOrderColumn()
+    public function getOrderColumn(): string
     {
         return 'order';
     }
@@ -229,7 +232,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * @param $queryCallback
      * @return $this
      */
-    public function withQuery($queryCallback)
+    public function withQuery($queryCallback): static
     {
         throw new RuntimeException('This repository does not support "withQuery" method.');
     }
@@ -239,7 +242,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      *
      * @return array
      */
-    public function toTree()
+    public function toTree(): array
     {
         throw new RuntimeException('This repository does not support "toTree" method.');
     }
@@ -248,7 +251,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * @param  mixed  ...$params
      * @return $this
      */
-    public static function make(...$params)
+    public static function make(...$params): static
     {
         return new static(...$params);
     }

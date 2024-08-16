@@ -40,7 +40,7 @@ class Where extends AbstractFilter
      * @param  array  $inputs
      * @return array|mixed|void
      */
-    public function condition($inputs)
+    public function condition(array $inputs)
     {
         $value = Arr::get($inputs, $this->column);
 

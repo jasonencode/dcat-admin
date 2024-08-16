@@ -48,10 +48,10 @@ class Actions extends AbstractDisplayer
     /**
      * Append a action.
      *
-     * @param  string|Renderable|Action|Htmlable  $action
+     * @param  string|Action|Htmlable|Renderable  $action
      * @return $this
      */
-    public function append($action): static
+    public function append(Renderable|Htmlable|Action|string $action): static
     {
         $this->prepareAction($action);
 
@@ -63,10 +63,10 @@ class Actions extends AbstractDisplayer
     /**
      * Prepend a action.
      *
-     * @param  string|Renderable|Action|Htmlable  $action
+     * @param  string|Action|Htmlable|Renderable  $action
      * @return $this
      */
-    public function prepend($action): static
+    public function prepend(Renderable|Htmlable|Action|string $action): static
     {
         $this->prepareAction($action);
 
@@ -79,7 +79,7 @@ class Actions extends AbstractDisplayer
      * @param  mixed  $action
      * @return mixed
      */
-    protected function prepareAction(&$action)
+    protected function prepareAction(mixed &$action): mixed
     {
         if ($action instanceof RowAction) {
             $action->setGrid($this->grid)
@@ -90,7 +90,7 @@ class Actions extends AbstractDisplayer
         return $action;
     }
 
-    public function view(bool $value = true)
+    public function view(bool $value = true): Actions|static
     {
         return $this->setAction('view', $value);
     }
@@ -229,8 +229,8 @@ class Actions extends AbstractDisplayer
 
         foreach ($this->actions as $action => $enable) {
             if ($enable) {
-                $method = 'render'.ucfirst($action);
-                array_push($prepends, $this->{$method}());
+                $method     = 'render'.ucfirst($action);
+                $prepends[] = $this->{$method}();
             }
         }
 
@@ -267,7 +267,7 @@ class Actions extends AbstractDisplayer
      * @return string
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function renderEdit()
+    protected function renderEdit(): string
     {
         $action = config('admin.grid.actions.edit') ?: Edit::class;
         $action = $action::make($this->getEditLabel());
@@ -278,7 +278,7 @@ class Actions extends AbstractDisplayer
     /**
      * @return string
      */
-    protected function getEditLabel()
+    protected function getEditLabel(): string
     {
         $label = trans('admin.edit');
 
@@ -289,7 +289,7 @@ class Actions extends AbstractDisplayer
      * @return string
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function renderQuickEdit()
+    protected function renderQuickEdit(): string
     {
         $action = config('admin.grid.actions.quick_edit') ?: QuickEdit::class;
         $action = $action::make($this->getQuickEditLabel());
@@ -300,7 +300,7 @@ class Actions extends AbstractDisplayer
     /**
      * @return string
      */
-    protected function getQuickEditLabel()
+    protected function getQuickEditLabel(): string
     {
         $label = trans('admin.quick_edit');
 
@@ -313,7 +313,7 @@ class Actions extends AbstractDisplayer
      * @return string
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function renderDelete()
+    protected function renderDelete(): string
     {
         $action = config('admin.grid.actions.delete') ?: Delete::class;
         $action = $action::make($this->getDeleteLabel());
@@ -324,7 +324,7 @@ class Actions extends AbstractDisplayer
     /**
      * @return string
      */
-    protected function getDeleteLabel()
+    protected function getDeleteLabel(): string
     {
         $label = trans('admin.delete');
 

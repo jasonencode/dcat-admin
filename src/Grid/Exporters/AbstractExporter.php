@@ -25,7 +25,7 @@ abstract class AbstractExporter implements ExporterInterface
      */
     protected Grid\Exporter $parent;
 
-    protected $modelQueries;
+    protected Collection $modelQueries;
     /**
      * @var \Closure
      */
@@ -187,10 +187,11 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Get data with export query.
      *
-     * @param int|null $page
-     * @param int|null $perPage
+     * @param  int|null  $page
+     * @param  int|null  $perPage
      * @return array
-     * @throws \Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function buildData(?int $page = null, ?int $perPage = null): array
     {

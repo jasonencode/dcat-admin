@@ -7,7 +7,10 @@ use Dcat\Admin\Exception\AdminException;
 use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Show;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Database\Eloquent\Relations;
@@ -30,31 +33,31 @@ class EloquentRepository extends Repository implements TreeRepository
     protected $eloquentClass;
 
     /**
-     * @var EloquentModel
+     * @var EloquentModel|null
      */
-    protected $model;
+    protected ?EloquentModel $model = null;
 
     /**
-     * @var Builder
+     * @var Builder|null
      */
-    protected $queryBuilder;
+    protected ?Builder $queryBuilder = null;
 
     /**
      * @var array
      */
-    protected $relations = [];
+    protected array $relations = [];
 
     /**
      * @var \Illuminate\Database\Eloquent\Collection
      */
-    protected $collection;
+    protected \Illuminate\Database\Eloquent\Collection $collection;
 
     /**
      * EloquentRepository constructor.
      *
-     * @param  EloquentModel|array|string  $modelOrRelations  $modelOrRelations
+     * @param  array|string|Builder|EloquentModel  $modelOrRelations  $modelOrRelations
      */
-    public function __construct($modelOrRelations = [])
+    public function __construct(EloquentModel|Builder|array|string $modelOrRelations = [])
     {
         $this->initModel($modelOrRelations);
     }
@@ -62,9 +65,9 @@ class EloquentRepository extends Repository implements TreeRepository
     /**
      * 初始化模型.
      *
-     * @param  EloquentModel|Builder|array|string  $modelOrRelations
+     * @param  array|string|Builder|EloquentModel  $modelOrRelations
      */
-    protected function initModel($modelOrRelations)
+    protected function initModel(EloquentModel|Builder|array|string $modelOrRelations): void
     {
         if (is_string($modelOrRelations) && class_exists($modelOrRelations)) {
             $this->eloquentClass = $modelOrRelations;
@@ -91,7 +94,7 @@ class EloquentRepository extends Repository implements TreeRepository
     /**
      * @return string
      */
-    public function getCreatedAtColumn()
+    public function getCreatedAtColumn(): string
     {
         return $this->model()->getCreatedAtColumn();
     }
@@ -99,7 +102,7 @@ class EloquentRepository extends Repository implements TreeRepository
     /**
      * @return string
      */
-    public function getUpdatedAtColumn()
+    public function getUpdatedAtColumn(): string
     {
         return $this->model()->getUpdatedAtColumn();
     }
@@ -109,7 +112,7 @@ class EloquentRepository extends Repository implements TreeRepository
      *
      * @return array
      */
-    public function getGridColumns()
+    public function getGridColumns(): array
     {
         return ['*'];
     }
@@ -119,7 +122,7 @@ class EloquentRepository extends Repository implements TreeRepository
      *
      * @return array
      */
-    public function getFormColumns()
+    public function getFormColumns(): array
     {
         return ['*'];
     }
@@ -129,7 +132,7 @@ class EloquentRepository extends Repository implements TreeRepository
      *
      * @return array
      */
-    public function getDetailColumns()
+    public function getDetailColumns(): array
     {
         return ['*'];
     }
@@ -140,7 +143,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @param  mixed  $relations
      * @return $this
      */
-    public function setRelations($relations)
+    public function setRelations(mixed $relations): static
     {
         $this->relations = (array) $relations;
 
@@ -154,7 +157,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Collection|array
      * @throws \Exception
      */
-    public function get(Grid\Model $model)
+    public function get(Grid\Model $model): LengthAwarePaginator|array|Collection
     {
         $this->setSort($model);
         $this->setPaginate($model);
@@ -175,7 +178,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @return void
      * @throws \Exception
      */
-    protected function setSort(Grid\Model $model)
+    protected function setSort(Grid\Model $model): void
     {
         [$column, $type, $cast] = $model->getSort();
 
@@ -205,11 +208,11 @@ class EloquentRepository extends Repository implements TreeRepository
      * @param  Grid\Model  $model
      * @param  string  $column
      * @param  string  $type
-     * @param  string  $cast
+     * @param  string|null  $cast
      *
      * @throws \Exception
      */
-    protected function addOrderBy(Grid\Model $model, $column, $type, $cast)
+    protected function addOrderBy(Grid\Model $model, string $column, string $type, ?string $cast = null): void
     {
         $explodedCols = explode('.', $column);
         $isRelation   = ! empty($explodedCols[1]) && method_exists($this->model(), $explodedCols[0]);
@@ -233,7 +236,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @param $type
      * @param $cast
      */
-    protected function setOrderBy(Grid\Model $model, $column, $type, $cast)
+    protected function setOrderBy(Grid\Model $model, $column, $type, $cast): void
     {
         $isJsonColumn = Str::contains($column, '->');
 
@@ -267,7 +270,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @param  string  $column
      * @return string
      */
-    protected function wrapMySqlColumn($column)
+    protected function wrapMySqlColumn(string $column): string
     {
         if (Str::contains($column, '`')) {
             return $column;
@@ -294,7 +297,7 @@ class EloquentRepository extends Repository implements TreeRepository
      *
      * @throws \Exception
      */
-    protected function setRelationSort(Grid\Model $model, $column, $type, $cast)
+    protected function setRelationSort(Grid\Model $model, string $column, string $type, string $cast): void
     {
         [$relationName, $relationColumn] = explode('.', $column, 2);
 
@@ -320,7 +323,7 @@ class EloquentRepository extends Repository implements TreeRepository
      *
      * @throws \Exception
      */
-    protected function joinParameters(Relation $relation)
+    protected function joinParameters(Relation $relation): array
     {
         $relatedTable = $relation->getRelated()->getTable();
 
@@ -353,7 +356,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @param  Grid\Model  $model
      * @return void
      */
-    protected function setPaginate(Grid\Model $model)
+    protected function setPaginate(Grid\Model $model): void
     {
         $paginateMethod = $model->getPaginateMethod();
 
@@ -375,7 +378,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @param  array|null  $paginate
      * @return array
      */
-    protected function resolvePerPage(Grid\Model $model, $paginate)
+    protected function resolvePerPage(Grid\Model $model, ?array $paginate = null): array
     {
         if ($paginate && is_array($paginate)) {
             if ($perPage = request()->input($model->getPerPageName())) {
@@ -397,9 +400,9 @@ class EloquentRepository extends Repository implements TreeRepository
      * 查询编辑页面数据.
      *
      * @param  Form  $form
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return \Illuminate\Database\Eloquent\Model|array|\Illuminate\Contracts\Support\Arrayable
      */
-    public function edit(Form $form)
+    public function edit(Form $form): EloquentModel|array|Arrayable
     {
         $query = $this->newQuery();
 
@@ -418,9 +421,9 @@ class EloquentRepository extends Repository implements TreeRepository
      * 查询详情页面数据.
      *
      * @param  Show  $show
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return \Illuminate\Database\Eloquent\Model|array|\Illuminate\Contracts\Support\Arrayable
      */
-    public function detail(Show $show)
+    public function detail(Show $show): EloquentModel|array|Arrayable
     {
         $query = $this->newQuery();
 
@@ -439,13 +442,11 @@ class EloquentRepository extends Repository implements TreeRepository
      * 新增记录.
      *
      * @param  Form  $form
-     * @return mixed
+     * @return int|bool|\Dcat\Admin\Http\JsonResponse
      */
-    public function store(Form $form)
+    public function store(Form $form): int|bool|JsonResponse
     {
-        $result = null;
-
-        DB::transaction(function () use ($form, &$result) {
+        DB::transaction(function () use ($form) {
             $model = $this->model();
 
             $updates = $form->updates();
@@ -460,7 +461,7 @@ class EloquentRepository extends Repository implements TreeRepository
                 $model->setAttribute($column, $value);
             }
 
-            $result = $model->save();
+            $model->save();
 
             $this->updateRelation($form, $model, $relations, $relationKeyMap);
         });
@@ -472,9 +473,9 @@ class EloquentRepository extends Repository implements TreeRepository
      * 查询更新前的行数据.
      *
      * @param  Form  $form
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return \Illuminate\Database\Eloquent\Model|array|\Illuminate\Contracts\Support\Arrayable
      */
-    public function updating(Form $form)
+    public function updating(Form $form): EloquentModel|array|Arrayable
     {
         return $this->edit($form);
     }
@@ -483,9 +484,9 @@ class EloquentRepository extends Repository implements TreeRepository
      * 更新数据.
      *
      * @param  Form  $form
-     * @return bool
+     * @return bool|\Dcat\Admin\Http\JsonResponse
      */
-    public function update(Form $form)
+    public function update(Form $form): bool|JsonResponse
     {
         /* @var EloquentModel $builder */
         $model = $this->model();
@@ -525,7 +526,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @return bool
      * @throws \Dcat\Admin\Exception\RuntimeException
      */
-    public function moveOrderUp()
+    public function moveOrderUp(): bool
     {
         $model = $this->model();
 
@@ -548,7 +549,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @return bool
      * @throws \Dcat\Admin\Exception\RuntimeException
      */
-    public function moveOrderDown()
+    public function moveOrderDown(): bool
     {
         $model = $this->model();
 
@@ -572,7 +573,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @param  array  $originalData
      * @return bool
      */
-    public function delete(Form $form, array $originalData)
+    public function delete(Form $form, array $originalData): bool
     {
         $models = $this->collection->keyBy($this->getKeyName());
 
@@ -606,7 +607,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @param  Form  $form
      * @return array
      */
-    public function deleting(Form $form)
+    public function deleting(Form $form): array
     {
         $query = $this->newQuery();
 
@@ -631,13 +632,15 @@ class EloquentRepository extends Repository implements TreeRepository
      *
      * @return string
      */
-    public function getParentColumn()
+    public function getParentColumn(): string
     {
         $model = $this->model();
 
         if (method_exists($model, 'getParentColumn')) {
             return $model->getParentColumn();
         }
+
+        return 'parent_id';
     }
 
     /**
@@ -645,13 +648,15 @@ class EloquentRepository extends Repository implements TreeRepository
      *
      * @return string
      */
-    public function getTitleColumn()
+    public function getTitleColumn(): string
     {
         $model = $this->model();
 
         if (method_exists($model, 'getTitleColumn')) {
             return $model->getTitleColumn();
         }
+
+        return 'title';
     }
 
     /**
@@ -659,13 +664,15 @@ class EloquentRepository extends Repository implements TreeRepository
      *
      * @return string
      */
-    public function getOrderColumn()
+    public function getOrderColumn(): string
     {
         $model = $this->model();
 
         if (method_exists($model, 'getOrderColumn')) {
             return $model->getOrderColumn();
         }
+
+        return 'order';
     }
 
     /**
@@ -674,7 +681,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @param  array  $tree
      * @param  int  $parentId
      */
-    public function saveOrder($tree = [], $parentId = 0)
+    public function saveOrder($tree = [], $parentId = 0): void
     {
         $this->model()->saveOrder($tree, $parentId);
     }
@@ -685,7 +692,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @param $queryCallback
      * @return $this
      */
-    public function withQuery($queryCallback)
+    public function withQuery($queryCallback): static
     {
         $this->model()->withQuery($queryCallback);
 
@@ -697,7 +704,7 @@ class EloquentRepository extends Repository implements TreeRepository
      *
      * @return array
      */
-    public function toTree()
+    public function toTree(): array
     {
         if ($this->relations) {
             $this->withQuery(function ($model) {
@@ -711,7 +718,7 @@ class EloquentRepository extends Repository implements TreeRepository
     /**
      * @return Builder
      */
-    protected function newQuery()
+    protected function newQuery(): Builder
     {
         if ($this->queryBuilder) {
             return clone $this->queryBuilder;
@@ -725,7 +732,7 @@ class EloquentRepository extends Repository implements TreeRepository
      *
      * @return EloquentModel
      */
-    public function model()
+    public function model(): EloquentModel
     {
         return $this->model ?: ($this->model = $this->createModel());
     }
@@ -734,7 +741,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @param  array  $data
      * @return EloquentModel
      */
-    public function createModel(array $data = [])
+    public function createModel(array $data = []): EloquentModel
     {
         $model = new $this->eloquentClass();
 
@@ -749,7 +756,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @param  array  $relations
      * @return $this
      */
-    public static function with($relations = [])
+    public static function with(array $relations = []): static
     {
         return (new static())->setRelations($relations);
     }
@@ -759,7 +766,7 @@ class EloquentRepository extends Repository implements TreeRepository
      *
      * @return array
      */
-    public function getRelations()
+    public function getRelations(): array
     {
         return $this->relations;
     }
@@ -772,7 +779,7 @@ class EloquentRepository extends Repository implements TreeRepository
      * @return array
      * @throws \ReflectionException
      */
-    protected function getRelationInputs($model, $inputs = [])
+    protected function getRelationInputs(EloquentModel $model, array $inputs = []): array
     {
         $map       = [];
         $relations = [];
@@ -812,8 +819,12 @@ class EloquentRepository extends Repository implements TreeRepository
      *
      * @throws \Exception
      */
-    protected function updateRelation(Form $form, EloquentModel $model, array $relationsData, array $relationKeyMap)
-    {
+    protected function updateRelation(
+        Form $form,
+        EloquentModel $model,
+        array $relationsData,
+        array $relationKeyMap
+    ): void {
         foreach ($relationsData as $name => $values) {
             $relationName = $relationKeyMap[$name] ?? $name;
 

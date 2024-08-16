@@ -37,12 +37,12 @@ class Between extends AbstractFilter
     /**
      * Format id.
      *
-     * @param  string  $column
+     * @param  array|string  $columns
      * @return array|string
      */
-    public function formatId($column)
+    public function formatId(array|string $columns): array|string
     {
-        $id = str_replace('.', '_', $column);
+        $id = str_replace('.', '_', $columns);
         $prefix = $this->parent->grid()->makeName('filter-column-');
 
         return ['start' => "{$prefix}{$id}-start", 'end' => "{$prefix}{$id}-end"];
@@ -54,7 +54,7 @@ class Between extends AbstractFilter
      * @param  string  $column
      * @return array
      */
-    protected function formatName($column)
+    protected function formatName(string $column): string
     {
         $columns = explode('.', $column);
 
@@ -77,7 +77,7 @@ class Between extends AbstractFilter
      * @param  array  $inputs
      * @return mixed
      */
-    public function condition($inputs)
+    public function condition(array $inputs)
     {
         if (! Arr::has($inputs, $this->column)) {
             return;
@@ -118,7 +118,7 @@ class Between extends AbstractFilter
      * @param  array  $options
      * @return $this
      */
-    public function datetime($options = [])
+    public function datetime(array $options = []): DateTime|Presenter\Presenter
     {
         $this->view = 'admin::filter.between-datetime';
 
