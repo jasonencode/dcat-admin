@@ -4,6 +4,7 @@ namespace Dcat\Admin;
 
 use Closure;
 use Dcat\Admin\Contracts\Repository;
+use Dcat\Admin\Exception\InvalidArgumentException;
 use Dcat\Admin\Show\AbstractTool;
 use Dcat\Admin\Show\Divider;
 use Dcat\Admin\Show\Field;
@@ -23,6 +24,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Traits\Macroable;
+use Throwable;
 
 class Show implements Renderable
 {
@@ -98,8 +100,8 @@ class Show implements Renderable
      *
      * @param  mixed|null  $id  $id
      * @param  null  $model
-     * @param  \Closure|null  $builder
-     * @throws \Dcat\Admin\Exception\InvalidArgumentException
+     * @param  Closure|null  $builder
+     * @throws InvalidArgumentException
      */
     public function __construct(mixed $id = null, $model = null, ?Closure $builder = null)
     {
@@ -110,13 +112,13 @@ class Show implements Renderable
                     $this->setKey($id);
                 } else {
                     $builder = $model;
-                    $model   = $id;
+                    $model = $id;
                 }
                 break;
             default:
                 $this->setKey($id);
         }
-        $this->rows    = new Collection();
+        $this->rows = new Collection();
         $this->builder = $builder;
 
         $this->initModel($model);
@@ -127,7 +129,7 @@ class Show implements Renderable
     }
 
     /**
-     * @throws \Dcat\Admin\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function initModel($model): void
     {
@@ -150,7 +152,7 @@ class Show implements Renderable
             $this->model(new Fluent());
         }
 
-        if (! $this->model && $this->repository) {
+        if (!$this->model && $this->repository) {
             $this->model($this->repository->detail($this));
         }
     }
@@ -160,7 +162,7 @@ class Show implements Renderable
      *
      * @param  mixed  ...$params
      * @return $this
-     * @throws \Dcat\Admin\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function make(...$params): static
     {
@@ -185,7 +187,7 @@ class Show implements Renderable
      */
     public function getKeyName(): string
     {
-        if (! $this->repository) {
+        if (!$this->repository) {
             return $this->keyName;
         }
 
@@ -194,7 +196,7 @@ class Show implements Renderable
 
     /**
      * @param  mixed  $id
-     * @return \Dcat\Admin\Show
+     * @return Show
      */
     public function setKey(mixed $id): static
     {
@@ -212,7 +214,7 @@ class Show implements Renderable
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Fluent|array|null  $model
+     * @param  Model|Fluent|array|null  $model
      * @return $this|Fluent
      */
     public function model(Model|Fluent|array|null $model = null): Fluent|static
@@ -271,7 +273,7 @@ class Show implements Renderable
      */
     protected function initContents(): void
     {
-        $this->fields    = new Collection();
+        $this->fields = new Collection();
         $this->relations = new Collection();
     }
 
@@ -294,7 +296,7 @@ class Show implements Renderable
     }
 
     /**
-     * @param  array|string|\Closure|AbstractTool|Htmlable|Renderable|null  $callback
+     * @param  array|string|Closure|AbstractTool|Htmlable|Renderable|null  $callback
      * @return $this|Tools
      */
     public function tools(Renderable|Htmlable|array|string|Closure|AbstractTool $callback = null): Tools|static
@@ -309,7 +311,7 @@ class Show implements Renderable
             return $this;
         }
 
-        if (! is_array($callback)) {
+        if (!is_array($callback)) {
             $callback = [$callback];
         }
 
@@ -344,7 +346,7 @@ class Show implements Renderable
             return $this->fields;
         }
 
-        if (! Arr::isAssoc($fields)) {
+        if (!Arr::isAssoc($fields)) {
             $fields = array_combine($fields, $fields);
         }
 
@@ -366,7 +368,7 @@ class Show implements Renderable
     /**
      * Show all fields.
      *
-     * @return \Illuminate\Support\Collection|\Dcat\Admin\Show
+     * @return Collection|Show
      */
     public function all(): Collection|static
     {
@@ -379,15 +381,15 @@ class Show implements Renderable
      * Add a relation to show.
      *
      * @param  string  $name
-     * @param  string|\Closure  $label
-     * @param  \Closure|null  $builder
+     * @param  string|Closure  $label
+     * @param  Closure|null  $builder
      * @return Relation
      */
     public function relation(string $name, string|Closure $label, Closure $builder = null): Relation
     {
         if (is_null($builder)) {
             $builder = $label;
-            $label   = '';
+            $label = '';
         }
 
         return $this->addRelation($name, $builder, $label);
@@ -417,7 +419,7 @@ class Show implements Renderable
      * Add a relation panel to show.
      *
      * @param  string  $name
-     * @param  \Closure  $builder
+     * @param  Closure  $builder
      * @param  string  $label
      * @return Relation
      */
@@ -652,7 +654,7 @@ class Show implements Renderable
      * Render the show panels.
      *
      * @return string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(): string
     {
@@ -676,7 +678,7 @@ class Show implements Renderable
         $this->callComposing();
 
         $data = [
-            'panel'     => $this->panel->fill($this->fields),
+            'panel' => $this->panel->fill($this->fields),
             'relations' => $this->relations,
         ];
 
@@ -697,7 +699,7 @@ class Show implements Renderable
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function rows(): Collection
     {

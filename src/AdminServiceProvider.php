@@ -13,6 +13,7 @@ use Dcat\Admin\Support\Context;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Support\Translator;
 use Dcat\Admin\Support\WebUploader;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\URL;
@@ -69,7 +70,7 @@ class AdminServiceProvider extends ServiceProvider
     ];
 
     /**
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function register(): void
     {
@@ -222,7 +223,7 @@ PHP;
      * 路由中间件注册.
      *
      * @return void
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     protected function registerRouteMiddleware(): void
     {

@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Tree;
 
+use Closure;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Tree;
 use Illuminate\Contracts\Support\Htmlable;
@@ -15,14 +16,14 @@ class Tools implements Renderable
      *
      * @var Tree
      */
-    protected $tree;
+    protected Tree $tree;
 
     /**
      * Collection of tools.
      *
      * @var Collection
      */
-    protected $tools;
+    protected Collection $tools;
 
     /**
      * Create a new Tools instance.
@@ -36,10 +37,10 @@ class Tools implements Renderable
     /**
      * Prepend a tool.
      *
-     * @param  string|\Closure|AbstractTool|Renderable|Htmlable  $tool
+     * @param  Closure|string|AbstractTool|Htmlable|Renderable  $tool
      * @return $this
      */
-    public function add($tool)
+    public function add(AbstractTool|Renderable|Htmlable|Closure|string $tool): static
     {
         if ($tool instanceof AbstractTool) {
             $tool->setParent($this->tree);

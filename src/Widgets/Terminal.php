@@ -9,7 +9,7 @@ class Terminal extends Widget
 {
     protected static string $style = '.dump info{color: #21b978;}.dump warning{color: #ffcc80}.dump comment{color: rgba(255, 189, 74, .8);}.dump error{color: #ff5b5b}';
 
-    protected $content;
+    protected string $content;
 
     public function __construct($content = null)
     {
@@ -23,7 +23,7 @@ class Terminal extends Widget
      * @param  array  $parameters
      * @return static
      */
-    public static function call(string $command, array $parameters = [])
+    public static function call(string $command, array $parameters = []): static
     {
         $output = new StringOutput();
         Artisan::call($command, $parameters, $output);
@@ -31,17 +31,17 @@ class Terminal extends Widget
         return static::make($output);
     }
 
-    public function dark()
+    public function dark(): static
     {
         return $this->style('background:#333;color:#fff;');
     }
 
-    public function transparent()
+    public function transparent(): static
     {
         return $this->style('background:transparent!important;color:#fff;');
     }
 
-    public function content($content)
+    public function content($content): static
     {
         if ($content instanceof StringOutput) {
             $content = $content->getContent();
@@ -59,7 +59,7 @@ class Terminal extends Widget
         static::$style = null;
 
         return <<<EOF
-<style>{$style}</style><pre {$this->formatHtmlAttributes()}>{$this->content}</pre>
-EOF;
+            <style>$style</style><pre {$this->formatHtmlAttributes()}>$this->content</pre>
+            EOF;
     }
 }

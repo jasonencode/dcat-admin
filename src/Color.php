@@ -73,32 +73,32 @@ class Color
      * @var array
      */
     protected static array $extensions = [
-        'default'    => [
+        'default' => [
             'colors' => [
-                'primary'        => '#586cb1',
+                'primary' => '#586cb1',
                 'primary-darker' => '#4c60a3',
-                'link'           => '#4c60a3',
+                'link' => '#4c60a3',
             ],
         ],
         'blue-light' => [
             'colors' => [
-                'primary'        => '#62a8ea',
+                'primary' => '#62a8ea',
                 'primary-darker' => '#62a8ea',
-                'link'           => '#62a8ea',
+                'link' => '#62a8ea',
             ],
         ],
-        'blue'       => [
+        'blue' => [
             'colors' => [
-                'primary'        => '#6d8be6',
+                'primary' => '#6d8be6',
                 'primary-darker' => '#6d8be6',
-                'link'           => '#6d8be6',
+                'link' => '#6d8be6',
             ],
         ],
-        'green'      => [
+        'green' => [
             'colors' => [
-                'primary'        => '#4e9876',
+                'primary' => '#4e9876',
                 'primary-darker' => '#458769',
-                'link'           => '#458769',
+                'link' => '#458769',
             ],
         ],
     ];
@@ -109,82 +109,82 @@ class Color
      * @var array
      */
     protected static array $allColors = [
-        'info'    => 'blue',
+        'info' => 'blue',
         'success' => 'green',
-        'danger'  => 'red',
+        'danger' => 'red',
         'warning' => 'orange',
-        'indigo'  => '#5c6bc6',
-        'blue'    => '#3085d6',
-        'red'     => '#ea5455',
-        'orange'  => '#dda451',
-        'green'   => '#21b978',
-        'cyan'    => '#7367f0',
-        'purple'  => '#5b69bc',
-        'custom'  => '#59a9f8',
-        'pink'    => '#ff8acc',
-        'dark'    => '#22292f',
-        'white'   => '#fff',
+        'indigo' => '#5c6bc6',
+        'blue' => '#3085d6',
+        'red' => '#ea5455',
+        'orange' => '#dda451',
+        'green' => '#21b978',
+        'cyan' => '#7367f0',
+        'purple' => '#5b69bc',
+        'custom' => '#59a9f8',
+        'pink' => '#ff8acc',
+        'dark' => '#22292f',
+        'white' => '#fff',
         'white50' => 'hsla(0,0%,100%,.5)',
 
         // 其他蓝色
-        'blue1'   => '#007ee5',
-        'blue2'   => '#3d97dd',
+        'blue1' => '#007ee5',
+        'blue2' => '#3d97dd',
 
         // 橘色
         'orange1' => '#ffcc80',
         'orange2' => '#F99037',
 
         // 黄色
-        'yellow'  => '#edc30e',
+        'yellow' => '#edc30e',
 
-        'indigo-darker'    => '#495abf',
-        'red-darker'       => '#bd4147',
-        'blue-darker'      => '#236bb0',
-        'cyan-darker'      => '#6355ee',
+        'indigo-darker' => '#495abf',
+        'red-darker' => '#bd4147',
+        'blue-darker' => '#236bb0',
+        'cyan-darker' => '#6355ee',
 
         // 灰色
-        'gray'             => '#b9c3cd',
+        'gray' => '#b9c3cd',
         // 轻灰
-        'light'            => '#f7f7f9',
+        'light' => '#f7f7f9',
 
         // 水鸭色
-        'tear'             => '#01847f',
-        'tear1'            => '#00b5b5',
+        'tear' => '#01847f',
+        'tear1' => '#00b5b5',
 
         // 深色
-        'dark20'           => '#f6fbff',
-        'dark30'           => '#f4f7fa',
-        'dark35'           => '#e7eef7',
-        'dark40'           => '#ebf0f3',
-        'dark50'           => '#d3dde5',
-        'dark60'           => '#bacad6',
-        'dark70'           => '#b3b9bf',
-        'dark80'           => '#7c858e',
-        'dark85'           => '#5c7089',
-        'dark90'           => '#252d37',
+        'dark20' => '#f6fbff',
+        'dark30' => '#f4f7fa',
+        'dark35' => '#e7eef7',
+        'dark40' => '#ebf0f3',
+        'dark50' => '#d3dde5',
+        'dark60' => '#bacad6',
+        'dark70' => '#b3b9bf',
+        'dark80' => '#7c858e',
+        'dark85' => '#5c7089',
+        'dark90' => '#252d37',
 
         // 文本通用颜色
-        'font'             => '#414750',
+        'font' => '#414750',
 
         // 灰色背景
-        'gray-bg'          => '#f1f1f1',
+        'gray-bg' => '#f1f1f1',
 
         // 边框颜色
-        'border'           => '#ebeff2',
+        'border' => '#ebeff2',
 
         // 表单边框
-        'input-border'     => '#d9d9d9',
+        'input-border' => '#d9d9d9',
 
         // 背景色
-        'background'       => '#eff3f8',
+        'background' => '#eff3f8',
 
         // 深色模式
         // 背景色
-        'dark-mode-bg'     => '#2c2c43',
+        'dark-mode-bg' => '#2c2c43',
         // 深色
-        'dark-mode-color'  => '#222233',
+        'dark-mode-color' => '#222233',
         'dark-mode-color2' => '#1e1e2d',
-        'dark-mode-font'   => '##a8a9bb',
+        'dark-mode-font' => '##a8a9bb',
     ];
 
     /**
@@ -211,7 +211,7 @@ class Color
      */
     public function getName(): string
     {
-        if (! $this->name) {
+        if (!$this->name) {
             $this->name = config('admin.layout.color') ?: static::DEFAULT_COLOR;
         }
 
@@ -246,7 +246,7 @@ class Color
 
         $result = $colors[$colorName] ?? $default;
 
-        if ($result && ! empty($colors[$result])) {
+        if ($result && !empty($colors[$result])) {
             return $this->get($result, $default);
         }
 
@@ -314,7 +314,7 @@ class Color
      */
     protected function getColors(): array
     {
-        if (! $this->colors) {
+        if (!$this->colors) {
             $this->colors = array_merge(
                 static::$allColors,
                 static::$extensions[$this->getName()]['colors'] ?? []

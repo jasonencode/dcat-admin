@@ -15,9 +15,12 @@ use Dcat\Admin\Layout\SectionManager;
 use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Repositories\EloquentRepository;
 use Dcat\Admin\Support\Composer;
+use Dcat\Admin\Support\Context;
 use Dcat\Admin\Support\Helper;
+use Dcat\Admin\Support\Translator;
 use Dcat\Admin\Traits\HasAssets;
 use Dcat\Admin\Traits\HasHtml;
+use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Support\Renderable;
@@ -39,30 +42,30 @@ class Admin
 
     const SECTION = [
         // 往 <head> 标签内输入内容
-        'HEAD'                     => 'ADMIN_HEAD',
+        'HEAD' => 'ADMIN_HEAD',
 
         // 往body标签内部输入内容
-        'BODY_INNER_BEFORE'        => 'ADMIN_BODY_INNER_BEFORE',
-        'BODY_INNER_AFTER'         => 'ADMIN_BODY_INNER_AFTER',
+        'BODY_INNER_BEFORE' => 'ADMIN_BODY_INNER_BEFORE',
+        'BODY_INNER_AFTER' => 'ADMIN_BODY_INNER_AFTER',
 
         // 往#app内部输入内容
-        'APP_INNER_BEFORE'         => 'ADMIN_APP_INNER_BEFORE',
-        'APP_INNER_AFTER'          => 'ADMIN_APP_INNER_AFTER',
+        'APP_INNER_BEFORE' => 'ADMIN_APP_INNER_BEFORE',
+        'APP_INNER_AFTER' => 'ADMIN_APP_INNER_AFTER',
 
         // 顶部导航栏用户面板
-        'NAVBAR_USER_PANEL'        => 'ADMIN_NAVBAR_USER_PANEL',
-        'NAVBAR_AFTER_USER_PANEL'  => 'ADMIN_NAVBAR_AFTER_USER_PANEL',
+        'NAVBAR_USER_PANEL' => 'ADMIN_NAVBAR_USER_PANEL',
+        'NAVBAR_AFTER_USER_PANEL' => 'ADMIN_NAVBAR_AFTER_USER_PANEL',
         // 顶部导航栏之前
-        'NAVBAR_BEFORE'            => 'ADMIN_NAVBAR_BEFORE',
+        'NAVBAR_BEFORE' => 'ADMIN_NAVBAR_BEFORE',
         // 顶部导航栏底下
-        'NAVBAR_AFTER'             => 'ADMIN_NAVBAR_AFTER',
+        'NAVBAR_AFTER' => 'ADMIN_NAVBAR_AFTER',
 
         // 侧边栏顶部用户信息面板
-        'LEFT_SIDEBAR_USER_PANEL'  => 'ADMIN_LEFT_SIDEBAR_USER_PANEL',
+        'LEFT_SIDEBAR_USER_PANEL' => 'ADMIN_LEFT_SIDEBAR_USER_PANEL',
         // 菜单栏
-        'LEFT_SIDEBAR_MENU'        => 'ADMIN_LEFT_SIDEBAR_MENU',
+        'LEFT_SIDEBAR_MENU' => 'ADMIN_LEFT_SIDEBAR_MENU',
         // 菜单栏顶部
-        'LEFT_SIDEBAR_MENU_TOP'    => 'ADMIN_LEFT_SIDEBAR_MENU_TOP',
+        'LEFT_SIDEBAR_MENU_TOP' => 'ADMIN_LEFT_SIDEBAR_MENU_TOP',
         // 菜单栏底部
         'LEFT_SIDEBAR_MENU_BOTTOM' => 'ADMIN_LEFT_SIDEBAR_MENU_BOTTOM',
     ];
@@ -90,7 +93,7 @@ class Admin
     /**
      * 菜单管理.
      *
-     * @param Closure|null $builder
+     * @param  Closure|null  $builder
      * @return Menu
      */
     public static function menu(Closure $builder = null): Menu
@@ -117,7 +120,7 @@ class Admin
     }
 
     /**
-     * @param string|null $favicon
+     * @param  string|null  $favicon
      * @return string|void
      */
     public static function favicon(?string $favicon = null)
@@ -132,7 +135,7 @@ class Admin
     /**
      * 设置翻译文件路径.
      *
-     * @param string|null $path
+     * @param  string|null  $path
      */
     public static function translation(?string $path): void
     {
@@ -142,7 +145,7 @@ class Admin
     /**
      * 获取登录用户模型.
      *
-     * @return \Illuminate\Contracts\Auth\Authenticatable|Administrator|null
+     * @return Authenticatable|Administrator|null
      */
     public static function user(): Authenticatable|Administrator|null
     {
@@ -150,7 +153,7 @@ class Admin
     }
 
     /**
-     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     * @return StatefulGuard
      */
     public static function guard(): StatefulGuard
     {
@@ -158,7 +161,7 @@ class Admin
     }
 
     /**
-     * @param Closure|null $builder
+     * @param  Closure|null  $builder
      * @return Navbar
      */
     public static function navbar(Closure $builder = null): Navbar
@@ -173,7 +176,7 @@ class Admin
     /**
      * 启用或禁用Pjax.
      *
-     * @param bool $value
+     * @param  bool  $value
      * @return void
      */
     public static function pjax(bool $value = true): void
@@ -206,7 +209,7 @@ class Admin
     /**
      * section.
      *
-     * @param Closure|null $builder
+     * @param  Closure|null  $builder
      * @return SectionManager
      */
     public static function section(Closure $builder = null): SectionManager
@@ -221,10 +224,10 @@ class Admin
     /**
      * 创建数据仓库实例.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder|\Dcat\Admin\Contracts\Repository|string  $repository
+     * @param  Model|Builder|Repository|string  $repository
      * @param  array  $args
      * @return Repository
-     * @throws \Dcat\Admin\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function repository(Model|Builder|Repository|string $repository, array $args = []): Repository
     {
@@ -258,9 +261,9 @@ class Admin
     /**
      * 处理异常.
      *
-     * @param \Throwable $e
-     * @return array|string|\Symfony\Component\HttpFoundation\Response|null
-     * @throws \Exception
+     * @param  Throwable  $e
+     * @return array|string|Response|null
+     * @throws Exception
      */
     public static function handleException(Throwable $e): array|string|Response|null
     {
@@ -270,7 +273,7 @@ class Admin
     /**
      * 上报异常.
      *
-     * @param \Throwable $e
+     * @param  Throwable  $e
      * @return mixed
      */
     public static function reportException(Throwable $e): mixed
@@ -281,7 +284,7 @@ class Admin
     /**
      * 显示异常信息.
      *
-     * @param \Throwable $e
+     * @param  Throwable  $e
      * @return mixed
      */
     public static function renderException(Throwable $e): mixed
@@ -290,7 +293,7 @@ class Admin
     }
 
     /**
-     * @param callable $callback
+     * @param  callable  $callback
      */
     public static function booting(callable $callback): void
     {
@@ -298,7 +301,7 @@ class Admin
     }
 
     /**
-     * @param callable $callback
+     * @param  callable  $callback
      */
     public static function booted(callable $callback): void
     {
@@ -324,7 +327,7 @@ class Admin
     /**
      * 上下文管理.
      *
-     * @return \Dcat\Admin\Support\Context
+     * @return Context
      */
     public static function context(): Support\Context
     {
@@ -334,7 +337,7 @@ class Admin
     /**
      * 翻译器.
      *
-     * @return \Dcat\Admin\Support\Translator
+     * @return Translator
      */
     public static function translator(): Support\Translator
     {
@@ -342,7 +345,7 @@ class Admin
     }
 
     /**
-     * @param array|string $name
+     * @param  array|string  $name
      * @return void
      */
     public static function addIgnoreQueryName(array|string $name): void
@@ -351,7 +354,7 @@ class Admin
 
         $ignoreQueries = $context->ignoreQueries ?? [];
 
-        $context->ignoreQueries = array_merge($ignoreQueries, (array)$name);
+        $context->ignoreQueries = array_merge($ignoreQueries, (array) $name);
     }
 
     /**
@@ -365,7 +368,7 @@ class Admin
     /**
      * 中断默认的渲染逻辑.
      *
-     * @param \Illuminate\Contracts\Support\Renderable|\Closure|string|null $value
+     * @param  Renderable|Closure|string|null  $value
      */
     public static function prevent(Renderable|Closure|string|null $value): void
     {
@@ -420,7 +423,7 @@ class Admin
     /**
      * 响应json数据.
      *
-     * @param array $data
+     * @param  array  $data
      * @return JsonResponse
      */
     public static function json(array $data = []): JsonResponse
@@ -431,7 +434,7 @@ class Admin
     /**
      * 响应并中断后续逻辑.
      *
-     * @param array|string|\Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Support\Renderable $response
+     * @param  array|string|Response|Renderable  $response
      *
      */
     public static function exit(array|string|Response|Renderable $response = '')
@@ -448,7 +451,7 @@ class Admin
     /**
      * 类自动加载器.
      *
-     * @return \Composer\Autoload\ClassLoader
+     * @return ClassLoader
      */
     public static function classLoader(): ClassLoader
     {
@@ -458,7 +461,7 @@ class Admin
     /**
      * 往分组插入中间件.
      *
-     * @param array $mix
+     * @param  array  $mix
      */
     public static function mixMiddlewareGroup(array $mix = []): void
     {
@@ -496,7 +499,7 @@ class Admin
     /**
      * 获取js配置.
      *
-     * @param array|null $variables
+     * @param  array|null  $variables
      * @return string
      */
     public static function jsVariables(array $variables = null): string
@@ -517,13 +520,13 @@ class Admin
         $pjaxId = static::getPjaxContainerId();
 
         $jsVariables['pjax_container_selector'] = $pjaxId ? ('#'.$pjaxId) : '';
-        $jsVariables['token']                   = csrf_token();
-        $jsVariables['lang']                    = ($lang = __('admin.client')) ? array_merge($lang,
+        $jsVariables['token'] = csrf_token();
+        $jsVariables['lang'] = ($lang = __('admin.client')) ? array_merge($lang,
             $jsVariables['lang'] ?? []) : [];
-        $jsVariables['colors']                  = static::color()->all();
-        $jsVariables['dark_mode']               = static::isDarkMode();
-        $jsVariables['sidebar_dark']            = config('admin.layout.sidebar_dark') || ($sidebarStyle === 'dark');
-        $jsVariables['sidebar_light_style']     = in_array($sidebarStyle, ['dark', 'light'],
+        $jsVariables['colors'] = static::color()->all();
+        $jsVariables['dark_mode'] = static::isDarkMode();
+        $jsVariables['sidebar_dark'] = config('admin.layout.sidebar_dark') || ($sidebarStyle === 'dark');
+        $jsVariables['sidebar_light_style'] = in_array($sidebarStyle, ['dark', 'light'],
             true) ? 'sidebar-light-primary' : 'sidebar-primary';
 
         return admin_javascript_json($jsVariables);
@@ -551,7 +554,7 @@ class Admin
     public static function routes(): void
     {
         $attributes = [
-            'prefix'     => config('admin.route.prefix'),
+            'prefix' => config('admin.route.prefix'),
             'middleware' => config('admin.route.middleware'),
         ];
 
@@ -590,10 +593,10 @@ class Admin
     public static function registerApiRoutes(): void
     {
         $attributes = [
-            'prefix'     => admin_base_path('jason-api'),
+            'prefix' => admin_base_path('jason-api'),
             'middleware' => config('admin.route.middleware'),
-            'namespace'  => 'Dcat\Admin\Http\Controllers',
-            'as'         => 'jason-api.',
+            'namespace' => 'Dcat\Admin\Http\Controllers',
+            'as' => 'jason-api.',
         ];
 
         app('router')->group($attributes, function (Router $router) {

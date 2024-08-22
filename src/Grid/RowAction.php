@@ -8,7 +8,7 @@ use Illuminate\Support\Fluent;
 abstract class RowAction extends GridAction
 {
     /**
-     * @var \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Fluent
+     * @var Model|Fluent
      */
     protected Model|Fluent $row;
 
@@ -31,7 +31,7 @@ abstract class RowAction extends GridAction
      * Set row model.
      *
      * @param  mixed|null  $key
-     * @return \Illuminate\Database\Eloquent\Model|mixed
+     * @return Model|mixed
      */
     public function row(mixed $key = null): mixed
     {
@@ -45,7 +45,7 @@ abstract class RowAction extends GridAction
     /**
      * Set row model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Fluent  $row
+     * @param  Model|Fluent  $row
      * @return $this
      */
     public function setRow(Model|Fluent $row): RowAction

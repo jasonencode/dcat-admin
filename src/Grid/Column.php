@@ -515,6 +515,7 @@ class Column
             $previous = $value;
 
             $callback = $this->bindOriginalRowModel($callback);
+
             $value = $callback($value, $this, ...$params);
 
             if (
@@ -687,11 +688,11 @@ class Column
     /**
      * Call Builtin displayer.
      *
-     * @param  string  $abstract
+     * @param  Closure|string  $abstract
      * @param  array  $arguments
      * @return Column
      */
-    protected function callBuiltinDisplayer(string $abstract, array $arguments): static
+    protected function callBuiltinDisplayer(Closure|string $abstract, array $arguments): static
     {
         if ($abstract instanceof Closure) {
             return $this->display(function ($value) use ($abstract, $arguments) {

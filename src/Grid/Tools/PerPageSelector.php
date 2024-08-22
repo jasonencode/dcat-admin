@@ -86,10 +86,10 @@ class PerPageSelector implements Renderable
             ->render();
 
         return <<<EOT
-<label class="pull-right d-none d-sm-inline per-pages-selector" style="margin-right: 10px">
-    $dropdown
-</label>
-EOT;
+            <label class="pull-right d-none d-sm-inline per-pages-selector" style="margin-right: 10px">
+                $dropdown
+            </label>
+            EOT;
     }
 
     /**
@@ -100,9 +100,9 @@ EOT;
     protected function script(): string
     {
         return <<<JS
-$('.{$this->parent->getPerPageName()}').change(function() {
-    Dcat.reload(this.value);
-});
-JS;
+            $('.{$this->parent->getPerPageName()}').change(function() {
+                Dcat.reload(this.value);
+            });
+            JS;
     }
 }

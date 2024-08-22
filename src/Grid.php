@@ -3,6 +3,7 @@
 namespace Dcat\Admin;
 
 use Closure;
+use Dcat\Admin\Exception\InvalidArgumentException;
 use Dcat\Admin\Grid\Column;
 use Dcat\Admin\Grid\Concerns;
 use Dcat\Admin\Grid\Model;
@@ -11,10 +12,14 @@ use Dcat\Admin\Grid\Tools;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Traits\HasBuilderEvents;
 use Dcat\Admin\Traits\HasVariables;
+use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Macroable;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 class Grid
 {
@@ -39,34 +44,34 @@ class Grid
     }
 
     const CREATE_MODE_DEFAULT = 'default';
-    const CREATE_MODE_DIALOG  = 'dialog';
-    const ASYNC_NAME          = '_async_';
+    const CREATE_MODE_DIALOG = 'dialog';
+    const ASYNC_NAME = '_async_';
 
     /**
      * 表格数据实例
      *
-     * @var \Dcat\Admin\Grid\Model
+     * @var Model
      */
     protected Model $model;
 
     /**
      * 表格列的集合
      *
-     * @var \Illuminate\Support\Collection
+     * @var Collection
      */
     protected Collection $columns;
 
     /**
      * 表格全部列的集合
      *
-     * @var \Illuminate\Support\Collection
+     * @var Collection
      */
     protected Collection $allColumns;
 
     /**
      * 表格数据行
      *
-     * @var \Illuminate\Support\Collection
+     * @var Collection
      */
     protected Collection $rows;
 
@@ -87,7 +92,7 @@ class Grid
     /**
      * 表格构建器
      *
-     * @var \Closure|null
+     * @var Closure|null
      */
     protected ?Closure $builder = null;
 
@@ -160,32 +165,32 @@ class Grid
      * @var array
      */
     protected array $options = [
-        'actions'              => true,
-        'actions_class'        => null,
-        'batch_actions_class'  => null,
-        'bordered'             => false,
-        'create_button'        => true,
-        'create_mode'          => self::CREATE_MODE_DEFAULT,
-        'delete_button'        => true,
-        'dialog_form_area'     => ['700px', '670px'],
-        'edit_button'          => true,
-        'filter'               => true,
-        'pagination'           => true,
-        'paginator_class'      => null,
-        'quick_edit_button'    => false,
-        'row_selector'         => true,
-        'scrollbar_x'          => false,
+        'actions' => true,
+        'actions_class' => null,
+        'batch_actions_class' => null,
+        'bordered' => false,
+        'create_button' => true,
+        'create_mode' => self::CREATE_MODE_DEFAULT,
+        'delete_button' => true,
+        'dialog_form_area' => ['700px', '670px'],
+        'edit_button' => true,
+        'filter' => true,
+        'pagination' => true,
+        'paginator_class' => null,
+        'quick_edit_button' => false,
+        'row_selector' => true,
+        'scrollbar_x' => false,
         'show_column_selector' => true,
-        'table_class'          => ['table', 'custom-data-table', 'data-table'],
-        'table_collapse'       => true,
-        'toolbar'              => true,
-        'view_button'          => true,
+        'table_class' => ['table', 'custom-data-table', 'data-table'],
+        'table_collapse' => true,
+        'toolbar' => true,
+        'view_button' => true,
     ];
 
     /**
      * 当前请求
      *
-     * @var \Illuminate\Http\Request
+     * @var Request
      */
     protected Request $request;
 
@@ -209,18 +214,18 @@ class Grid
      * Grid constructor.
      *
      * @param  null  $repository  资源
-     * @param  null|\Closure  $builder  构建器
+     * @param  null|Closure  $builder  构建器
      * @param  null  $request  请求
-     * @throws \Dcat\Admin\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct($repository = null, ?Closure $builder = null, $request = null)
     {
-        $this->model        = new Model(request(), $repository);
-        $this->columns      = new Collection();
-        $this->allColumns   = new Collection();
-        $this->rows         = new Collection();
-        $this->builder      = $builder;
-        $this->request      = $request ?: request();
+        $this->model = new Model(request(), $repository);
+        $this->columns = new Collection();
+        $this->allColumns = new Collection();
+        $this->rows = new Collection();
+        $this->builder = $builder;
+        $this->request = $request ?: request();
         $this->resourcePath = url($this->request->getPathInfo());
 
         if ($repository = $this->model->repository()) {
@@ -312,18 +317,18 @@ class Grid
      * 判断是否允许查询数据.
      *
      * @return bool
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function buildable(): bool
     {
-        return ! $this->async || $this->isAsyncRequest();
+        return !$this->async || $this->isAsyncRequest();
     }
 
     /**
      * @return bool|null
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function isAsyncRequest(): ?bool
     {
@@ -333,7 +338,7 @@ class Grid
     /**
      * 列集合.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function columns(): Collection
     {
@@ -449,13 +454,13 @@ class Grid
      * 构建表格
      *
      * @return void
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Exception
      */
     public function build(): void
     {
-        if (! $this->buildable()) {
+        if (!$this->buildable()) {
             $this->callBuilder();
             $this->handleExportRequest();
 
@@ -494,7 +499,7 @@ class Grid
      */
     public function callBuilder(): void
     {
-        if ($this->builder && ! $this->built) {
+        if ($this->builder && !$this->built) {
             call_user_func($this->builder, $this);
         }
 
@@ -583,12 +588,12 @@ class Grid
      */
     protected function prependRowSelectorColumn(): void
     {
-        if (! $this->options['row_selector']) {
+        if (!$this->options['row_selector']) {
             return;
         }
 
         $rowSelector = $this->rowSelector();
-        $keyName     = $this->getKeyName();
+        $keyName = $this->getKeyName();
 
         $this->prependColumn(
             Grid\Column::SELECT_COLUMN_NAME
@@ -604,7 +609,7 @@ class Grid
      */
     public function renderCreateButton(): string
     {
-        if (! $this->options['create_button']) {
+        if (!$this->options['create_button']) {
             return '';
         }
 
@@ -628,29 +633,29 @@ class Grid
      * Render grid header.
      *
      * @return string
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function renderHeader(): string
     {
-        if (! $this->header) {
+        if (!$this->header) {
             return '';
         }
 
         return <<<HTML
-<div class="card-header clearfix" style="border-bottom: 0;background: transparent;padding: 0">{$this->renderHeaderOrFooter($this->header)}</div>
-HTML;
+            <div class="card-header clearfix" style="border-bottom: 0;background: transparent;padding: 0">{$this->renderHeaderOrFooter($this->header)}</div>
+            HTML;
     }
 
     /**
      * @param $callbacks
      * @return string
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function renderHeaderOrFooter($callbacks): string
     {
-        $target  = [$this->processFilter(), $this];
+        $target = [$this->processFilter(), $this];
         $content = [];
 
         foreach ($callbacks as $callback) {
@@ -681,18 +686,18 @@ HTML;
      * Render grid footer.
      *
      * @return string
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function renderFooter(): string
     {
-        if (! $this->footer) {
+        if (!$this->footer) {
             return '';
         }
 
         return <<<HTML
-<div class="box-footer clearfix">{$this->renderHeaderOrFooter($this->footer)}</div>
-HTML;
+            <div class="box-footer clearfix">{$this->renderHeaderOrFooter($this->footer)}</div>
+            HTML;
     }
 
     /**
@@ -710,7 +715,7 @@ HTML;
      *
      * @param ...$params
      * @return static
-     * @throws \Dcat\Admin\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function make(...$params): static
     {
@@ -755,7 +760,7 @@ HTML;
     protected function defaultVariables(): array
     {
         return [
-            'grid'    => $this,
+            'grid' => $this,
             'tableId' => $this->getTableId(),
         ];
     }
@@ -831,7 +836,7 @@ HTML;
     public function formatTableParentClass(): string
     {
         $tableCollaps = $this->getOption('table_collapse') ? 'table-collapse' : '';
-        $scrollbarX   = $this->getOption('scrollbar_x') ? 'table-scrollbar-x' : '';
+        $scrollbarX = $this->getOption('scrollbar_x') ? 'table-scrollbar-x' : '';
 
         return "table-responsive table-wrapper complex-container table-middle mt-1 $tableCollaps $scrollbarX";
     }
@@ -840,9 +845,9 @@ HTML;
      * Get the string contents of the grid view.
      *
      * @return string
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Throwable
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Throwable
      */
     public function render(): string
     {
@@ -866,20 +871,20 @@ HTML;
     }
 
     /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function addScript(): void
     {
-        if ($this->async && ! $this->isAsyncRequest()) {
+        if ($this->async && !$this->isAsyncRequest()) {
             $query = static::ASYNC_NAME;
-            $url   = Helper::fullUrlWithoutQuery(['_pjax']);
-            $url   = Helper::urlWithQuery($url, [static::ASYNC_NAME => 1]);
+            $url = Helper::fullUrlWithoutQuery(['_pjax']);
+            $url = Helper::urlWithQuery($url, [static::ASYNC_NAME => 1]);
 
             $options = [
-                'selector'  => ".async-{$this->getTableId()}",
+                'selector' => ".async-{$this->getTableId()}",
                 'queryName' => $query,
-                'url'       => $url,
+                'url' => $url,
             ];
 
             if ($this->hasFixColumns()) {
@@ -890,25 +895,25 @@ HTML;
 
             Admin::script(
                 <<<JS
-Dcat.grid.async($options).render()
-JS
+                    Dcat.grid.async($options).render()
+                    JS
             );
         }
     }
 
     /**
      * @return string
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function doWrap(): string
     {
-        if (! $this->show) {
+        if (!$this->show) {
             return '';
         }
 
         $view = view($this->getView(), $this->variables());
 
-        if (! $wrapper = $this->wrapper) {
+        if (!$wrapper = $this->wrapper) {
             return $view->render();
         }
 
@@ -944,9 +949,9 @@ JS
 
     /**
      * @return string
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Throwable
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Throwable
      */
     public function __toString(): string
     {

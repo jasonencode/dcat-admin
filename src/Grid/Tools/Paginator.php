@@ -4,6 +4,7 @@ namespace Dcat\Admin\Grid\Tools;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
+use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -15,7 +16,7 @@ class Paginator implements Renderable
     protected Grid $grid;
 
     /**
-     * @var \Illuminate\Pagination\LengthAwarePaginator|null
+     * @var LengthAwarePaginator|null
      */
     public ?LengthAwarePaginator $paginator = null;
 
@@ -23,7 +24,7 @@ class Paginator implements Renderable
      * Create a new Paginator instance.
      *
      * @param  Grid  $grid
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(Grid $grid)
     {
@@ -36,7 +37,7 @@ class Paginator implements Renderable
      * Initialize work for Paginator.
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     protected function initPaginator(): void
     {
@@ -64,7 +65,7 @@ class Paginator implements Renderable
      */
     protected function perPageSelector(): string
     {
-        if (! $this->grid->getPerPages()) {
+        if (!$this->grid->getPerPages()) {
             return '';
         }
 
@@ -78,7 +79,7 @@ class Paginator implements Renderable
     {
         $parameters = [
             'first' => $this->paginator->firstItem(),
-            'last'  => $this->paginator->lastItem(),
+            'last' => $this->paginator->lastItem(),
             'total' => method_exists($this->paginator, 'total') ? $this->paginator->total() : '...',
         ];
 
@@ -88,7 +89,8 @@ class Paginator implements Renderable
 
         $color = Admin::color()->dark80();
 
-        return "<span class='d-none d-sm-inline' style=\"line-height:33px;color:{$color}\">".trans('admin.pagination.range', $parameters->all()).'</span>';
+        return "<span class='d-none d-sm-inline' style=\"line-height:33px;color:$color\">".trans('admin.pagination.range',
+                $parameters->all()).'</span>';
     }
 
     /**

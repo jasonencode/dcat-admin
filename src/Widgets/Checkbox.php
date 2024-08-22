@@ -8,18 +8,18 @@ use Illuminate\Support\Arr;
 class Checkbox extends Radio
 {
     protected string $view = 'admin::widgets.checkbox';
-    protected        $type = 'checkbox';
+    protected $type = 'checkbox';
     protected $checked = [];
 
     /**
      * 设置选中的的选项.
      *
-     * @param  string|array  $options
+     * @param  string|array  $option
      * @return $this
      */
-    public function check($options)
+    public function check($option): static
     {
-        $this->checked = Helper::array($options);
+        $this->checked = Helper::array($option);
 
         return $this;
     }

@@ -10,32 +10,32 @@ abstract class AbstractTool extends Action
     /**
      * @var Form
      */
-    protected $parent;
+    protected Form $parent;
 
     /**
      * @var string
      */
-    protected $style = 'btn btn-sm btn-primary';
+    protected string $style = 'btn btn-sm btn-primary';
 
     /**
      * Whether the action should only allow in creation page.
      *
      * @var bool
      */
-    public $allowOnlyCreating = false;
+    public bool $allowOnlyCreating = false;
 
     /**
      * Whether the action should only allow in edit page.
      *
      * @var bool
      */
-    public $allowOnlyEditing = false;
+    public bool $allowOnlyEditing = false;
 
     /**
      * @param  Form  $form
      * @return void
      */
-    public function setForm(Form $form)
+    public function setForm(Form $form): void
     {
         $this->parent = $form;
     }
@@ -82,7 +82,7 @@ abstract class AbstractTool extends Action
      * @param  mixed  ...$params
      * @return $this
      */
-    public static function allowOnlyCreating(...$params)
+    public static function allowOnlyCreating(...$params): static
     {
         $tool = static::make(...$params);
 
@@ -96,7 +96,7 @@ abstract class AbstractTool extends Action
      * @param  mixed  ...$params
      * @return $this
      */
-    public static function allowOnlyEditing(...$params)
+    public static function allowOnlyEditing(...$params): static
     {
         $tool = static::make(...$params);
 

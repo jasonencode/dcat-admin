@@ -37,11 +37,13 @@ use Dcat\Admin\Grid\Filter\Year;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Traits\HasBuilderEvents;
 use Dcat\Admin\Traits\HasVariables;
+use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use Throwable;
 
 /**
  * Class Filter.
@@ -310,7 +312,7 @@ class Filter implements Renderable
     /**
      * Get grid.
      *
-     * @return \Dcat\Admin\Grid
+     * @return Grid
      */
     public function grid(): Grid
     {
@@ -328,7 +330,7 @@ class Filter implements Renderable
     }
 
     /**
-     * @return string|\Dcat\Admin\Grid\Filter
+     * @return string|Filter
      */
     public function panel(): string|static
     {
@@ -336,7 +338,7 @@ class Filter implements Renderable
     }
 
     /**
-     * @return string|\Dcat\Admin\Grid\Filter
+     * @return string|Filter
      */
     public function rightSide(): string|static
     {
@@ -619,7 +621,7 @@ class Filter implements Renderable
      * Execute the filter with conditions.
      *
      * @return Collection|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function execute(): mixed
     {
@@ -695,7 +697,7 @@ class Filter implements Renderable
      * Get the string contents of the filter view.
      *
      * @return string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(): string
     {
@@ -771,7 +773,7 @@ class Filter implements Renderable
      * @param  string  $method
      * @param  array  $parameters
      * @return AbstractFilter|$this
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @throws RuntimeException
      */
     public function __call($method, $parameters)
     {

@@ -2,10 +2,14 @@
 
 namespace Dcat\Admin\Form;
 
+use Closure;
+use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Form;
 use Dcat\Admin\Widgets\Form as WidgetForm;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
 
 /**
  * Class Row.
@@ -66,50 +70,50 @@ class Row implements Renderable
     /**
      * Callback for add field to current row.s.
      *
-     * @var \Closure
+     * @var Closure
      */
-    protected $callback;
+    protected Closure $callback;
 
     /**
      * Parent form.
      *
      * @var Form|WidgetForm
      */
-    protected $form;
+    protected Form|WidgetForm $form;
 
     /**
      * Fields in this row.
      *
      * @var Collection
      */
-    protected $fields;
+    protected Collection $fields;
 
     /**
      * Default field width for appended field.
      *
      * @var int
      */
-    protected $defaultFieldWidth = 12;
+    protected int $defaultFieldWidth = 12;
 
     /**
      * field width for appended field.
      *
      * @var int
      */
-    protected $fieldWidth = 12;
+    protected int $fieldWidth = 12;
 
     /**
      * @var bool
      */
-    protected $horizontal = false;
+    protected bool $horizontal = false;
 
     /**
      * Row constructor.
      *
-     * @param  \Closure  $callback
+     * @param  Closure  $callback
      * @param  Form|WidgetForm  $form
      */
-    public function __construct(\Closure $callback, $form)
+    public function __construct(Closure $callback, WidgetForm|Form $form)
     {
         $this->callback = $callback;
         $this->fields = collect();
@@ -124,7 +128,7 @@ class Row implements Renderable
      *
      * @return array|Collection
      */
-    public function fields()
+    public function fields(): array|Collection
     {
         return $this->fields;
     }
@@ -135,7 +139,7 @@ class Row implements Renderable
      * @param  bool  $value
      * @return $this
      */
-    public function horizontal(bool $value = true)
+    public function horizontal(bool $value = true): static
     {
         $this->horizontal = $value;
 
@@ -144,7 +148,7 @@ class Row implements Renderable
         return $this;
     }
 
-    public function setFields(Collection $collection)
+    public function setFields(Collection $collection): static
     {
         $this->fields = $collection;
 
@@ -154,15 +158,15 @@ class Row implements Renderable
     /**
      * @return mixed
      */
-    public function getKey()
+    public function getKey(): mixed
     {
         return $this->form->getKey();
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Fluent|void
+     * @return Fluent|Model
      */
-    public function model()
+    public function model(): Model|Fluent
     {
         return $this->form->model();
     }
@@ -173,7 +177,7 @@ class Row implements Renderable
      * @param  int  $width
      * @return $this
      */
-    public function defaultWidth(int $width = 12)
+    public function defaultWidth(int $width = 12): static
     {
         $this->defaultFieldWidth = $width;
 
@@ -186,7 +190,7 @@ class Row implements Renderable
      * @param  int  $width
      * @return $this
      */
-    public function width($width = 12)
+    public function width(int $width = 12): static
     {
         $this->fieldWidth = $width;
 
@@ -196,7 +200,7 @@ class Row implements Renderable
     /**
      * Render the row.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return string
      */
     public function render(): string
     {
@@ -208,16 +212,17 @@ class Row implements Renderable
      *
      * @param  string  $method
      * @param  array  $arguments
-     * @return Field|void
+     * @return Field
+     * @throws RuntimeException
      */
-    public function __call($method, $arguments)
+    public function __call(string $method, array $arguments)
     {
         $field = $this->form->__call($method, $arguments);
 
         $field->horizontal($this->horizontal);
 
         $this->fields->push([
-            'width'   => $this->fieldWidth,
+            'width' => $this->fieldWidth,
             'element' => $field,
         ]);
 

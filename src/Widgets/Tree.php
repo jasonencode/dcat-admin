@@ -11,30 +11,30 @@ class Tree extends Widget
     protected string $view = 'admin::widgets.tree';
 
     protected array $options = [
-        'plugins'  => ['checkbox', 'types'],
-        'core'     => [
+        'plugins' => ['checkbox', 'types'],
+        'core' => [
             'check_callback' => true,
 
             'themes' => [
-                'name'       => 'proton',
+                'name' => 'proton',
                 'responsive' => true,
             ],
         ],
         'checkbox' => [
             'keep_selected_style' => false,
         ],
-        'types'    => [
+        'types' => [
             'default' => [
                 'icon' => false,
             ],
         ],
     ];
 
-    protected $id;
+    protected string $id = '';
 
     protected array $columnNames = [
-        'id'     => 'id',
-        'text'   => 'name',
+        'id' => 'id',
+        'text' => 'name',
         'parent' => 'parent_id',
     ];
 
@@ -109,7 +109,7 @@ class Tree extends Widget
         $this->formatNodes();
 
         $this->variables = [
-            'id'    => $this->id,
+            'id' => $this->id,
             'nodes' => &$this->nodes,
         ];
 
@@ -119,17 +119,16 @@ class Tree extends Widget
     protected function formatNodes(): void
     {
         $value = $this->value;
-        if ($value && ! is_array($value)) {
+        if ($value && !is_array($value)) {
             $value = explode(',', $value);
         }
-        $value = (array) $value;
 
-        if (! $this->nodes) {
+        if (!$this->nodes) {
             return;
         }
 
-        $idColumn     = $this->columnNames['id'];
-        $textColumn   = $this->columnNames['text'];
+        $idColumn = $this->columnNames['id'];
+        $textColumn = $this->columnNames['text'];
         $parentColumn = $this->columnNames['parent'];
 
         $nodes = [];
@@ -153,10 +152,10 @@ class Tree extends Widget
             $v['state']['disabled'] = true;
 
             $nodes[] = [
-                'id'     => $v[$idColumn],
-                'text'   => $v[$textColumn] ?? null,
+                'id' => $v[$idColumn],
+                'text' => $v[$textColumn] ?? null,
                 'parent' => $parentId,
-                'state'  => $v['state'],
+                'state' => $v['state'],
             ];
         }
 

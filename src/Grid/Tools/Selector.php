@@ -8,6 +8,8 @@ use Dcat\Admin\Support\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class Selector
 {
@@ -41,20 +43,24 @@ class Selector
      */
     public function __construct(Grid $grid)
     {
-        $this->grid      = $grid;
-        $this->request   = request();
+        $this->grid = $grid;
+        $this->request = request();
         $this->selectors = new Collection();
     }
 
     /**
      * @param  string  $column
      * @param  array|string  $label
-     * @param  array|\Closure  $options
-     * @param  null|\Closure  $query
+     * @param  array|Closure  $options
+     * @param  null|Closure  $query
      * @return $this
      */
-    public function select(string $column, array|string $label, array|Closure $options = [], ?Closure $query = null): static
-    {
+    public function select(
+        string $column,
+        array|string $label,
+        array|Closure $options = [],
+        ?Closure $query = null
+    ): static {
         return $this->addSelector($column, $label, $options, $query);
     }
 
@@ -62,7 +68,7 @@ class Selector
      * @param  string  $column
      * @param  array|string  $label
      * @param  array  $options
-     * @param  null|\Closure  $query
+     * @param  null|Closure  $query
      * @return $this
      */
     public function selectOne(string $column, array|string $label, array $options = [], ?Closure $query = null): static
@@ -74,19 +80,24 @@ class Selector
      * @param  string  $column
      * @param  string  $label
      * @param  array  $options
-     * @param  \Closure|null  $query
+     * @param  Closure|null  $query
      * @param  string  $type
      * @return $this
      */
-    protected function addSelector(string $column, string $label, array $options = [], ?Closure $query = null, string $type = 'many'): static
-    {
+    protected function addSelector(
+        string $column,
+        string $label,
+        array $options = [],
+        ?Closure $query = null,
+        string $type = 'many'
+    ): static {
         if (is_array($label)) {
             if ($options instanceof Closure) {
                 $query = $options;
             }
 
             $options = $label;
-            $label   = admin_trans_field($column);
+            $label = admin_trans_field($column);
         }
 
         $this->selectors[$column] = compact(
@@ -126,22 +137,22 @@ class Selector
 
     /**
      * @return array
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function parseSelected(): array
     {
-        if (! is_null($this->selected)) {
+        if (!is_null($this->selected)) {
             return $this->selected;
         }
 
         $selected = $this->request->get($this->getQueryName(), []);
-        if (! is_array($selected)) {
+        if (!is_array($selected)) {
             return [];
         }
 
         $selected = array_filter($selected, function ($value) {
-            return ! is_null($value);
+            return !is_null($value);
         });
 
         foreach ($selected as &$value) {
@@ -165,8 +176,8 @@ class Selector
      * @param  mixed|null  $value
      * @param  bool  $add
      * @return string
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function url(string $column, mixed $value = null, bool $add = false): string
     {
@@ -176,8 +187,8 @@ class Selector
 
         $query[$this->grid->model()->getPageName()] = null;
 
-        $selected  = $this->parseSelected();
-        $options   = Arr::get($selected, $column, []);
+        $selected = $this->parseSelected();
+        $options = Arr::get($selected, $column, []);
         $queryName = "{$this->getQueryName()}.$column";
 
         if (is_null($value)) {
@@ -195,7 +206,7 @@ class Selector
             $options[] = $value;
         }
 
-        if (! empty($options)) {
+        if (!empty($options)) {
             Arr::set($query, $queryName, implode(',', $options));
         } else {
             Arr::forget($query, $queryName);
@@ -206,13 +217,13 @@ class Selector
 
     /**
      * @return string
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function render(): string
     {
         return view('admin::grid.selector', [
-            'self'     => $this,
+            'self' => $this,
             'selected' => $this->parseSelected(),
         ]);
     }

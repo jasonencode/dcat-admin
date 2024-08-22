@@ -32,7 +32,7 @@ abstract class AbstractDisplayer
     protected Column $column;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Fluent|array
+     * @var Model|Fluent|array
      */
     public Model|Fluent|array $row;
 
@@ -122,7 +122,7 @@ abstract class AbstractDisplayer
      * Get translation.
      *
      * @param  string  $text
-     * @return string|\Symfony\Component\Translation\TranslatorInterface
+     * @return string|TranslatorInterface
      */
     protected function trans(string $text): TranslatorInterface|string
     {

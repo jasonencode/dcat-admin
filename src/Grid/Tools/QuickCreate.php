@@ -5,10 +5,12 @@ namespace Dcat\Admin\Grid\Tools;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\Field\MultipleSelect;
+use Dcat\Admin\Form\Field\Text;
 use Dcat\Admin\Grid;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Macroable;
+use Throwable;
 
 class QuickCreate implements Renderable
 {
@@ -54,11 +56,11 @@ class QuickCreate implements Renderable
     /**
      * @param  string  $column
      * @param  string  $placeholder
-     * @return \Dcat\Admin\Form\Field\Text
+     * @return Text
      */
-    public function text(string $column, string $placeholder = ''): Field\Text
+    public function text(string $column, string $placeholder = ''): Text
     {
-        $field = new Field\Text($column, $this->formatPlaceholder($placeholder));
+        $field = new Text($column, $this->formatPlaceholder($placeholder));
 
         $this->addField($field->attribute('style', 'width:180px'));
 
@@ -67,9 +69,9 @@ class QuickCreate implements Renderable
 
     /**
      * @param  string  $column
-     * @return Field\Text
+     * @return Text
      */
-    public function hidden(string $column): Field\Text
+    public function hidden(string $column): Text
     {
         return $this->text($column)
             ->attribute('hidden', 'hidden');
@@ -78,9 +80,9 @@ class QuickCreate implements Renderable
     /**
      * @param  string  $column
      * @param  string  $placeholder
-     * @return Field\Text
+     * @return Text
      */
-    public function email(string $column, string $placeholder = ''): Field\Text
+    public function email(string $column, string $placeholder = ''): Text
     {
         return $this->text($column, $placeholder)
             ->inputmask(['alias' => 'email']);
@@ -89,9 +91,9 @@ class QuickCreate implements Renderable
     /**
      * @param  string  $column
      * @param  string  $placeholder
-     * @return Field\Text
+     * @return Text
      */
-    public function ip(string $column, string $placeholder = ''): Field\Text
+    public function ip(string $column, string $placeholder = ''): Text
     {
         return $this->text($column, $placeholder)
             ->inputmask(['alias' => 'ip'])
@@ -101,9 +103,9 @@ class QuickCreate implements Renderable
     /**
      * @param  string  $column
      * @param  string  $placeholder
-     * @return Field\Text
+     * @return Text
      */
-    public function url(string $column, string $placeholder = ''): Field\Text
+    public function url(string $column, string $placeholder = ''): Text
     {
         return $this->text($column, $placeholder)
             ->inputmask(['alias' => 'url']);
@@ -112,9 +114,9 @@ class QuickCreate implements Renderable
     /**
      * @param  string  $column
      * @param  string  $placeholder
-     * @return Field\Text
+     * @return Text
      */
-    public function password(string $column, string $placeholder = ''): Field\Text
+    public function password(string $column, string $placeholder = ''): Text
     {
         return $this->text($column, $placeholder)
             ->attribute('type', 'password')
@@ -124,9 +126,9 @@ class QuickCreate implements Renderable
     /**
      * @param  string  $column
      * @param  string  $placeholder
-     * @return Field\Text
+     * @return Text
      */
-    public function mobile(string $column, string $placeholder = ''):Field\Text
+    public function mobile(string $column, string $placeholder = ''): Text
     {
         return $this->text($column, $placeholder)
             ->inputmask(['mask' => '99999999999'])
@@ -136,9 +138,9 @@ class QuickCreate implements Renderable
     /**
      * @param  string  $column
      * @param  string  $placeholder
-     * @return Field\Text
+     * @return Text
      */
-    public function integer(string $column, string $placeholder = ''): Field\Text
+    public function integer(string $column, string $placeholder = ''): Text
     {
         return $this->text($column, $placeholder)
             ->inputmask(['alias' => 'integer'])
@@ -283,7 +285,7 @@ class QuickCreate implements Renderable
     /**
      * @param  int  $columnCount
      * @return string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(int $columnCount = 0): string
     {
@@ -292,12 +294,12 @@ class QuickCreate implements Renderable
         }
 
         $vars = [
-            'columnCount'  => $columnCount,
-            'fields'       => $this->fields,
+            'columnCount' => $columnCount,
+            'fields' => $this->fields,
             'elementClass' => $this->getElementClass(),
-            'url'          => $this->action,
-            'method'       => $this->method,
-            'uniqueName'   => $this->parent->getName(),
+            'url' => $this->action,
+            'method' => $this->method,
+            'uniqueName' => $this->parent->getName(),
         ];
 
         return Admin::view('admin::grid.quick-create.form', $vars);

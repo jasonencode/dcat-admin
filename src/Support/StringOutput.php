@@ -6,7 +6,7 @@ use Symfony\Component\Console\Output\Output;
 
 class StringOutput extends Output
 {
-    public $output = '';
+    public string $output = '';
 
     public function __construct($verbosity = self::VERBOSITY_NORMAL, $decorated = false, $formatter = null)
     {
@@ -15,17 +15,17 @@ class StringOutput extends Output
         parent::__construct($verbosity, $decorated, $formatter);
     }
 
-    public function clear()
+    public function clear(): void
     {
         $this->output = '';
     }
 
-    protected function doWrite($message, $newline)
+    protected function doWrite($message, $newline): void
     {
         $this->output .= $message.($newline ? "\n" : '');
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         return trim($this->output);
     }

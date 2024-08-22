@@ -4,6 +4,7 @@ namespace Dcat\Admin\Widgets;
 
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Arr;
+use Throwable;
 
 class Table extends Widget
 {
@@ -33,12 +34,12 @@ class Table extends Widget
      * @param  array  $headers
      * @param  mixed  $rows
      * @param  array  $style
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function __construct(array $headers = [], mixed $rows = false, array $style = [])
     {
         if ($rows === false) {
-            $rows    = $headers;
+            $rows = $headers;
             $headers = [];
         }
 
@@ -78,11 +79,11 @@ class Table extends Widget
      *
      * @param  array  $rows
      * @return $this
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function setRows(array $rows = []): static
     {
-        if ($rows && ! Arr::isAssoc(Helper::array($rows, false))) {
+        if ($rows && !Arr::isAssoc(Helper::array($rows, false))) {
             $this->rows = $rows;
 
             return $this;
@@ -100,7 +101,7 @@ class Table extends Widget
                         ->class('table-no-top-border '.$borderLeft, true)
                         ->render();
 
-                    if (! $noTrPadding) {
+                    if (!$noTrPadding) {
                         $this->class('table-no-tr-padding', true);
                     }
                     $noTrPadding = true;
@@ -134,13 +135,13 @@ class Table extends Widget
      * Render the table.
      *
      * @return string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(): string
     {
         $vars = [
-            'headers'    => $this->headers,
-            'rows'       => $this->rows,
+            'headers' => $this->headers,
+            'rows' => $this->rows,
             'attributes' => $this->formatHtmlAttributes(),
         ];
 

@@ -19,7 +19,7 @@ abstract class AbstractTool extends Grid\GridAction
         $this->appendHtmlAttribute('class', $this->style);
 
         return <<<HTML
-<button {$this->formatHtmlAttributes()}>{$this->title()}</button>
-HTML;
+            <button {$this->formatHtmlAttributes()}>{$this->title()}</button>
+            HTML;
     }
 }

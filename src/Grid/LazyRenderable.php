@@ -5,6 +5,9 @@ namespace Dcat\Admin\Grid;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Support\LazyRenderable as Renderable;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 abstract class LazyRenderable extends Renderable
 {
@@ -27,9 +30,9 @@ abstract class LazyRenderable extends Renderable
     abstract public function grid(): Grid;
 
     /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Throwable
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Throwable
      */
     public function render(): string
     {
@@ -38,8 +41,8 @@ abstract class LazyRenderable extends Renderable
         $class = $this->allowSimpleMode() ? 'simple-grid' : null;
 
         return <<<HTML
-<div class="$class">{$this->prepare($this->grid())->render()}</div>
-HTML;
+            <div class="$class">{$this->prepare($this->grid())->render()}</div>
+            HTML;
     }
 
     protected function addStyle(): void
@@ -64,7 +67,7 @@ HTML;
      */
     protected function prepare(Grid $grid): Grid
     {
-        if (! $grid->getName()) {
+        if (!$grid->getName()) {
             $grid->setName($this->getDefaultName());
         }
 
@@ -81,7 +84,7 @@ HTML;
             $grid->rowSelector()->click();
         }
 
-        if (! empty($this->payload[static::ROW_SELECTOR_COLUMN_NAME])) {
+        if (!empty($this->payload[static::ROW_SELECTOR_COLUMN_NAME])) {
             [$key, $visibleColumn] = $this->payload[static::ROW_SELECTOR_COLUMN_NAME];
 
             $key && $grid->rowSelector()->idColumn($key);

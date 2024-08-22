@@ -7,6 +7,7 @@ use Dcat\Admin\Grid\BatchAction;
 use Dcat\Admin\Traits\HasVariables;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Macroable;
+use Throwable;
 
 class BatchActions extends AbstractTool
 {
@@ -64,7 +65,7 @@ class BatchActions extends AbstractTool
      */
     public function disableDelete(bool $disable = true): static
     {
-        $this->enableDelete = ! $disable;
+        $this->enableDelete = !$disable;
 
         return $this;
     }
@@ -123,10 +124,10 @@ class BatchActions extends AbstractTool
     protected function defaultVariables(): array
     {
         return [
-            'actions'                 => $this->actions,
-            'selectAllName'           => $this->parent->getSelectAllName(),
+            'actions' => $this->actions,
+            'selectAllName' => $this->parent->getSelectAllName(),
             'isHoldSelectAllCheckbox' => $this->isHoldSelectAllCheckbox,
-            'parent'                  => $this->parent,
+            'parent' => $this->parent,
         ];
     }
 
@@ -134,11 +135,11 @@ class BatchActions extends AbstractTool
      * Render BatchActions button groups.
      *
      * @return string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(): string
     {
-        if (! $this->enableDelete) {
+        if (!$this->enableDelete) {
             $this->actions->forget('_delete_');
         }
 

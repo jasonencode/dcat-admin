@@ -2,36 +2,39 @@
 
 namespace Dcat\Admin\Tree;
 
+use Dcat\Admin\Actions\Action;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Tree;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\Eloquent\Model;
 
 class Actions implements Renderable
 {
     /**
      * @var Tree
      */
-    protected $parent;
+    protected Tree $parent;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
-    public $row;
-
-    /**
-     * @var array
-     */
-    protected $appends = [];
+    public Model $row;
 
     /**
      * @var array
      */
-    protected $prepends = [];
+    protected array $appends = [];
 
     /**
      * @var array
      */
-    protected $actions = [
+    protected array $prepends = [];
+
+    /**
+     * @var array
+     */
+    protected array $actions = [
         'delete'    => true,
         'quickEdit' => true,
         'edit'      => false,
@@ -40,30 +43,30 @@ class Actions implements Renderable
     /**
      * @var array
      */
-    protected $defaultActions = [
+    protected array $defaultActions = [
         'edit'      => Tree\Actions\Edit::class,
         'quickEdit' => Tree\Actions\QuickEdit::class,
         'delete'    => Tree\Actions\Delete::class,
     ];
 
     /**
-     * @param  string|Renderable|\Dcat\Admin\Actions\Action|\Illuminate\Contracts\Support\Htmlable  $action
+     * @param  string|Action|Htmlable|Renderable  $action
      * @return $this
      */
-    public function append($action)
+    public function append(Renderable|Htmlable|Action|string $action): static
     {
         $this->prepareAction($action);
 
-        array_push($this->appends, $action);
+        $this->appends[] = $action;
 
         return $this;
     }
 
     /**
-     * @param  string|Renderable|\Dcat\Admin\Actions\Action|\Illuminate\Contracts\Support\Htmlable  $action
+     * @param  string|Action|Htmlable|Renderable  $action
      * @return $this
      */
-    public function prepend($action)
+    public function prepend(Renderable|Htmlable|Action|string $action): static
     {
         $this->prepareAction($action);
 
@@ -77,38 +80,38 @@ class Actions implements Renderable
         return $this->row->{$this->parent()->getKeyName()};
     }
 
-    public function quickEdit(bool $value = true)
+    public function quickEdit(bool $value = true): static
     {
         $this->actions['quickEdit'] = $value;
 
         return $this;
     }
 
-    public function disableQuickEdit(bool $value = true)
+    public function disableQuickEdit(bool $value = true): Actions|static
     {
         return $this->quickEdit(! $value);
     }
 
-    public function edit(bool $value = true)
+    public function edit(bool $value = true): static
     {
         $this->actions['edit'] = $value;
 
         return $this;
     }
 
-    public function disableEdit(bool $value = true)
+    public function disableEdit(bool $value = true): Actions|static
     {
         return $this->edit(! $value);
     }
 
-    public function delete(bool $value = true)
+    public function delete(bool $value = true): static
     {
         $this->actions['delete'] = $value;
 
         return $this;
     }
 
-    public function disableDelete(bool $value = true)
+    public function disableDelete(bool $value = true): Actions|static
     {
         return $this->delete(! $value);
     }
@@ -125,7 +128,7 @@ class Actions implements Renderable
         return implode('', array_merge($prepends, $appends));
     }
 
-    protected function prepareAction($action)
+    protected function prepareAction($action): void
     {
         if ($action instanceof RowAction) {
             $action->setParent($this);
@@ -133,7 +136,7 @@ class Actions implements Renderable
         }
     }
 
-    protected function prependDefaultActions()
+    protected function prependDefaultActions(): void
     {
         foreach ($this->actions as $action => $enable) {
             if (! $enable) {
@@ -148,22 +151,22 @@ class Actions implements Renderable
         }
     }
 
-    public function parent()
+    public function parent(): Tree
     {
         return $this->parent;
     }
 
-    public function setParent(Tree $tree)
+    public function setParent(Tree $tree): void
     {
         $this->parent = $tree;
     }
 
-    public function getRow()
+    public function getRow(): Model
     {
         return $this->row;
     }
 
-    public function setRow($row)
+    public function setRow($row): void
     {
         $this->row = $row;
     }

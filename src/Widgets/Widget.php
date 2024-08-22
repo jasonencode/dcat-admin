@@ -12,6 +12,7 @@ use Dcat\Admin\Traits\HasVariables;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Arr;
+use Throwable;
 
 /**
  * @method $this class(array|string $class, bool $append = false)
@@ -137,9 +138,9 @@ abstract class Widget implements Renderable
     {
         return [
             'attributes' => $this->formatHtmlAttributes(),
-            'options'    => $this->options,
-            'class'      => $this->getElementClass(),
-            'selector'   => $this->getElementSelector(),
+            'options' => $this->options,
+            'class' => $this->getElementClass(),
+            'selector' => $this->getElementSelector(),
         ];
     }
 
@@ -173,7 +174,7 @@ abstract class Widget implements Renderable
 
     /**
      * @return string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(): string
     {
@@ -221,11 +222,11 @@ abstract class Widget implements Renderable
      * 渲染HTML.
      *
      * @return string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function html(): string
     {
-        if (! $this->view) {
+        if (!$this->view) {
             return '';
         }
 
@@ -306,8 +307,8 @@ abstract class Widget implements Renderable
     public function __call($method, $parameters)
     {
         if ($method === 'style' || $method === 'class') {
-            $value  = $parameters[0] ?? null;
-            $append = $parameters[1] ?? ! ($method === 'class');
+            $value = $parameters[0] ?? null;
+            $append = $parameters[1] ?? !($method === 'class');
 
             if (is_array($value)) {
                 $value = implode(' ', $value);
@@ -356,7 +357,7 @@ abstract class Widget implements Renderable
 
     /**
      * @return string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function __toString(): string
     {

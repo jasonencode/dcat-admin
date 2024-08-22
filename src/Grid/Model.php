@@ -5,9 +5,12 @@ namespace Dcat\Admin\Grid;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Contracts\Repository;
 use Dcat\Admin\Exception\AdminException;
+use Dcat\Admin\Exception\InvalidArgumentException;
 use Dcat\Admin\Grid;
+use Exception;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\AbstractPaginator;
@@ -17,7 +20,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use stdClass;
-use Illuminate\Database\Eloquent\Model as EloquentModel;
+
 /**
  * @mixin Builder
  */
@@ -43,7 +46,7 @@ class Model
     /**
      * Array of queries of the model.
      *
-     * @var \Illuminate\Support\Collection
+     * @var Collection
      */
     protected Collection $queries;
 
@@ -131,8 +134,8 @@ class Model
      * Create a new grid model instance.
      *
      * @param  Request  $request
-     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder|\Dcat\Admin\Contracts\Repository|string|null  $repository
-     * @throws \Dcat\Admin\Exception\InvalidArgumentException
+     * @param  EloquentModel|Builder|Repository|string|null  $repository
+     * @throws InvalidArgumentException
      */
     public function __construct(Request $request, EloquentModel|Builder|Repository|string|null $repository = null)
     {
@@ -153,7 +156,7 @@ class Model
     }
 
     /**
-     * @return \Dcat\Admin\Contracts\Repository|null
+     * @return Repository|null
      */
     public function repository(): ?Repository
     {
@@ -179,7 +182,7 @@ class Model
 
     /**
      * @return AbstractPaginator|LengthAwarePaginator
-     * @throws \Exception
+     * @throws Exception
      */
     public function paginator(): ?AbstractPaginator
     {
@@ -251,7 +254,7 @@ class Model
      *
      * @param  bool  $use
      *
-     * @return \Dcat\Admin\Grid\Model
+     * @return Model
      * @reutrn $this;
      */
     public function usePaginate(bool $use = true): static
@@ -281,7 +284,7 @@ class Model
 
     /**
      * @param  int  $perPage
-     * @return \Dcat\Admin\Grid\Model
+     * @return Model
      */
     public function setPerPage(int $perPage): static
     {
@@ -387,8 +390,8 @@ class Model
     /**
      * Build.
      *
-     * @return \Illuminate\Support\Collection|null
-     * @throws \Exception
+     * @return Collection|null
+     * @throws Exception
      */
     public function buildData(): ?Collection
     {
@@ -449,7 +452,7 @@ class Model
     /**
      * @return Collection|array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function fetch(): array|Collection
     {
@@ -517,7 +520,7 @@ class Model
      */
     public function getCurrentPage(): ?int
     {
-        if (! $this->usePaginate) {
+        if (!$this->usePaginate) {
             return null;
         }
 
@@ -526,7 +529,7 @@ class Model
 
     /**
      * @param  int  $currentPage
-     * @return \Dcat\Admin\Grid\Model
+     * @return Model
      */
     public function setCurrentPage(int $currentPage): static
     {
@@ -542,7 +545,7 @@ class Model
      */
     public function getPerPage(): ?int
     {
-        if (! $this->usePaginate) {
+        if (!$this->usePaginate) {
             return null;
         }
 
@@ -650,7 +653,7 @@ class Model
     public function addQuery(string $method, array $arguments = []): static
     {
         $this->queries->push([
-            'method'    => $method,
+            'method' => $method,
             'arguments' => $arguments,
         ]);
 
@@ -674,12 +677,12 @@ class Model
      * @param  Builder  $query
      * @param  bool  $fetch
      * @param  string[]|null  $columns
-     * @return \Illuminate\Database\Eloquent\Builder|mixed
+     * @return Builder|mixed
      */
     public function apply(Builder $query, bool $fetch = false, array $columns = null): mixed
     {
         $this->getQueries()->unique()->each(function ($value) use (&$query, $fetch, $columns) {
-            if (! $fetch && in_array($value['method'], ['paginate', 'simplePaginate', 'get'], true)) {
+            if (!$fetch && in_array($value['method'], ['paginate', 'simplePaginate', 'get'], true)) {
                 return;
             }
 

@@ -16,10 +16,10 @@ class BatchDelete extends BatchAction
         $redirect = request()->fullUrl();
 
         return <<<HTML
-<a  data-name="{$this->parent->getName()}"
-    data-action="batch-delete"
-    data-redirect="$redirect"
-    data-url="{$this->resource()}"><i class="feather icon-trash"></i> $this->title</a>
-HTML;
+            <a  data-name="{$this->parent->getName()}"
+                data-action="batch-delete"
+                data-redirect="$redirect"
+                data-url="{$this->resource()}"><i class="feather icon-trash"></i> $this->title</a>
+            HTML;
     }
 }

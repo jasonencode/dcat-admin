@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Widgets;
 
+use Closure;
 use Dcat\Admin\Admin;
 use Illuminate\Contracts\Support\Renderable;
 
@@ -15,9 +16,9 @@ class Tooltip extends Widget
 
     protected $background;
 
-    protected $maxWidth = 210;
+    protected int $maxWidth = 210;
 
-    protected $placement = 1;
+    protected int $placement = 1;
 
     protected $built;
 
@@ -28,14 +29,14 @@ class Tooltip extends Widget
         $this->autoRender();
     }
 
-    public function selector(string $selector)
+    public function selector(string $selector): static
     {
         $this->selector = $selector;
 
         return $this;
     }
 
-    public function maxWidth(int $width)
+    public function maxWidth(int $width): static
     {
         $this->maxWidth = $width;
 
@@ -43,64 +44,64 @@ class Tooltip extends Widget
     }
 
     /**
-     * @param  string|Renderable|\Closure  $content
+     * @param  string|Closure|Renderable  $content
      * @return $this
      */
-    public function title($content)
+    public function title(Renderable|string|Closure $content): static
     {
         $this->title = $this->toString($content);
 
         return $this;
     }
 
-    public function background(string $color)
+    public function background(string $color): static
     {
         $this->background = $color;
 
         return $this;
     }
 
-    public function green()
+    public function green(): static
     {
         return $this->background(Admin::color()->success());
     }
 
-    public function blue()
+    public function blue(): static
     {
         return $this->background(Admin::color()->blue());
     }
 
-    public function red()
+    public function red(): static
     {
         return $this->background(Admin::color()->danger());
     }
 
-    public function purple()
+    public function purple(): static
     {
         return $this->background(Admin::color()->purple());
     }
 
-    public function left()
+    public function left(): static
     {
         return $this->placement('left');
     }
 
-    public function right()
+    public function right(): static
     {
         return $this->placement('right');
     }
 
-    public function top()
+    public function top(): static
     {
         return $this->placement('top');
     }
 
-    public function bottom()
+    public function bottom(): static
     {
         return $this->placement('bottom');
     }
 
-    public function placement(string $placement = 'auto')
+    public function placement(string $placement = 'auto'): static
     {
         $map = [
             'top'    => 1,
@@ -114,25 +115,25 @@ class Tooltip extends Widget
         return $this;
     }
 
-    protected function addScript()
+    protected function addScript(): void
     {
         $background = $this->background ?: Admin::color()->primary(-5);
         $title      = $this->title;
 
         Admin::script(
             <<<JS
-$('{$this->selector}').on('mouseover', function () {
-    var title = '{$title}' || $(this).data('title');
+$('$this->selector').on('mouseover', function () {
+    var title = '$title' || $(this).data('title');
     var idx = layer.tips(title, this, {
-      tips: ['{$this->placement}', '{$background}'],
+      tips: ['$this->placement', '$background'],
       time: 0,
-      maxWidth: {$this->maxWidth},
+      maxWidth: $this->maxWidth,
     });
-    
+
     $(this).attr('layer-idx', idx);
 }).on('mouseleave', function () {
     layer.close($(this).attr('layer-idx'));
-    
+
     $(this).attr('layer-idx', '');
 });
 JS

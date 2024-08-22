@@ -22,16 +22,16 @@ class RefreshButton implements Renderable
      */
     public function render(): string
     {
-        if (! $this->display) {
+        if (!$this->display) {
             return '';
         }
 
         $refresh = trans('admin.refresh');
 
         return <<<EOT
-<button data-action="refresh" class="btn btn-primary grid-refresh btn-mini" style="margin-right:3px">
-    <i class="feather icon-refresh-cw"></i><span class="d-none d-sm-inline">&nbsp; $refresh</span>
-</button>
-EOT;
+            <button data-action="refresh" class="btn btn-primary grid-refresh btn-mini" style="margin-right:3px">
+                <i class="feather icon-refresh-cw"></i><span class="d-none d-sm-inline">&nbsp; $refresh</span>
+            </button>
+            EOT;
     }
 }

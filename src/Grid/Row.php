@@ -23,7 +23,7 @@ class Row implements Arrayable
     /**
      * Row data.
      *
-     * @var \Dcat\Admin\Grid\Model|Fluent
+     * @var Model|Fluent
      */
     protected Model|Fluent $data;
 
@@ -63,7 +63,7 @@ class Row implements Arrayable
     /**
      * Get column attributes.
      *
-     * @param string $column
+     * @param  string  $column
      * @return string
      */
     public function columnAttributes(string $column): string
@@ -78,7 +78,7 @@ class Row implements Arrayable
     /**
      * Format attributes to html.
      *
-     * @param array $attributes
+     * @param  array  $attributes
      * @return string
      */
     private function formatHtmlAttributes(array $attributes = []): string
@@ -89,8 +89,8 @@ class Row implements Arrayable
     /**
      * Set attributes.
      *
-     * @param array $attributes
-     * @return \Dcat\Admin\Grid\Row
+     * @param  array  $attributes
+     * @return Row
      */
     public function setAttributes(array $attributes): static
     {
@@ -102,7 +102,7 @@ class Row implements Arrayable
     /**
      * Set style of the row.
      *
-     * @param array|string $style
+     * @param  array|string  $style
      */
     public function style(array|string $style): void
     {
@@ -130,7 +130,7 @@ class Row implements Arrayable
     /**
      * Getter.
      *
-     * @param string $attr
+     * @param  string  $attr
      * @return mixed
      */
     public function __get(string $attr)
@@ -141,8 +141,8 @@ class Row implements Arrayable
     /**
      * Setter.
      *
-     * @param string $attr
-     * @param mixed  $value
+     * @param  string  $attr
+     * @param  mixed  $value
      * @return void
      */
     public function __set(string $attr, mixed $value)
@@ -153,9 +153,9 @@ class Row implements Arrayable
     /**
      * Get or set value of column in this row.
      *
-     * @param string     $name
-     * @param mixed|null $value
-     * @return float|\Illuminate\Support\Carbon|bool|int|string|\Dcat\Admin\Grid\Row|null
+     * @param  string  $name
+     * @param  mixed|null  $value
+     * @return float|Carbon|bool|int|string|Row|null
      */
     public function column(string $name, mixed $value = null): float|Carbon|bool|int|string|null|static
     {
@@ -185,8 +185,8 @@ class Row implements Arrayable
     /**
      * Output column value.
      *
-     * @param mixed $value
-     * @return float|\Illuminate\Support\Carbon|bool|int|string|null
+     * @param  mixed  $value
+     * @return float|Carbon|bool|int|string|null
      */
     protected function output(mixed $value): float|Carbon|bool|int|string|null
     {

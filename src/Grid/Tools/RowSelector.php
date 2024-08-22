@@ -82,45 +82,45 @@ class RowSelector
     public function renderHeader(): string
     {
         return <<<HTML
-<div class="vs-checkbox-con vs-checkbox-$this->style checkbox-grid checkbox-grid-header">
-    <input type="checkbox" class="select-all {$this->grid->getSelectAllName()}">
-    <span class="vs-checkbox"><span class="vs-checkbox--check"><i class="vs-icon feather icon-check"></i></span></span>
-</div>
-HTML;
+            <div class="vs-checkbox-con vs-checkbox-$this->style checkbox-grid checkbox-grid-header">
+                <input type="checkbox" class="select-all {$this->grid->getSelectAllName()}">
+                <span class="vs-checkbox"><span class="vs-checkbox--check"><i class="vs-icon feather icon-check"></i></span></span>
+            </div>
+            HTML;
     }
 
     public function renderColumn($row, $id): string
     {
         $this->addScript();
-        $title    = $this->getTitle($row, $id);
-        $title    = e(is_array($title) ? json_encode($title) : $title);
-        $id       = $this->idColumn ? Arr::get($row->toArray(), $this->idColumn) : $id;
-        $checked  = $this->shouldChecked($row) ? 'checked="true"' : '';
+        $title = $this->getTitle($row, $id);
+        $title = e(is_array($title) ? json_encode($title) : $title);
+        $id = $this->idColumn ? Arr::get($row->toArray(), $this->idColumn) : $id;
+        $checked = $this->shouldChecked($row) ? 'checked="true"' : '';
         $disabled = $this->shouldDisable($row) ? 'disabled' : '';
 
         return <<<EOT
-<div class="vs-checkbox-con vs-checkbox-$this->style checkbox-grid checkbox-grid-column">
-    <input type="checkbox" class="{$this->grid->getRowName()}-checkbox" data-id="$id" $checked $disabled data-label="$title">
-    <span class="vs-checkbox"><span class="vs-checkbox--check"><i class="vs-icon feather icon-check"></i></span></span>
-</div>
-EOT;
+            <div class="vs-checkbox-con vs-checkbox-$this->style checkbox-grid checkbox-grid-column">
+                <input type="checkbox" class="{$this->grid->getRowName()}-checkbox" data-id="$id" $checked $disabled data-label="$title">
+                <span class="vs-checkbox"><span class="vs-checkbox--check"><i class="vs-icon feather icon-check"></i></span></span>
+            </div>
+            EOT;
     }
 
     protected function addScript(): void
     {
-        $clickable  = $this->rowClickable ? 'true' : 'false';
+        $clickable = $this->rowClickable ? 'true' : 'false';
         $background = $this->background ?: Admin::color()->dark20();
 
         Admin::script(
             <<<JS
-var selector = Dcat.RowSelector({
-    checkboxSelector: '.{$this->grid->getRowName()}-checkbox',
-    selectAllSelector: '.{$this->grid->getSelectAllName()}',
-    clickRow: $clickable,
-    background: '$background',
-});
-Dcat.grid.addSelector(selector, '{$this->grid->getName()}');
-JS
+                var selector = Dcat.RowSelector({
+                    checkboxSelector: '.{$this->grid->getRowName()}-checkbox',
+                    selectAllSelector: '.{$this->grid->getSelectAllName()}',
+                    clickRow: $clickable,
+                    background: '$background',
+                });
+                Dcat.grid.addSelector(selector, '{$this->grid->getName()}');
+                JS
         );
     }
 

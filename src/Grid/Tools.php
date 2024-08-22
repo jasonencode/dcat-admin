@@ -73,7 +73,7 @@ class Tools implements Renderable
     /**
      * Append tools.
      *
-     * @param  \Closure|string|AbstractTool|Htmlable|Renderable  $tool
+     * @param  Closure|string|AbstractTool|Htmlable|Renderable  $tool
      * @return $this
      */
     public function append(Renderable|Htmlable|Closure|string|AbstractTool $tool): static
@@ -88,7 +88,7 @@ class Tools implements Renderable
     /**
      * Prepend a tool.
      *
-     * @param  \Closure|string|AbstractTool|Htmlable|Renderable  $tool
+     * @param  Closure|string|AbstractTool|Htmlable|Renderable  $tool
      * @return $this
      */
     public function prepend(Renderable|Htmlable|Closure|string|AbstractTool $tool): static
@@ -116,7 +116,7 @@ class Tools implements Renderable
      */
     public function has(): bool
     {
-        return ! $this->tools->isEmpty();
+        return !$this->tools->isEmpty();
     }
 
     /**
@@ -157,7 +157,7 @@ class Tools implements Renderable
     {
         $this->tools = $this->tools->map(function ($tool) use ($disable) {
             if ($tool instanceof RefreshButton) {
-                return $tool->display(! $disable);
+                return $tool->display(!$disable);
             }
 
             return $tool;
@@ -182,7 +182,7 @@ class Tools implements Renderable
     }
 
     /**
-     * @param  \Closure|BatchAction|BatchAction[]  $value
+     * @param  Closure|BatchAction|BatchAction[]  $value
      */
     public function batch(array|BatchAction|Closure $value): void
     {
@@ -197,7 +197,7 @@ class Tools implements Renderable
             return;
         }
 
-        if (! is_array($value)) {
+        if (!is_array($value)) {
             $value = [$value];
         }
 
@@ -214,7 +214,7 @@ class Tools implements Renderable
     public function render(): string
     {
         $value = $this->tools->map(function ($tool) {
-            if ($tool instanceof Action && ! $tool->allowed()) {
+            if ($tool instanceof Action && !$tool->allowed()) {
                 return;
             }
 
@@ -239,7 +239,7 @@ class Tools implements Renderable
      */
     protected function addButtonOutline(string $value): string
     {
-        if (! $this->outline) {
+        if (!$this->outline) {
             return $value;
         }
 
@@ -248,7 +248,7 @@ class Tools implements Renderable
 
             if (
                 in_array('btn', $class, true)
-                && ! in_array('disable-outline', $class, true)
+                && !in_array('disable-outline', $class, true)
                 && Str::contains($text[1], 'btn-')
             ) {
                 $class[] = 'btn-outline';

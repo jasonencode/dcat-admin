@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Form;
 
+use Closure;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
@@ -12,28 +13,28 @@ class Tools implements Renderable
     /**
      * @var Builder
      */
-    protected $form;
+    protected Builder $form;
 
     /**
      * Collection of tools.
      *
      * @var array
      */
-    protected $tools = ['delete' => true, 'view' => true, 'list' => true];
+    protected array $tools = ['delete' => true, 'view' => true, 'list' => true];
 
     /**
      * Tools should be appends to default tools.
      *
      * @var Collection
      */
-    protected $appends;
+    protected Collection $appends;
 
     /**
      * Tools should be prepends to default tools.
      *
      * @var Collection
      */
-    protected $prepends;
+    protected Collection $prepends;
 
     /**
      * Create a new Tools instance.
@@ -50,10 +51,10 @@ class Tools implements Renderable
     /**
      * Append a tools.
      *
-     * @param  string|\Closure|Renderable|Htmlable|AbstractTool  $tool
+     * @param  Closure|string|AbstractTool|Htmlable|Renderable  $tool
      * @return $this
      */
-    public function append($tool)
+    public function append(Renderable|Htmlable|AbstractTool|Closure|string $tool): static
     {
         $this->prepareTool($tool);
 
@@ -65,10 +66,10 @@ class Tools implements Renderable
     /**
      * Prepend a tool.
      *
-     * @param  string|\Closure|Renderable|Htmlable|AbstractTool  $tool
+     * @param  Closure|string|AbstractTool|Htmlable|Renderable  $tool
      * @return $this
      */
-    public function prepend($tool)
+    public function prepend(Renderable|Htmlable|AbstractTool|Closure|string $tool): static
     {
         $this->prepareTool($tool);
 
@@ -81,7 +82,7 @@ class Tools implements Renderable
      * @param  mixed  $tool
      * @return void
      */
-    protected function prepareTool($tool)
+    protected function prepareTool(mixed $tool): void
     {
         if ($tool instanceof AbstractTool) {
             $tool->setForm($this->form->form());
@@ -93,7 +94,7 @@ class Tools implements Renderable
      *
      * @return $this
      */
-    public function disableList(bool $disable = true)
+    public function disableList(bool $disable = true): static
     {
         $this->tools['list'] = ! $disable;
 
@@ -105,7 +106,7 @@ class Tools implements Renderable
      *
      * @return $this
      */
-    public function disableDelete(bool $disable = true)
+    public function disableDelete(bool $disable = true): static
     {
         $this->tools['delete'] = ! $disable;
 
@@ -117,7 +118,7 @@ class Tools implements Renderable
      *
      * @return $this
      */
-    public function disableView(bool $disable = true)
+    public function disableView(bool $disable = true): static
     {
         $this->tools['view'] = ! $disable;
 
@@ -129,7 +130,7 @@ class Tools implements Renderable
      *
      * @return string
      */
-    protected function getListPath()
+    protected function getListPath(): string
     {
         return $this->form->resource();
     }
@@ -139,7 +140,7 @@ class Tools implements Renderable
      *
      * @return string
      */
-    protected function getDeletePath()
+    protected function getDeletePath(): string
     {
         return $this->getViewPath();
     }
@@ -149,7 +150,7 @@ class Tools implements Renderable
      *
      * @return string
      */
-    protected function getViewPath()
+    protected function getViewPath(): string
     {
         if ($key = $this->form->getResourceId()) {
             return $this->getListPath().'/'.$key;
@@ -163,7 +164,7 @@ class Tools implements Renderable
      *
      * @return Builder
      */
-    public function form()
+    public function form(): Builder
     {
         return $this->form;
     }
@@ -173,7 +174,7 @@ class Tools implements Renderable
      *
      * @return string
      */
-    protected function renderList()
+    protected function renderList(): string
     {
         $text = trans('admin.list');
 
@@ -189,14 +190,14 @@ EOT;
      *
      * @return string
      */
-    protected function renderView()
+    protected function renderView(): string
     {
         $view = trans('admin.view');
 
         return <<<HTML
 <div class="btn-group pull-right" style="margin-right: 5px">
     <a href="{$this->getViewPath()}" class="btn btn-sm btn-primary">
-        <i class="feather icon-eye"></i><span class="d-none d-sm-inline"> {$view}</span>
+        <i class="feather icon-eye"></i><span class="d-none d-sm-inline"> $view</span>
     </a>
 </div>
 HTML;
@@ -207,14 +208,14 @@ HTML;
      *
      * @return string
      */
-    protected function renderDelete()
+    protected function renderDelete(): string
     {
         $delete = trans('admin.delete');
 
         return <<<HTML
 <div class="btn-group pull-right" style="margin-right: 5px">
     <a class="btn btn-sm btn-white" data-action="delete" data-url="{$this->getDeletePath()}" data-redirect="{$this->getListPath()}">
-        <i class="feather icon-trash"></i><span class="d-none d-sm-inline"> {$delete}</span>
+        <i class="feather icon-trash"></i><span class="d-none d-sm-inline"> $delete</span>
     </a>
 </div>
 HTML;
@@ -224,9 +225,9 @@ HTML;
      * Render custom tools.
      *
      * @param  Collection  $tools
-     * @return mixed
+     * @return string
      */
-    protected function renderCustomTools($tools)
+    protected function renderCustomTools(Collection $tools): string
     {
         if ($this->form->isCreating()) {
             $this->disableView();

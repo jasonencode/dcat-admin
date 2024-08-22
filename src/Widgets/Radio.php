@@ -3,17 +3,19 @@
 namespace Dcat\Admin\Widgets;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Collection;
+use Throwable;
 
 class Radio extends Widget
 {
     protected string $view = 'admin::widgets.radio';
-    protected        $type = 'radio';
-    protected $style = 'primary';
-    protected $right = '16px';
+    protected $type = 'radio';
+    protected string $style = 'primary';
+    protected string $right = '16px';
     protected $checked;
-    protected $disabledValues = [];
+    protected array $disabledValues = [];
     protected $size;
-    protected $inline = false;
+    protected bool $inline = false;
 
     public function __construct(
         ?string $name = null,
@@ -28,10 +30,10 @@ class Radio extends Widget
     /**
      * 设置表单 "name" 属性.
      *
-     * @param  string  $name
+     * @param  string|null  $name
      * @return $this
      */
-    public function name(?string $name)
+    public function name(?string $name): static
     {
         return $this->setHtmlAttribute('name', $name);
     }
@@ -44,7 +46,7 @@ class Radio extends Widget
      * @param  string  $size
      * @return $this
      */
-    public function size(string $size)
+    public function size(string $size): static
     {
         $this->size = $size;
 
@@ -54,12 +56,12 @@ class Radio extends Widget
     /**
      * 是否排成一行.
      *
-     * @param  bool  $inine
+     * @param  bool  $inline
      * @return $this
      */
-    public function inline(bool $inine = true)
+    public function inline(bool $inline = true): static
     {
-        $this->inline = $inine;
+        $this->inline = $inline;
 
         return $this;
     }
@@ -67,10 +69,10 @@ class Radio extends Widget
     /**
      * 设置禁选的选项.
      *
-     * @param  string|array  $values
+     * @param  array|string|null  $values
      * @return $this
      */
-    public function disable($values = null)
+    public function disable(array|string $values = null): static
     {
         if ($values) {
             $this->disabledValues = (array) $values;
@@ -87,7 +89,7 @@ class Radio extends Widget
      * @param  string  $value
      * @return $this
      */
-    public function right(string $value)
+    public function right(string $value): static
     {
         $this->right = $value;
 
@@ -97,10 +99,10 @@ class Radio extends Widget
     /**
      * 设置选中的选项.
      *
-     * @param  string  $id
+     * @param $option
      * @return $this
      */
-    public function check($option)
+    public function check($option): static
     {
         $this->checked = $option;
 
@@ -116,15 +118,15 @@ class Radio extends Widget
      *         ...
      *     ]
      *
-     * @param  array  $opts
+     * @param  array|Collection  $options
      * @return $this
      */
-    public function options($opts = []): static
+    public function options(array|Collection $options = []): static
     {
-        if ($opts instanceof Arrayable) {
-            $opts = $opts->toArray();
+        if ($options instanceof Arrayable) {
+            $options = $options->toArray();
         }
-        $this->options = $opts;
+        $this->options = $options;
 
         return $this;
     }
@@ -137,7 +139,7 @@ class Radio extends Widget
      * @param  string  $style
      * @return $this
      */
-    public function style(string $style)
+    public function style(string $style): static
     {
         $this->style = $style;
 
@@ -150,19 +152,20 @@ class Radio extends Widget
     public function defaultVariables(): array
     {
         return [
-            'style'      => $this->style,
-            'options'    => $this->options,
+            'style' => $this->style,
+            'options' => $this->options,
             'attributes' => $this->formatHtmlAttributes(),
-            'checked'    => $this->checked,
-            'disabled'   => $this->disabledValues,
-            'right'      => $this->right,
-            'size'       => $this->size,
-            'inline'     => $this->inline,
+            'checked' => $this->checked,
+            'disabled' => $this->disabledValues,
+            'right' => $this->right,
+            'size' => $this->size,
+            'inline' => $this->inline,
         ];
     }
 
     /**
      * @return string
+     * @throws Throwable
      */
     public function render(): string
     {

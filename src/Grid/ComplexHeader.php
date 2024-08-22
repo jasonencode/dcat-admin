@@ -2,9 +2,11 @@
 
 namespace Dcat\Admin\Grid;
 
+use Closure;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Column\Help;
 use Dcat\Admin\Widgets\Widget;
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Collection;
 
 class ComplexHeader extends Widget
@@ -15,24 +17,24 @@ class ComplexHeader extends Widget
     protected Grid $grid;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $column;
+    protected ?string $column;
 
     /**
-     * @var string
+     * @var string|array|Translator|null
      */
-    protected $label;
+    protected Translator|string|array|null $label = null;
+
+    /**
+     * @var array|Collection
+     */
+    protected Collection|array $columnNames = [];
 
     /**
      * @var array
      */
-    protected $columnNames = [];
-
-    /**
-     * @var array
-     */
-    protected $html = [];
+    protected array $html = [];
 
     public function __construct(Grid $grid, ?string $column, array $columnNames, ?string $label = null)
     {
@@ -45,9 +47,9 @@ class ComplexHeader extends Widget
     }
 
     /**
-     * @return Collection
+     * @return array|Collection
      */
-    public function getColumnNames()
+    public function getColumnNames(): array|Collection
     {
         return $this->columnNames;
     }
@@ -55,7 +57,7 @@ class ComplexHeader extends Widget
     /**
      * @return Collection
      */
-    public function columns()
+    public function columns(): Collection
     {
         return $this->columnNames->map(function ($name) {
             return $this->grid->allColumns()->get($name);
@@ -67,14 +69,14 @@ class ComplexHeader extends Widget
      *
      * @return $this
      */
-    public function hide()
+    public function hide(): static
     {
         $this->grid->hideColumns($this->column);
 
         return $this;
     }
 
-    public function getName()
+    public function getName(): ?string
     {
         return $this->column;
     }
@@ -88,7 +90,7 @@ class ComplexHeader extends Widget
      * @param  string  $html
      * @return $this
      */
-    public function append($html)
+    public function append(string $html): static
     {
         $this->html[] = $html;
 
@@ -96,17 +98,17 @@ class ComplexHeader extends Widget
     }
 
     /**
-     * @param  string|\Closure  $message
+     * @param  string|Closure  $message
      * @param  null|string  $style  'green', 'blue', 'red', 'purple'
      * @param  null|string  $placement  'bottom', 'left', 'right', 'top'
      * @return $this
      */
-    public function help($message, ?string $style = null, ?string $placement = null)
+    public function help(string|Closure $message, ?string $style = null, ?string $placement = null): static
     {
         return $this->append((new Help($message, $style, $placement))->render());
     }
 
-    protected function addDefaultAttributes()
+    protected function addDefaultAttributes(): void
     {
         $count = $this->columnNames->count();
 

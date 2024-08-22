@@ -6,6 +6,9 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Widgets\Checkbox;
 use Illuminate\Support\Collection;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 class ColumnSelector extends AbstractTool
 {
@@ -38,9 +41,9 @@ class ColumnSelector extends AbstractTool
      * {@inheritdoc}
      *
      * @return string
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Throwable
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Throwable
      */
     public function render(): string
     {
@@ -59,17 +62,17 @@ class ColumnSelector extends AbstractTool
         );
 
         return Admin::view('admin::grid.column-selector', [
-            'checkbox'   => $list,
-            'defaults'   => $visibleColumnNames,
-            'selectAll'  => $selectAll,
+            'checkbox' => $list,
+            'defaults' => $visibleColumnNames,
+            'selectAll' => $selectAll,
             'columnName' => $this->grid->getColumnSelectorQueryName(),
         ]);
     }
 
     /**
      * @return array
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function getVisibleColumnNames(): array
     {
@@ -77,7 +80,7 @@ class ColumnSelector extends AbstractTool
 
         $columns = $this->grid->getComplexHeaderNames() ?: $this->grid->getColumnNames();
 
-        if (! empty($visible)) {
+        if (!empty($visible)) {
             array_push($visible, Grid\Column::SELECT_COLUMN_NAME, Grid\Column::ACTION_COLUMN_NAME);
 
             $columns = collect($columns)->filter(function ($column) use ($visible) {
@@ -86,7 +89,7 @@ class ColumnSelector extends AbstractTool
         }
 
         return array_filter($columns, function ($v) {
-            return ! in_array($v, [Grid\Column::SELECT_COLUMN_NAME, Grid\Column::ACTION_COLUMN_NAME]);
+            return !in_array($v, [Grid\Column::SELECT_COLUMN_NAME, Grid\Column::ACTION_COLUMN_NAME]);
         });
     }
 

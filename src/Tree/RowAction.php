@@ -3,18 +3,19 @@
 namespace Dcat\Admin\Tree;
 
 use Dcat\Admin\Actions\Action;
+use Illuminate\Database\Eloquent\Model;
 
 class RowAction extends Action
 {
     /**
-     * @var \Dcat\Admin\Tree\Actions;
+     * @var Actions;
      */
-    protected $actions;
+    protected Actions $actions;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
-    protected $row;
+    protected Model $row;
 
     /**
      * 获取主键值.
@@ -33,9 +34,9 @@ class RowAction extends Action
     /**
      * 获取行数据.
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
-    public function getRow()
+    public function getRow(): Model
     {
         return $this->row;
     }
@@ -45,22 +46,22 @@ class RowAction extends Action
      *
      * @return string
      */
-    public function resource()
+    public function resource(): string
     {
         return $this->actions->parent()->resource();
     }
 
-    public function getActions()
+    public function getActions(): Actions
     {
         return $this->actions;
     }
 
-    public function setParent(Actions $actions)
+    public function setParent(Actions $actions): void
     {
         $this->actions = $actions;
     }
 
-    public function setRow($row)
+    public function setRow($row): void
     {
         $this->row = $row;
     }
