@@ -7,10 +7,10 @@ class Month extends Date
     /**
      * {@inheritdoc}
      */
-    protected $query = 'whereMonth';
+    protected string $query = 'whereMonth';
 
     /**
      * @var string
      */
-    protected $fieldName = 'month';
+    protected string $fieldName = 'month';
 }

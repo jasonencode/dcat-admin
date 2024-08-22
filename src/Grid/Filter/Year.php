@@ -7,10 +7,10 @@ class Year extends Date
     /**
      * {@inheritdoc}
      */
-    protected $query = 'whereYear';
+    protected string $query = 'whereYear';
 
     /**
      * @var string
      */
-    protected $fieldName = 'year';
+    protected string $fieldName = 'year';
 }

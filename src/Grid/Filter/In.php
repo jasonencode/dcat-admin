@@ -9,18 +9,18 @@ class In extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    protected $query = 'whereIn';
+    protected string $query = 'whereIn';
 
     /**
      * @var int
      */
-    protected $width = 12;
+    protected int $width = 12;
 
     /**
      * Get condition of this filter.
      *
      * @param  array  $inputs
-     * @return mixed
+     * @return array|string|void
      */
     public function condition(array $inputs)
     {

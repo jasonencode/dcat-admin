@@ -4,6 +4,7 @@ namespace Dcat\Admin\Grid\Filter;
 
 use Dcat\Admin\Grid\Filter;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Macroable;
@@ -23,12 +24,12 @@ class Scope implements Renderable
     /**
      * @var string
      */
-    public $key = '';
+    public string $key = '';
 
     /**
      * @var string
      */
-    protected $label = '';
+    protected Translator|string|array|null $label = '';
 
     /**
      * @var Collection
@@ -83,7 +84,7 @@ class Scope implements Renderable
             $this->filter->grid()->model()->getPageName() => null,
         ]);
 
-        return "<li class='dropdown-item'><a href=\"{$url}\">{$this->label}</a></li>";
+        return "<li class='dropdown-item'><a href=\"$url\">$this->label</a></li>";
     }
 
     /**

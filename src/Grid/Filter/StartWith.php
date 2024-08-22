@@ -6,13 +6,13 @@ use Illuminate\Support\Arr;
 
 class StartWith extends AbstractFilter
 {
-    protected $type = 'like';
+    protected string $type = 'like';
 
     /**
      * Get condition of this filter.
      *
      * @param  array  $inputs
-     * @return array|mixed|void
+     * @return array|string|void
      */
     public function condition(array $inputs)
     {
@@ -24,10 +24,10 @@ class StartWith extends AbstractFilter
 
         $this->value = $value;
 
-        return $this->buildCondition($this->column, $this->type, "{$this->value}%");
+        return $this->buildCondition($this->column, $this->type, "$this->value%");
     }
 
-    public function ilike()
+    public function ilike(): static
     {
         $this->type = 'ilike';
 

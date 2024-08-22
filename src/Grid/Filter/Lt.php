@@ -15,7 +15,7 @@ class Lt extends AbstractFilter
      * Get condition of this filter.
      *
      * @param  array  $inputs
-     * @return array|mixed|void
+     * @return array|string|void
      */
     public function condition(array $inputs)
     {

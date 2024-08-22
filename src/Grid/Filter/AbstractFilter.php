@@ -16,8 +16,10 @@ use Dcat\Admin\Grid\Filter\Presenter\Text;
 use Dcat\Admin\Grid\LazyRenderable;
 use Dcat\Admin\Traits\HasVariables;
 use Dcat\Laravel\Database\WhereHasInServiceProvider;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Throwable;
 
 /**
  * Class AbstractFilter.
@@ -50,7 +52,7 @@ abstract class AbstractFilter
      *
      * @var string
      */
-    protected $label;
+    protected string $label;
 
     /**
      * @var array|string|null
@@ -79,7 +81,7 @@ abstract class AbstractFilter
      *
      * @var string
      */
-    protected $query = 'where';
+    protected string $query = 'where';
 
     /**
      * @var Filter
@@ -89,7 +91,7 @@ abstract class AbstractFilter
     /**
      * @var int
      */
-    protected $width = 10;
+    protected int $width = 10;
 
     /**
      * @var string
@@ -180,9 +182,9 @@ abstract class AbstractFilter
      * Format name.
      *
      * @param  string  $column
-     * @return string
+     * @return string|array
      */
-    protected function formatName(string $column): string
+    protected function formatName(string $column): string|array
     {
         $columns = explode('.', $column);
 
@@ -311,7 +313,7 @@ abstract class AbstractFilter
      * Select filter.
      *
      * @param  array  $options
-     * @return \Dcat\Admin\Grid\Filter\Presenter\Select|\Dcat\Admin\Grid\Filter\Presenter\Presenter
+     * @return Select|Presenter
      */
     public function select(array $options = []): Select|Presenter
     {
@@ -320,7 +322,7 @@ abstract class AbstractFilter
 
     /**
      * @param  array  $options
-     * @return \Dcat\Admin\Grid\Filter\Presenter\Presenter|\Dcat\Admin\Grid\Filter\Presenter\MultipleSelect
+     * @return Presenter|MultipleSelect
      */
     public function multipleSelect(array $options = []): Presenter|MultipleSelect
     {
@@ -329,7 +331,7 @@ abstract class AbstractFilter
 
     /**
      * @param  LazyRenderable  $table
-     * @return \Dcat\Admin\Grid\Filter\Presenter\Presenter|mixed
+     * @return Presenter|mixed
      */
     public function selectTable(LazyRenderable $table): mixed
     {
@@ -338,7 +340,7 @@ abstract class AbstractFilter
 
     /**
      * @param  LazyRenderable  $table
-     * @return \Dcat\Admin\Grid\Filter\Presenter\Presenter|mixed
+     * @return Presenter|mixed
      */
     public function multipleSelectTable(LazyRenderable $table): mixed
     {
@@ -347,7 +349,7 @@ abstract class AbstractFilter
 
     /**
      * @param  array  $options
-     * @return \Dcat\Admin\Grid\Filter\Presenter\Presenter|\Dcat\Admin\Grid\Filter\Presenter\Radio
+     * @return Presenter|Radio
      */
     public function radio(array $options = []): Presenter|Radio
     {
@@ -356,7 +358,7 @@ abstract class AbstractFilter
 
     /**
      * @param  array  $options
-     * @return \Dcat\Admin\Grid\Filter\Presenter\Checkbox|\Dcat\Admin\Grid\Filter\Presenter\Presenter
+     * @return Checkbox|Presenter
      */
     public function checkbox(array $options = []): Checkbox|Presenter
     {
@@ -367,9 +369,9 @@ abstract class AbstractFilter
      * Datetime filter.
      *
      * @param  array  $options
-     * @return \Dcat\Admin\Grid\Filter\Presenter\DateTime|\Dcat\Admin\Grid\Filter\Presenter\Presenter
+     * @return DateTime|Presenter
      */
-    public function datetime(array $options = []): DateTime|Presenter
+    public function datetime(array $options = [])
     {
         return $this->setPresenter(new DateTime($options));
     }
@@ -442,7 +444,7 @@ abstract class AbstractFilter
     /**
      * Get presenter object of filter.
      *
-     * @return \Dcat\Admin\Grid\Filter\Presenter\Presenter|null
+     * @return Presenter|null
      */
     protected function presenter(): ?Presenter
     {
@@ -624,7 +626,7 @@ abstract class AbstractFilter
      * Render this filter.
      *
      * @return string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(): string
     {
@@ -636,9 +638,9 @@ abstract class AbstractFilter
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function renderPresenter(): Closure
     {
@@ -651,7 +653,7 @@ abstract class AbstractFilter
      * Render this filter.
      *
      * @return string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function __toString()
     {
@@ -663,7 +665,7 @@ abstract class AbstractFilter
      * @param $params
      * @return mixed
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __call($method, $params)
     {

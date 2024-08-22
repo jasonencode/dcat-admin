@@ -26,16 +26,16 @@ class Helper
      * @var array
      */
     public static $fileTypes = [
-        'image'      => 'png|jpg|jpeg|tmp|gif',
-        'word'       => 'doc|docx',
-        'excel'      => 'xls|xlsx|csv',
+        'image' => 'png|jpg|jpeg|tmp|gif',
+        'word' => 'doc|docx',
+        'excel' => 'xls|xlsx|csv',
         'powerpoint' => 'ppt|pptx',
-        'pdf'        => 'pdf',
-        'code'       => 'php|js|java|python|ruby|go|c|cpp|sql|m|h|json|html|aspx',
-        'archive'    => 'zip|tar\.gz|rar|rpm',
-        'txt'        => 'txt|pac|log|md',
-        'audio'      => 'mp3|wav|flac|3pg|aa|aac|ape|au|m4a|mpc|ogg',
-        'video'      => 'mkv|rmvb|flv|mp4|avi|wmv|rm|asf|mpeg',
+        'pdf' => 'pdf',
+        'code' => 'php|js|java|python|ruby|go|c|cpp|sql|m|h|json|html|aspx',
+        'archive' => 'zip|tar\.gz|rar|rpm',
+        'txt' => 'txt|pac|log|md',
+        'audio' => 'mp3|wav|flac|3pg|aa|aac|ape|au|m4a|mpc|ogg',
+        'video' => 'mkv|rmvb|flv|mp4|avi|wmv|rm|asf|mpeg',
     ];
 
     protected static $controllerNames = [];
@@ -120,13 +120,13 @@ class Helper
     {
         $router = app('router');
 
-        if (! $router->current()) {
+        if (!$router->current()) {
             return 'undefined';
         }
 
         $actionName = $router->current()->getActionName();
 
-        if (! isset(static::$controllerNames[$actionName])) {
+        if (!isset(static::$controllerNames[$actionName])) {
             $controller = class_basename(explode('@', $actionName)[0]);
 
             static::$controllerNames[$actionName] = str_replace('Controller', '', $controller);
@@ -171,7 +171,7 @@ class Helper
      */
     public static function urlWithQuery(?string $url, array $query = [])
     {
-        if (! $url || ! $query) {
+        if (!$url || !$query) {
             return $url;
         }
 
@@ -191,7 +191,7 @@ class Helper
      */
     public static function urlWithoutQuery($url, $keys)
     {
-        if (! Str::contains($url, '?') || ! $keys) {
+        if (!Str::contains($url, '?') || !$keys) {
             return $url;
         }
 
@@ -250,15 +250,15 @@ class Helper
     /**
      * 匹配请求路径.
      *
+     * @param  string  $path
+     * @param  null|string  $current
+     * @return bool
      * @example
      *      Helper::matchRequestPath(admin_base_path('auth/user'))
      *      Helper::matchRequestPath(admin_base_path('auth/user*'))
      *      Helper::matchRequestPath(admin_base_path('auth/user/* /edit'))
      *      Helper::matchRequestPath('GET,POST:auth/user')
      *
-     * @param  string  $path
-     * @param  null|string  $current
-     * @return bool
      */
     public static function matchRequestPath($path, ?string $current = null)
     {
@@ -270,7 +270,7 @@ class Helper
 
             $methods = array_map('strtoupper', explode(',', $methods));
 
-            if (! empty($methods) && ! in_array($request->method(), $methods)) {
+            if (!empty($methods) && !in_array($request->method(), $methods)) {
                 return false;
             }
         }
@@ -280,7 +280,7 @@ class Helper
             return true;
         }
 
-        if (! Str::contains($path, '*')) {
+        if (!Str::contains($path, '*')) {
             return $path === $current;
         }
 
@@ -427,7 +427,7 @@ class Helper
         $value = (array) $value;
 
         foreach ($array as $index => $item) {
-            foreach ($value as  $v) {
+            foreach ($value as $v) {
                 if (Str::contains($item, $v)) {
                     unset($array[$index]);
                 }
@@ -444,7 +444,7 @@ class Helper
      */
     public static function colorLighten(string $color, int $amt)
     {
-        if (! $amt) {
+        if (!$amt) {
             return $color;
         }
 
@@ -563,7 +563,7 @@ class Helper
         /* @var Request $request */
         $request = $request ?: request();
 
-        return $request->ajax() && ! $request->pjax();
+        return $request->ajax() && !$request->pjax();
     }
 
     /**
@@ -573,7 +573,8 @@ class Helper
      */
     public static function isIEBrowser()
     {
-        return (bool) preg_match('/Mozilla\/5\.0 \(Windows NT 10\.0; WOW64; Trident\/7\.0; rv:[0-9.]*\) like Gecko/i', $_SERVER['HTTP_USER_AGENT'] ?? '');
+        return (bool) preg_match('/Mozilla\/5\.0 \(Windows NT 10\.0; WOW64; Trident\/7\.0; rv:[0-9.]*\) like Gecko/i',
+            $_SERVER['HTTP_USER_AGENT'] ?? '');
     }
 
     /**
@@ -640,7 +641,7 @@ class Helper
             return false;
         }
 
-        if (! is_scalar($value1) || ! is_scalar($value2)) {
+        if (!is_scalar($value1) || !is_scalar($value2)) {
             return $value1 === $value2;
         }
 
@@ -791,7 +792,7 @@ class Helper
      */
     public static function withQueryCondition($model, ?string $column, string $query, array $params)
     {
-        if (! Str::contains($column, '.')) {
+        if (!Str::contains($column, '.')) {
             $model->$query($column, ...$params);
 
             return;
@@ -832,14 +833,15 @@ class Helper
     /**
      * Html转义.
      *
-     * @param  array|string  $item
+     * @param  array|string|null  $item
      * @return mixed
      */
-    public static function htmlEntityEncode($item)
+    public static function htmlEntityEncode(array|string|null $item): mixed
     {
-        if (is_object($item)) {
-            return $item;
+        if (is_null($item)) {
+            return '';
         }
+
         if (is_array($item)) {
             array_walk_recursive($item, function (&$value) {
                 $value = htmlentities($value ?? '');
@@ -859,7 +861,7 @@ class Helper
      */
     public static function formatElementName($name)
     {
-        if (! $name) {
+        if (!$name) {
             return $name;
         }
 
@@ -906,7 +908,7 @@ class Helper
         while (count($keys) > 1) {
             $key = array_shift($keys);
 
-            if (! isset($array[$key]) || (! is_array($array[$key]) && ! $array[$key] instanceof ArrayAccess)) {
+            if (!isset($array[$key]) || (!is_array($array[$key]) && !$array[$key] instanceof ArrayAccess)) {
                 $array[$key] = [];
             }
 
@@ -955,7 +957,7 @@ class Helper
      */
     public static function basename($name)
     {
-        if (! $name) {
+        if (!$name) {
             return $name;
         }
 
@@ -988,11 +990,11 @@ class Helper
     {
         $request = $request ?: request();
 
-        if (! URL::isValidUrl($to)) {
+        if (!URL::isValidUrl($to)) {
             $to = admin_base_path($to);
         }
 
-        if ($request->ajax() && ! $request->pjax()) {
+        if ($request->ajax() && !$request->pjax()) {
             return response()->json(['redirect' => $to], $statusCode);
         }
 

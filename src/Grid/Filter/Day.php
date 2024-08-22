@@ -4,10 +4,10 @@ namespace Dcat\Admin\Grid\Filter;
 
 class Day extends Date
 {
-    protected $query = 'whereDay';
+    protected string $query = 'whereDay';
 
     /**
      * @var string
      */
-    protected $fieldName = 'day';
+    protected string $fieldName = 'day';
 }

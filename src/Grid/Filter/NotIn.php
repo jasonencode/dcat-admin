@@ -7,5 +7,5 @@ class NotIn extends In
     /**
      * {@inheritdoc}
      */
-    protected $query = 'whereNotIn';
+    protected string $query = 'whereNotIn';
 }

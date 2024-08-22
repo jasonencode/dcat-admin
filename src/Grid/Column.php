@@ -4,6 +4,7 @@ namespace Dcat\Admin\Grid;
 
 use Closure;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Grid\Column\Condition;
 use Dcat\Admin\Grid\Displayers\AbstractDisplayer;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Traits\HasBuilderEvents;
@@ -14,6 +15,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * @method $this input(bool|array $options = [])
@@ -74,31 +77,31 @@ class Column
      * @var array
      */
     protected static array $displayers = [
-        'badge'            => Displayers\Badge::class,
-        'button'           => Displayers\Button::class,
-        'checkbox'         => Displayers\Checkbox::class,
-        'copyable'         => Displayers\Copyable::class,
-        'dateFormat'       => Displayers\DateFormat::class,
-        'downloadable'     => Displayers\Downloadable::class,
-        'editable'         => Displayers\Input::class,
-        'expand'           => Displayers\Expand::class,
-        'image'            => Displayers\Image::class,
-        'input'            => Displayers\Input::class,
-        'label'            => Displayers\Label::class,
-        'limit'            => Displayers\Limit::class,
-        'link'             => Displayers\Link::class,
-        'modal'            => Displayers\Modal::class,
-        'orderable'        => Displayers\Orderable::class,
-        'progressBar'      => Displayers\ProgressBar::class,
-        'qrcode'           => Displayers\QRCode::class,
-        'radio'            => Displayers\Radio::class,
-        'select'           => Displayers\Select::class,
+        'badge' => Displayers\Badge::class,
+        'button' => Displayers\Button::class,
+        'checkbox' => Displayers\Checkbox::class,
+        'copyable' => Displayers\Copyable::class,
+        'dateFormat' => Displayers\DateFormat::class,
+        'downloadable' => Displayers\Downloadable::class,
+        'editable' => Displayers\Input::class,
+        'expand' => Displayers\Expand::class,
+        'image' => Displayers\Image::class,
+        'input' => Displayers\Input::class,
+        'label' => Displayers\Label::class,
+        'limit' => Displayers\Limit::class,
+        'link' => Displayers\Link::class,
+        'modal' => Displayers\Modal::class,
+        'orderable' => Displayers\Orderable::class,
+        'progressBar' => Displayers\ProgressBar::class,
+        'qrcode' => Displayers\QRCode::class,
+        'radio' => Displayers\Radio::class,
+        'select' => Displayers\Select::class,
         'showTreeInDialog' => Displayers\DialogTree::class,
-        'switch'           => Displayers\SwitchDisplay::class,
-        'switchGroup'      => Displayers\SwitchGroup::class,
-        'table'            => Displayers\Table::class,
-        'textarea'         => Displayers\Textarea::class,
-        'thumb'            => Displayers\Thumb::class,
+        'switch' => Displayers\SwitchDisplay::class,
+        'switchGroup' => Displayers\SwitchGroup::class,
+        'table' => Displayers\Table::class,
+        'textarea' => Displayers\Textarea::class,
+        'thumb' => Displayers\Thumb::class,
     ];
 
     /**
@@ -133,7 +136,7 @@ class Column
     protected mixed $label;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Model|Fluent
+     * @var Model|Fluent
      */
     protected Fluent|Model $originalModel;
 
@@ -184,7 +187,7 @@ class Column
     protected static Model $model;
 
     /**
-     * @var array|\Dcat\Admin\Grid\Column\Condition
+     * @var array|Condition
      */
     protected array|Column\Condition $conditions = [];
 
@@ -273,7 +276,7 @@ class Column
     }
 
     /**
-     * @param  \Closure|null  $condition
+     * @param  Closure|null  $condition
      * @return Column\Condition
      * @example
      *     $grid->column('...')
@@ -309,7 +312,7 @@ class Column
             return $column->getValue();
         };
 
-        return $this->conditions[] = new Grid\Column\Condition($condition, $this);
+        return $this->conditions[] = new Condition($condition, $this);
     }
 
     /**
@@ -379,7 +382,7 @@ class Column
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Fluent
+     * @return Model|Fluent
      */
     public function getOriginalModel(): Model|Fluent
     {
@@ -455,7 +458,7 @@ class Column
     /**
      * Add a display callback.
      *
-     * @param  \Closure|string  $callback
+     * @param  Closure|string  $callback
      * @param  array  $params
      * @return $this
      */
@@ -473,7 +476,7 @@ class Column
      */
     public function hasDisplayCallbacks(): bool
     {
-        return ! empty($this->displayCallbacks);
+        return !empty($this->displayCallbacks);
     }
 
     /**
@@ -486,7 +489,7 @@ class Column
     }
 
     /**
-     * @return \Closure[]
+     * @return Closure[]
      */
     public function getDisplayCallbacks(): array
     {
@@ -504,7 +507,7 @@ class Column
         foreach ($this->displayCallbacks as $callback) {
             [$callback, $params] = $callback;
 
-            if (! $callback instanceof Closure) {
+            if (!$callback instanceof Closure) {
                 $value = $callback;
                 continue;
             }
@@ -512,14 +515,14 @@ class Column
             $previous = $value;
 
             $callback = $this->bindOriginalRowModel($callback);
-            $value    = $callback($value, $this, ...$params);
+            $value = $callback($value, $this, ...$params);
 
             if (
                 $value instanceof static
                 && ($last = array_pop($this->displayCallbacks))
             ) {
                 [$last, $params] = $last;
-                $last  = $this->bindOriginalRowModel($last);
+                $last = $this->bindOriginalRowModel($last);
                 $value = call_user_func($last, $previous, $this, ...$params);
             }
         }
@@ -541,7 +544,7 @@ class Column
     /**
      * Fill all data to every column.
      *
-     * @param  \Illuminate\Support\Collection  $data
+     * @param  Collection  $data
      */
     public function fill(Collection $data): void
     {
@@ -555,7 +558,7 @@ class Column
             $row = $this->convertModelToArray($row);
 
             $i++;
-            if (! isset($row['#'])) {
+            if (!isset($row['#'])) {
                 $row['#'] = $i;
             }
 
@@ -587,7 +590,7 @@ class Column
      * 把模型转化为数组.
      *
      * @param  array|Model  $row
-     * @return array|\Illuminate\Database\Eloquent\Model
+     * @return array|Model
      */
     protected function convertModelToArray(Model|array $row): Model|array
     {
@@ -617,10 +620,10 @@ class Column
     /**
      * Convert characters to HTML entities recursively.
      *
-     * @param  array|string  $item
+     * @param  array|string|null  $item
      * @return mixed
      */
-    protected function htmlEntityEncode(array|string $item): mixed
+    protected function htmlEntityEncode(array|string|null $item): mixed
     {
         return Helper::htmlEntityEncode($item);
     }
@@ -629,8 +632,8 @@ class Column
      * Determine if this column is currently sorted.
      *
      * @return bool
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function isSorted(): bool
     {
@@ -697,7 +700,7 @@ class Column
         }
 
         if (is_subclass_of($abstract, AbstractDisplayer::class)) {
-            $grid   = $this->grid;
+            $grid = $this->grid;
             $column = $this;
 
             return $this->display(function ($value) use ($abstract, $grid, $column, $arguments) {
@@ -781,7 +784,7 @@ class Column
     public function __call($method, $parameters)
     {
         if (
-            ! isset(static::$displayers[$method])
+            !isset(static::$displayers[$method])
             && static::hasMacro($method)
         ) {
             return $this->__macroCall($method, $parameters);

@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid\Filter;
 
+use Closure;
 use Illuminate\Support\Arr;
 
 class Where extends AbstractFilter
@@ -9,25 +10,25 @@ class Where extends AbstractFilter
     /**
      * Query closure.
      *
-     * @var \Closure
+     * @var Closure
      */
-    protected $where;
+    protected Closure $where;
 
     /**
      * Input value from presenter.
      *
      * @var mixed
      */
-    public $input;
+    public mixed $input;
 
     /**
      * Where constructor.
      *
      * @param  string  $column
-     * @param  \Closure  $query
+     * @param  Closure  $query
      * @param  string  $label
      */
-    public function __construct($column, \Closure $query, $label = '')
+    public function __construct(string $column, Closure $query, string $label = '')
     {
         $this->where = $query;
         $this->column = $column;
@@ -38,7 +39,7 @@ class Where extends AbstractFilter
      * Get condition of this filter.
      *
      * @param  array  $inputs
-     * @return array|mixed|void
+     * @return array|string|void
      */
     public function condition(array $inputs)
     {

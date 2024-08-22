@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Grid\Filter;
 
+use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Grid\Filter;
 use Illuminate\Support\Arr;
@@ -10,30 +11,30 @@ use Illuminate\Support\Collection;
 class Group extends AbstractFilter
 {
     /**
-     * @var \Closure|null
+     * @var Closure|null
      */
-    protected $builder;
+    protected ?Closure $builder;
 
     /**
      * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Input value from presenter.
      *
      * @var mixed
      */
-    public $input;
+    public mixed $input;
 
     /**
      * Group constructor.
      *
      * @param  string  $column
      * @param  string  $label
-     * @param  \Closure|null  $builder
+     * @param  Closure|null  $builder
      */
-    public function __construct($column, \Closure $builder = null, $label = '')
+    public function __construct(string $column, Closure $builder = null, string $label = '')
     {
         $this->builder = $builder;
         $this->column = $column;
@@ -53,10 +54,10 @@ class Group extends AbstractFilter
     /**
      * Initialize a group filter.
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         $this->group = new Collection();
-        $this->name = "{$this->id}-filter-group";
+        $this->name = "$this->id-filter-group";
     }
 
     /**
@@ -66,7 +67,7 @@ class Group extends AbstractFilter
      * @param  array  $condition
      * @return $this
      */
-    protected function joinGroup($label, array $condition)
+    protected function joinGroup(string $label, array $condition): static
     {
         $this->group->push(
             compact('label', 'condition')
@@ -80,9 +81,9 @@ class Group extends AbstractFilter
      *
      * @param  string  $label
      * @param  string  $operator
-     * @return Group
+     * @return $this
      */
-    public function equal($label = '', $operator = '=')
+    public function equal(string $label = '', string $operator = '='): static
     {
         $label = $label ?: $operator;
 
@@ -97,7 +98,7 @@ class Group extends AbstractFilter
      * @param  string  $label
      * @return Group
      */
-    public function notEqual($label = '')
+    public function notEqual(string $label = ''): static
     {
         return $this->equal($label, '!=');
     }
@@ -108,7 +109,7 @@ class Group extends AbstractFilter
      * @param  string  $label
      * @return Group
      */
-    public function gt($label = '')
+    public function gt(string $label = ''): static
     {
         return $this->equal($label, '>');
     }
@@ -119,7 +120,7 @@ class Group extends AbstractFilter
      * @param  string  $label
      * @return Group
      */
-    public function lt($label = '')
+    public function lt(string $label = ''): static
     {
         return $this->equal($label, '<');
     }
@@ -130,7 +131,7 @@ class Group extends AbstractFilter
      * @param  string  $label
      * @return Group
      */
-    public function nlt($label = '')
+    public function nlt(string $label = ''): static
     {
         return $this->equal($label, '>=');
     }
@@ -141,7 +142,7 @@ class Group extends AbstractFilter
      * @param  string  $label
      * @return Group
      */
-    public function ngt($label = '')
+    public function ngt(string $label = ''): static
     {
         return $this->equal($label, '<=');
     }
@@ -152,7 +153,7 @@ class Group extends AbstractFilter
      * @param  string  $label
      * @return Group
      */
-    public function match($label = '')
+    public function match(string $label = ''): static
     {
         $label = $label ?: 'Match';
 
@@ -163,10 +164,10 @@ class Group extends AbstractFilter
      * Specify a where query.
      *
      * @param  string  $label
-     * @param  \Closure  $builder
+     * @param  Closure  $builder
      * @return Group
      */
-    public function where($label, \Closure $builder)
+    public function where(string $label, Closure $builder): static
     {
         $this->input = $this->value;
 
@@ -182,11 +183,11 @@ class Group extends AbstractFilter
      * @param  string  $operator
      * @return Group
      */
-    public function like($label = '', $operator = 'like')
+    public function like(string $label = '', string $operator = 'like'): static
     {
         $label = $label ?: $operator;
 
-        $condition = [$this->column, $operator, "%{$this->value}%"];
+        $condition = [$this->column, $operator, "%$this->value%"];
 
         return $this->joinGroup($label, $condition);
     }
@@ -197,7 +198,7 @@ class Group extends AbstractFilter
      * @param  string  $label
      * @return Group
      */
-    public function contains($label = '')
+    public function contains(string $label = ''): static
     {
         return $this->like($label);
     }
@@ -208,7 +209,7 @@ class Group extends AbstractFilter
      * @param  string  $label
      * @return Group
      */
-    public function ilike($label = '')
+    public function ilike(string $label = ''): static
     {
         return $this->like($label, 'ilike');
     }
@@ -219,11 +220,11 @@ class Group extends AbstractFilter
      * @param  string  $label
      * @return Group
      */
-    public function startWith($label = '')
+    public function startWith(string $label = ''): static
     {
         $label = $label ?: 'Start with';
 
-        $condition = [$this->column, 'like', "{$this->value}%"];
+        $condition = [$this->column, 'like', "$this->value%"];
 
         return $this->joinGroup($label, $condition);
     }
@@ -234,11 +235,11 @@ class Group extends AbstractFilter
      * @param  string  $label
      * @return Group
      */
-    public function endWith($label = '')
+    public function endWith(string $label = ''): static
     {
         $label = $label ?: 'End with';
 
-        $condition = [$this->column, 'like', "%{$this->value}"];
+        $condition = [$this->column, 'like', "%$this->value"];
 
         return $this->joinGroup($label, $condition);
     }
@@ -250,7 +251,7 @@ class Group extends AbstractFilter
     {
         $value = Arr::get($inputs, $this->column);
 
-        if (! isset($value)) {
+        if (!isset($value)) {
             return;
         }
 
@@ -270,14 +271,14 @@ class Group extends AbstractFilter
     /**
      * Inject script to current page.
      */
-    protected function injectScript()
+    protected function injectScript(): void
     {
         $script = <<<JS
-$(".{$this->name} li a").on('click', function(){
-    $(".{$this->name}-label").text($(this).text());
-    $(".{$this->name}-operation").val($(this).data('index'));
-});
-JS;
+            $(".$this->name li a").on('click', function(){
+                $(".$this->name-label").text($(this).text());
+                $(".$this->name-operation").val($(this).data('index'));
+            });
+            JS;
 
         Admin::script($script);
     }
@@ -293,7 +294,7 @@ JS;
 
         return array_merge(parent::defaultVariables(), [
             'group_name' => $this->name,
-            'default'    => $default,
+            'default' => $default,
         ]);
     }
 

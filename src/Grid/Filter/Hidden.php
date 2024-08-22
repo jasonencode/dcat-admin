@@ -10,7 +10,7 @@ class Hidden extends AbstractFilter
     protected $name;
 
     /**
-     * @var string|array
+     * @var string|array|null
      */
     protected string|array|null $value;
 
@@ -20,7 +20,7 @@ class Hidden extends AbstractFilter
      * @param  string  $name
      * @param  string  $value
      */
-    public function __construct($name, $value)
+    public function __construct(string $name, string $value)
     {
         $this->name = $name;
 

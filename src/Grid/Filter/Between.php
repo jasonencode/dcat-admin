@@ -15,19 +15,19 @@ class Between extends AbstractFilter
     /**
      * @var int
      */
-    protected $width = 12;
+    protected int $width = 12;
 
     /**
      * @var bool
      */
-    protected $timestamp = false;
+    protected bool $timestamp = false;
 
     /**
      * Convert the datetime into unix timestamp.
      *
      * @return $this
      */
-    public function toTimestamp()
+    public function toTimestamp(): static
     {
         $this->timestamp = true;
 
@@ -45,7 +45,7 @@ class Between extends AbstractFilter
         $id = str_replace('.', '_', $columns);
         $prefix = $this->parent->grid()->makeName('filter-column-');
 
-        return ['start' => "{$prefix}{$id}-start", 'end' => "{$prefix}{$id}-end"];
+        return ['start' => "$prefix$id-start", 'end' => "$prefix$id-end"];
     }
 
     /**
@@ -54,7 +54,7 @@ class Between extends AbstractFilter
      * @param  string  $column
      * @return array
      */
-    protected function formatName(string $column): string
+    protected function formatName(string $column): array
     {
         $columns = explode('.', $column);
 
@@ -75,11 +75,11 @@ class Between extends AbstractFilter
      * Get condition of this filter.
      *
      * @param  array  $inputs
-     * @return mixed
+     * @return array|string|void
      */
     public function condition(array $inputs)
     {
-        if (! Arr::has($inputs, $this->column)) {
+        if (!Arr::has($inputs, $this->column)) {
             return;
         }
 
@@ -101,11 +101,11 @@ class Between extends AbstractFilter
             return;
         }
 
-        if (! isset($value['start']) && isset($value['end'])) {
+        if (!isset($value['start']) && isset($value['end'])) {
             return $this->buildCondition($this->column, '<=', $value['end']);
         }
 
-        if (! isset($value['end']) && isset($value['start'])) {
+        if (!isset($value['end']) && isset($value['start'])) {
             return $this->buildCondition($this->column, '>=', $value['start']);
         }
 
@@ -118,7 +118,7 @@ class Between extends AbstractFilter
      * @param  array  $options
      * @return $this
      */
-    public function datetime(array $options = []): DateTime|Presenter\Presenter
+    public function datetime(array $options = [])
     {
         $this->view = 'admin::filter.between-datetime';
 
