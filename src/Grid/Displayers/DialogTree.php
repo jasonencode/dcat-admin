@@ -6,6 +6,7 @@ use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Collection;
 
 class DialogTree extends AbstractDisplayer
 {
@@ -48,10 +49,10 @@ class DialogTree extends AbstractDisplayer
     protected int $rootParentId = 0;
 
     /**
-     * @param  array  $data
+     * @param  array|Collection  $data
      * @return $this
      */
-    public function nodes(array $data): static
+    public function nodes(array|Collection $data): static
     {
         if ($data instanceof Arrayable) {
             $data = $data->toArray();

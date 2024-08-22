@@ -2,11 +2,13 @@
 
 namespace Dcat\Admin\Grid\Filter\Presenter;
 
+use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Grid\LazyRenderable;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\DialogTable;
 use Illuminate\Support\Str;
+use Throwable;
 
 class SelectTable extends Presenter
 {
@@ -40,10 +42,10 @@ class SelectTable extends Presenter
     /**
      * 设置选中的选项.
      *
-     * @param  \Closure  $options
+     * @param  Closure  $options
      * @return $this
      */
-    public function options(\Closure $options)
+    public function options(Closure $options): static
     {
         $this->options = $options;
 
@@ -58,7 +60,7 @@ class SelectTable extends Presenter
      * @param  string  $text
      * @return $this
      */
-    public function model(string $model, string $id = 'id', string $text = 'title')
+    public function model(string $model, string $id = 'id', string $text = 'title'): static
     {
         return $this->pluck($text, $id)->options(function ($v) use ($model, $id, $text) {
             if (! $v) {
@@ -72,11 +74,11 @@ class SelectTable extends Presenter
     /**
      * 设置选中的key以及标题字段.
      *
-     * @param $visibleColumn
-     * @param $key
+     * @param  string|null  $visibleColumn
+     * @param  string|null  $key
      * @return $this
      */
-    public function pluck(?string $visibleColumn, ?string $key = 'id')
+    public function pluck(?string $visibleColumn, ?string $key = 'id'): static
     {
         $this->visibleColumn = $visibleColumn;
         $this->key = $key;
@@ -94,7 +96,7 @@ class SelectTable extends Presenter
      * @param  string  $width
      * @return $this
      */
-    public function dialogWidth(string $width)
+    public function dialogWidth(string $width): static
     {
         $this->dialog->width($width);
 
@@ -107,7 +109,7 @@ class SelectTable extends Presenter
      * @param  string  $title
      * @return $this
      */
-    public function title($title)
+    public function title(string $title): static
     {
         $this->dialog->title($title);
 
@@ -115,10 +117,10 @@ class SelectTable extends Presenter
     }
 
     /**
-     * @param  string  $placeholder
+     * @param  string|null  $placeholder
      * @return $this|string
      */
-    public function placeholder(string $placeholder = null)
+    public function placeholder(string $placeholder = null): string|static
     {
         if ($placeholder === null) {
             return $this->placeholder ?: __('admin.choose');
@@ -129,7 +131,7 @@ class SelectTable extends Presenter
         return $this;
     }
 
-    protected function setUpTable()
+    protected function setUpTable(): void
     {
         $this->dialog
             ->footer($this->renderFooter())
@@ -144,11 +146,11 @@ class SelectTable extends Presenter
             ]);
     }
 
-    protected function formatOptions()
+    protected function formatOptions(): void
     {
         $value = Helper::array($this->value());
 
-        if ($this->options instanceof \Closure) {
+        if ($this->options instanceof Closure) {
             $this->options = call_user_func($this->options, $value, $this);
         }
 
@@ -165,20 +167,20 @@ class SelectTable extends Presenter
         $this->options = $values;
     }
 
-    protected function addScript()
+    protected function addScript(): void
     {
         $options = json_encode($this->options);
 
         Admin::script(
             <<<JS
-Dcat.init('#{$this->id}', function (self) {
+Dcat.init('#$this->id', function (self) {
     var dialogId = self.parent().find('{$this->dialog->getElementSelector()}').attr('id');
 
     Dcat.grid.SelectTable({
         dialog: '[data-id="' + dialogId + '"]',
-        container: '#{$this->id}',
-        input: '#hidden-{$this->id}',
-        values: {$options},
+        container: '#$this->id',
+        input: '#hidden-$this->id',
+        values: $options,
     });
 })
 JS
@@ -187,6 +189,7 @@ JS
 
     /**
      * @return array
+     * @throws Throwable
      */
     public function defaultVariables(): array
     {
@@ -204,10 +207,10 @@ JS
         ];
     }
 
-    protected function renderButton()
+    protected function renderButton(): string
     {
         return <<<HTML
-<div class="btn btn-{$this->style} btn-sm">
+<div class="btn btn-$this->style btn-sm">
     &nbsp;<i class="feather icon-arrow-up"></i>&nbsp;
 </div>
 HTML;
@@ -218,14 +221,14 @@ HTML;
      *
      * @return string
      */
-    protected function renderFooter()
+    protected function renderFooter(): string
     {
         $submit = trans('admin.submit');
         $cancel = trans('admin.cancel');
 
         return <<<HTML
-<button class="btn btn-primary btn-sm submit-btn" style="color: #fff">&nbsp;{$submit}&nbsp;</button>&nbsp;
-<button class="btn btn-white btn-sm cancel-btn">&nbsp;{$cancel}&nbsp;</button>
+<button class="btn btn-primary btn-sm submit-btn" style="color: #fff">&nbsp;$submit&nbsp;</button>&nbsp;
+<button class="btn btn-white btn-sm cancel-btn">&nbsp;$cancel&nbsp;</button>
 HTML;
     }
 }

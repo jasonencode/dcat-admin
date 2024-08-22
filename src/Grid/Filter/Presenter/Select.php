@@ -116,13 +116,13 @@ class Select extends Presenter
     /**
      * Load options from current selected resource(s).
      *
-     * @param string $model
+     * @param  string  $model
      * @param string $idField
      * @param string $textField
      * @return $this
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @throws RuntimeException
      */
-    public function model($model, string $idField = 'id', string $textField = 'name')
+    public function model(string $model, string $idField = 'id', string $textField = 'name'): static
     {
         if (!class_exists($model)
             || !in_array(Model::class, class_parents($model))

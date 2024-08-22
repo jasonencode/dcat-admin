@@ -14,19 +14,19 @@ class Text extends Presenter
     /**
      * @var string
      */
-    protected $icon = 'pencil';
+    protected string $icon = 'pencil';
 
     /**
      * @var string
      */
-    protected $type = 'text';
+    protected string $type = 'text';
 
     /**
      * Text constructor.
      *
      * @param  string  $placeholder
      */
-    public function __construct($placeholder = '')
+    public function __construct(string $placeholder = '')
     {
         $this->placeholder($placeholder);
     }
@@ -52,7 +52,7 @@ class Text extends Presenter
      * @param  string  $placeholder
      * @return $this
      */
-    public function placeholder($placeholder = '')
+    public function placeholder(string $placeholder = ''): static
     {
         $this->placeholder = $placeholder;
 
@@ -62,7 +62,7 @@ class Text extends Presenter
     /**
      * @return Text
      */
-    public function url()
+    public function url(): static
     {
         return $this->inputmask(['alias' => 'url'], 'internet-explorer');
     }
@@ -70,7 +70,7 @@ class Text extends Presenter
     /**
      * @return Text
      */
-    public function email()
+    public function email(): static
     {
         return $this->inputmask(['alias' => 'email'], 'envelope');
     }
@@ -78,7 +78,7 @@ class Text extends Presenter
     /**
      * @return Text
      */
-    public function integer()
+    public function integer(): static
     {
         return $this->inputmask(['alias' => 'integer']);
     }
@@ -86,11 +86,11 @@ class Text extends Presenter
     /**
      * @param  array  $options
      *
-     * @see https://github.com/RobinHerbots/Inputmask/blob/4.x/README_numeric.md
-     *
      * @return Text
+     *@see https://github.com/RobinHerbots/Inputmask/blob/4.x/README_numeric.md
+     *
      */
-    public function decimal($options = [])
+    public function decimal(array $options = []): static
     {
         return $this->inputmask(array_merge($options, ['alias' => 'decimal']));
     }
@@ -98,11 +98,11 @@ class Text extends Presenter
     /**
      * @param  array  $options
      *
-     * @see https://github.com/RobinHerbots/Inputmask/blob/4.x/README_numeric.md
-     *
      * @return Text
+     *@see https://github.com/RobinHerbots/Inputmask/blob/4.x/README_numeric.md
+     *
      */
-    public function currency($options = [])
+    public function currency(array $options = []): static
     {
         return $this->inputmask(array_merge($options, [
             'alias'              => 'currency',
@@ -114,11 +114,11 @@ class Text extends Presenter
     /**
      * @param  array  $options
      *
-     * @see https://github.com/RobinHerbots/Inputmask/blob/4.x/README_numeric.md
-     *
      * @return Text
+     *@see https://github.com/RobinHerbots/Inputmask/blob/4.x/README_numeric.md
+     *
      */
-    public function percentage($options = [])
+    public function percentage(array $options = []): static
     {
         $options = array_merge(['alias' => 'percentage'], $options);
 
@@ -128,7 +128,7 @@ class Text extends Presenter
     /**
      * @return Text
      */
-    public function ip()
+    public function ip(): static
     {
         return $this->inputmask(['alias' => 'ip'], 'laptop');
     }
@@ -136,7 +136,7 @@ class Text extends Presenter
     /**
      * @return Text
      */
-    public function mac()
+    public function mac(): static
     {
         return $this->inputmask(['alias' => 'mac'], 'laptop');
     }
@@ -145,7 +145,7 @@ class Text extends Presenter
      * @param  string  $mask
      * @return Text
      */
-    public function mobile($mask = '19999999999')
+    public function mobile(string $mask = '19999999999'): static
     {
         return $this->inputmask(compact('mask'), 'phone');
     }
@@ -155,7 +155,7 @@ class Text extends Presenter
      * @param  string  $icon
      * @return $this
      */
-    public function inputmask($options = [], $icon = 'pencil')
+    public function inputmask(array $options = [], string $icon = 'pencil'): static
     {
         Admin::js('@jquery.inputmask');
 
