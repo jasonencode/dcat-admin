@@ -4,6 +4,7 @@ namespace Dcat\Admin\Widgets;
 
 use Dcat\Admin\Admin;
 use Illuminate\Contracts\Support\Renderable;
+use Throwable;
 
 class Tab extends Widget
 {
@@ -18,13 +19,13 @@ class Tab extends Widget
     /**
      * @var array
      */
-    protected $data = [
-        'id'       => '',
-        'title'    => '',
-        'tabs'     => [],
+    protected array $data = [
+        'id' => '',
+        'title' => '',
+        'tabs' => [],
         'dropDown' => [],
-        'active'   => 0,
-        'padding'  => null,
+        'active' => 0,
+        'padding' => null,
         'tabStyle' => '',
     ];
 
@@ -37,13 +38,13 @@ class Tab extends Widget
      * @param  string|null  $id
      * @return $this
      */
-    public function add($title, $content, $active = false, $id = null)
+    public function add(string $title, Renderable|string $content, bool $active = false, string $id = null): static
     {
         $this->data['tabs'][] = [
-            'id'      => $id ?: mt_rand(),
-            'title'   => $title,
+            'id' => $id ?: mt_rand(),
+            'title' => $title,
             'content' => $this->toString($this->formatRenderable($content)),
-            'type'    => static::TYPE_CONTENT,
+            'type' => static::TYPE_CONTENT,
         ];
 
         if ($active) {
@@ -61,13 +62,13 @@ class Tab extends Widget
      * @param  bool  $active
      * @return $this
      */
-    public function addLink($title, $href, $active = false)
+    public function addLink(string $title, string $href, bool $active = false): static
     {
         $this->data['tabs'][] = [
-            'id'      => mt_rand(),
-            'title'   => $title,
-            'href'    => $href,
-            'type'    => static::TYPE_LINK,
+            'id' => mt_rand(),
+            'title' => $title,
+            'href' => $href,
+            'type' => static::TYPE_LINK,
         ];
 
         if ($active) {
@@ -81,15 +82,16 @@ class Tab extends Widget
      * Set tab content padding.
      *
      * @param  string  $padding
+     * @return Tab
      */
-    public function padding(string $padding)
+    public function padding(string $padding): static
     {
         $this->data['padding'] = 'padding:'.$padding;
 
         return $this;
     }
 
-    public function noPadding()
+    public function noPadding(): static
     {
         return $this->padding('0');
     }
@@ -98,8 +100,9 @@ class Tab extends Widget
      * Set title.
      *
      * @param  string  $title
+     * @return Tab
      */
-    public function title($title = '')
+    public function title(string $title = ''): static
     {
         $this->data['title'] = $title;
 
@@ -112,7 +115,7 @@ class Tab extends Widget
      * @param  array  $links
      * @return $this
      */
-    public function dropdown(array $links)
+    public function dropdown(array $links): static
     {
         if (is_array($links[0])) {
             foreach ($links as $link) {
@@ -130,14 +133,14 @@ class Tab extends Widget
         return $this;
     }
 
-    public function withCard()
+    public function withCard(): static
     {
         return $this
             ->class('card', true)
             ->style('padding:.25rem .4rem .4rem');
     }
 
-    public function vertical()
+    public function vertical(): static
     {
         return $this
             ->class('nav-vertical d-block', true)
@@ -145,14 +148,14 @@ class Tab extends Widget
             ->tabStyle('nav-left flex-column');
     }
 
-    public function theme(string $style = 'primary')
+    public function theme(string $style = 'primary'): static
     {
         return $this
             ->class('nav-theme-'.$style, true)
             ->style('padding:0!important;');
     }
 
-    public function tabStyle($type)
+    public function tabStyle($type): static
     {
         $this->data['tabStyle'] = $type;
 
@@ -163,6 +166,7 @@ class Tab extends Widget
      * Render Tab.
      *
      * @return string
+     * @throws Throwable
      */
     public function render(): string
     {
@@ -179,19 +183,19 @@ class Tab extends Widget
     /**
      * Setup script.
      */
-    protected function setupScript()
+    protected function setupScript(): void
     {
         $script = <<<'SCRIPT'
-var hash = document.location.hash;
-if (hash) {
-    $('.nav-tabs a[href="' + hash + '"]').tab('show');
-}
-
-// Change hash for page-reload
-$('.nav-tabs a').on('shown.bs.tab', function (e) {
-    history.pushState(null,null, e.target.hash);
-});
-SCRIPT;
+            var hash = document.location.hash;
+            if (hash) {
+                $('.nav-tabs a[href="' + hash + '"]').tab('show');
+            }
+            
+            // Change hash for page-reload
+            $('.nav-tabs a').on('shown.bs.tab', function (e) {
+                history.pushState(null,null, e.target.hash);
+            });
+            SCRIPT;
         Admin::script($script);
     }
 }

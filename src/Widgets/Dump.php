@@ -16,21 +16,21 @@ class Dump extends Widget
      */
     protected string $content = '';
 
-    protected $maxWidth;
+    protected string $maxWidth;
 
     /**
      * Dump constructor.
      *
-     * @param  array|object|string  $content
+     * @param  object|array|string  $content
      * @param  string|null  $padding
      */
-    public function __construct($content, string $padding = null)
+    public function __construct(object|array|string $content, string $padding = null)
     {
         $this->content($content);
         $this->padding($padding);
     }
 
-    public function content($content)
+    public function content($content): static
     {
         $content = $this->convertJsonToArray($content) ?: $content;
 
@@ -49,7 +49,7 @@ class Dump extends Widget
      * @param  string|null  $padding
      * @return $this
      */
-    public function padding(?string $padding)
+    public function padding(?string $padding): static
     {
         if ($padding) {
             $this->padding = $padding;
@@ -62,7 +62,7 @@ class Dump extends Widget
      * @param  string  $width
      * @return $this
      */
-    public function maxWidth($width)
+    public function maxWidth(string $width): static
     {
         $this->maxWidth = $width;
 
@@ -73,7 +73,7 @@ class Dump extends Widget
      * @param  mixed  $content
      * @return array|null
      */
-    protected function convertJsonToArray($content)
+    protected function convertJsonToArray(mixed $content): ?array
     {
         if (
             is_string($content) &&
@@ -84,17 +84,19 @@ class Dump extends Widget
         ) {
             return json_decode($content, true);
         }
+
+        return [];
     }
 
     public function render(): string
     {
         $this->defaultHtmlAttribute(
             'style',
-            'white-space:pre-wrap;'.($this->maxWidth ? "max-width:{$this->maxWidth};" : '')
+            'white-space:pre-wrap;'.($this->maxWidth ? "max-width:$this->maxWidth;" : '')
         );
 
         return <<<EOF
-<div style="padding:{$this->padding}"><pre class="dump" {$this->formatHtmlAttributes()}>{$this->content}</pre></div>
+<div style="padding:$this->padding"><pre class="dump" {$this->formatHtmlAttributes()}>$this->content</pre></div>
 EOF;
     }
 }

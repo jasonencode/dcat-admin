@@ -20,60 +20,62 @@ class Modal extends Widget
     /**
      * @var string|Closure|Renderable
      */
-    protected $title;
+    protected Closure|string|Renderable $title;
 
     /**
      * @var string|Closure|Renderable
      */
-    protected $content;
+    protected string|Closure|Renderable $content;
 
     /**
      * @var string|Closure|Renderable
      */
-    protected $footer;
+    protected string|Closure|Renderable $footer;
 
     /**
      * @var string|Closure|Renderable
      */
-    protected $button;
+    protected string|Closure|Renderable $button;
 
     /**
      * @var string
      */
-    protected $size = '';
+    protected string $size = '';
 
     /**
      * @var string
      */
-    protected $centered = '';
+    protected string $centered = '';
 
     /**
      * @var string
      */
-    protected $scrollable = '';
+    protected string $scrollable = '';
     /**
      * @var array
      */
-    protected $events = [];
+    protected array $events = [];
 
     /**
      * @var int
      */
-    protected $delay = 10;
+    protected int $delay = 10;
 
     /**
      * @var bool
      */
-    protected $join = false;
+    protected bool $join = false;
 
     /**
      * Modal constructor.
      *
-     * @param  string|Closure|Renderable  $title
-     * @param  string|Closure|Renderable|LazyRenderable  $content
+     * @param  Closure|string|Renderable|null  $title
+     * @param  Closure|string|LazyRenderable|Renderable|null  $content
      */
-    public function __construct($title = null, $content = null)
-    {
+    public function __construct(
+        Renderable|Closure|string $title = null,
+        Renderable|Closure|string|LazyRenderable $content = null
+    ) {
         $this->id('modal-'.Str::random(10));
         $this->title($title);
         $this->content($content);
@@ -87,7 +89,7 @@ class Modal extends Widget
      * @param  bool  $value
      * @return $this
      */
-    public function centered(bool $value = true)
+    public function centered(bool $value = true): static
     {
         $this->centered = $value ? 'modal-dialog-centered' : '';
 
@@ -100,7 +102,7 @@ class Modal extends Widget
      * @param  bool  $value
      * @return $this
      */
-    public function scrollable(bool $value = true)
+    public function scrollable(bool $value = true): static
     {
         $this->scrollable = $value ? 'modal-dialog-scrollable' : '';
 
@@ -113,7 +115,7 @@ class Modal extends Widget
      * @param  string  $size
      * @return $this
      */
-    public function size(string $size)
+    public function size(string $size): static
     {
         $this->size = $size;
 
@@ -125,7 +127,7 @@ class Modal extends Widget
      *
      * @return $this
      */
-    public function sm()
+    public function sm(): static
     {
         return $this->size('sm');
     }
@@ -135,7 +137,7 @@ class Modal extends Widget
      *
      * @return $this
      */
-    public function lg()
+    public function lg(): static
     {
         return $this->size('lg');
     }
@@ -145,7 +147,7 @@ class Modal extends Widget
      *
      * @return $this
      */
-    public function xl()
+    public function xl(): static
     {
         return $this->size('xl');
     }
@@ -156,7 +158,7 @@ class Modal extends Widget
      * @param  int  $delay
      * @return $this
      */
-    public function delay(int $delay)
+    public function delay(int $delay): static
     {
         $this->delay = $delay;
 
@@ -169,7 +171,7 @@ class Modal extends Widget
      * @param  string|Closure|Renderable  $button
      * @return $this
      */
-    public function button($button)
+    public function button(Renderable|string|Closure $button): static
     {
         $this->button = $button;
 
@@ -182,7 +184,7 @@ class Modal extends Widget
      * @param  string|Closure|Renderable  $title
      * @return $this
      */
-    public function title($title)
+    public function title(Renderable|string|Closure $title): static
     {
         $this->title = $title;
 
@@ -192,17 +194,17 @@ class Modal extends Widget
     /**
      * 设置弹窗内容.
      *
-     * @param  string|Closure|Renderable|LazyRenderable  $content
+     * @param  Closure|string|LazyRenderable|Renderable  $content
      * @return $this
      */
-    public function content($content)
+    public function content(Renderable|Closure|string|LazyRenderable $content): static
     {
         if ($content instanceof LazyGrid) {
             $content = $table =
                 LazyTable::make()
-                ->from($content)
-                ->simple()
-                ->load(false);
+                    ->from($content)
+                    ->simple()
+                    ->load(false);
 
             $this->onShow("target.find('{$table->getElementSelector()}').trigger('table:load')");
         }
@@ -217,10 +219,10 @@ class Modal extends Widget
     }
 
     /**
-     * @param  string|Closure|Renderable|LazyRenderable  $content
+     * @param  Closure|string|LazyRenderable|Renderable  $content
      * @return $this
      */
-    public function body($content)
+    public function body(Renderable|Closure|string|LazyRenderable $content): static
     {
         return $this->content($content);
     }
@@ -231,7 +233,7 @@ class Modal extends Widget
      * @param  bool  $value
      * @return $this
      */
-    public function join(bool $value = true)
+    public function join(bool $value = true): static
     {
         $this->join = $value;
 
@@ -241,10 +243,10 @@ class Modal extends Widget
     /**
      * 设置弹窗底部内容.
      *
-     * @param  string|Closure|Renderable|LazyRenderable  $footer
+     * @param  Closure|string|LazyRenderable|Renderable  $footer
      * @return $this
      */
-    public function footer($footer)
+    public function footer(Renderable|Closure|string|LazyRenderable $footer): static
     {
         $this->footer = $footer;
 
@@ -258,7 +260,7 @@ class Modal extends Widget
      * @param  string  $script
      * @return $this
      */
-    public function on(string $event, string $script)
+    public function on(string $event, string $script): static
     {
         $this->events[] = compact('event', 'script');
 
@@ -271,7 +273,7 @@ class Modal extends Widget
      * @param  string  $script
      * @return $this
      */
-    public function onShow(string $script)
+    public function onShow(string $script): static
     {
         return $this->on('show.bs.modal', $script);
     }
@@ -282,7 +284,7 @@ class Modal extends Widget
      * @param  string  $script
      * @return $this
      */
-    public function onShown(string $script)
+    public function onShown(string $script): static
     {
         return $this->on('shown.bs.modal', $script);
     }
@@ -293,7 +295,7 @@ class Modal extends Widget
      * @param  string  $script
      * @return $this
      */
-    public function onHide(string $script)
+    public function onHide(string $script): static
     {
         return $this->on('hide.bs.modal', $script);
     }
@@ -304,14 +306,14 @@ class Modal extends Widget
      * @param  string  $script
      * @return $this
      */
-    public function onHidden(string $script)
+    public function onHidden(string $script): static
     {
         return $this->on('hidden.bs.modal', $script);
     }
 
-    protected function addScript()
+    protected function addScript(): void
     {
-        if (! $this->events) {
+        if (!$this->events) {
             return;
         }
 
@@ -324,27 +326,27 @@ class Modal extends Widget
         }
 
         $this->script = <<<JS
-(function () {
-    var target = $('#{$this->id()}'), body = target.find('.modal-body');
-    {$this->getRenderableScript()}
-    {$script}
-})();
-JS;
+            (function () {
+                var target = $('#{$this->id()}'), body = target.find('.modal-body');
+                {$this->getRenderableScript()}
+                {$script}
+            })();
+            JS;
     }
 
-    protected function addLoadRenderableScript()
+    protected function addLoadRenderableScript(): void
     {
-        if (! $this->getRenderable()) {
+        if (!$this->getRenderable()) {
             return;
         }
 
         $this->on('show.bs.modal', <<<JS
-body.html('<div style="min-height:150px"></div>').loading();
-        
-setTimeout(function () {
-    target.trigger('{$this->target}:load')
-}, {$this->delay});
-JS
+                      body.html('<div style="min-height:150px"></div>').loading();
+                      
+                      setTimeout(function () {
+                          target.trigger('$this->target:load')
+                      }, $this->delay);
+                      JS
         );
     }
 
@@ -368,19 +370,19 @@ JS
     public function html(): string
     {
         return <<<HTML
-<div {$this->formatHtmlAttributes()} role="dialog">
-    <div class="modal-dialog {$this->centered} {$this->scrollable} modal-{$this->size}">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">{$this->renderTitle()}</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div {$this->formatHtmlAttributes()} role="dialog">
+                <div class="modal-dialog $this->centered $this->scrollable modal-$this->size">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">{$this->renderTitle()}</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">{$this->renderContent()}</div>
+                        {$this->renderFooter()}
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">{$this->renderContent()}</div>
-            {$this->renderFooter()}
-        </div>
-    </div>
-</div>
-HTML;
+            HTML;
     }
 
     protected function renderTitle(): string
@@ -393,34 +395,34 @@ HTML;
         return Helper::render($this->content);
     }
 
-    protected function renderFooter()
+    protected function renderFooter(): string
     {
         $footer = Helper::render($this->footer);
 
-        if (! $footer) {
-            return;
+        if (!$footer) {
+            return '';
         }
 
         return <<<HTML
-<div class="modal-footer">{$footer}</div>
-HTML;
+            <div class="modal-footer">$footer</div>
+            HTML;
     }
 
-    protected function renderButton()
+    protected function renderButton(): string
     {
-        if (! $this->button) {
-            return;
+        if (!$this->button) {
+            return '';
         }
 
         $button = Helper::render($this->button);
 
         // 如果没有HTML标签则添加一个 a 标签
-        if (! preg_match('/(\<\/[\d\w]+\s*\>+)/i', $button)) {
-            $button = "<a href=\"javascript:void(0)\">{$button}</a>";
+        if (!preg_match('/(<\/\w+\s*>+)/i', $button)) {
+            $button = "<a href=\"javascript:void(0)\">$button</a>";
         }
 
         return <<<HTML
-<span style="cursor: pointer" data-toggle="modal" data-target="#{$this->id()}">{$button}</span>
-HTML;
+            <span style="cursor: pointer" data-toggle="modal" data-target="#{$this->id()}">$button</span>
+            HTML;
     }
 }

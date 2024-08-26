@@ -2,8 +2,11 @@
 
 namespace Dcat\Admin\Widgets;
 
+use Closure;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
+use Throwable;
 
 class Dropdown extends Widget
 {
@@ -12,14 +15,14 @@ class Dropdown extends Widget
     /**
      * @var string
      */
-    protected static $dividerHtml = '<li class="dropdown-divider"></li>';
+    protected static string $dividerHtml = '<li class="dropdown-divider"></li>';
 
     protected string $view = 'admin::widgets.dropdown';
 
     /**
      * @var array
      */
-    protected $button = [
+    protected array $button = [
         'text'  => null,
         'class' => 'btn btn-sm btn-white waves-effect',
         'style' => null,
@@ -28,27 +31,27 @@ class Dropdown extends Widget
     /**
      * @var string
      */
-    protected $buttonId;
+    protected string $buttonId;
 
     /**
-     * @var \Closure
+     * @var Closure
      */
-    protected $builder;
-
-    /**
-     * @var bool
-     */
-    protected $divider;
+    protected Closure $builder;
 
     /**
      * @var bool
      */
-    protected $click = false;
+    protected bool $divider;
+
+    /**
+     * @var bool
+     */
+    protected bool $click = false;
 
     /**
      * @var string
      */
-    protected $direction = 'down';
+    protected string $direction = 'down';
 
     public function __construct(array $options = [])
     {
@@ -58,11 +61,11 @@ class Dropdown extends Widget
     /**
      * Set the options of dropdown menus.
      *
-     * @param  array  $options
+     * @param  array|Arrayable  $options
      * @param  string|null  $title
      * @return $this
      */
-    public function options(array $options = [], ?string $title = null): static
+    public function options(array|Arrayable $options = [], ?string $title = null): static
     {
         if (! $options) {
             return $this;
@@ -79,7 +82,7 @@ class Dropdown extends Widget
      * @param  string|null  $text
      * @return $this
      */
-    public function button(?string $text)
+    public function button(?string $text): static
     {
         $this->button['text'] = $text;
 
@@ -89,10 +92,10 @@ class Dropdown extends Widget
     /**
      * Set the button class.
      *
-     * @param  string  $class
+     * @param  string|null  $class
      * @return $this
      */
-    public function buttonClass(?string $class)
+    public function buttonClass(?string $class): static
     {
         $this->button['class'] = $class;
 
@@ -102,40 +105,39 @@ class Dropdown extends Widget
     /**
      * Set the button style.
      *
-     * @param  string  $class
+     * @param  string|null  $style
      * @return $this
      */
-    public function buttonStyle(?string $style)
+    public function buttonStyle(?string $style): static
     {
         $this->button['style'] = $style;
 
         return $this;
     }
 
-    public function direction(string $direction = 'down')
+    public function direction(string $direction = 'down'): static
     {
         $this->direction = $direction;
 
         return $this;
     }
 
-    public function up()
+    public function up(): Dropdown|static
     {
         return $this->direction('up');
     }
 
-    public function down()
+    public function down(): Dropdown|static
     {
-        return $this->direction('down');
+        return $this->direction();
     }
 
     /**
      * Show divider.
      *
-     * @param  string  $class
      * @return $this
      */
-    public function divider()
+    public function divider(): static
     {
         $this->divider = true;
 
@@ -145,10 +147,10 @@ class Dropdown extends Widget
     /**
      * Applies the callback to the elements of the options.
      *
-     * @param  string  $class
+     * @param  Closure  $builder
      * @return $this
      */
-    public function map(\Closure $builder)
+    public function map(Closure $builder): static
     {
         $this->builder = $builder;
 
@@ -161,7 +163,7 @@ class Dropdown extends Widget
      * @param  string|null  $defaultLabel
      * @return $this
      */
-    public function click(?string $defaultLabel = null)
+    public function click(?string $defaultLabel = null): static
     {
         $this->click = true;
 
@@ -177,7 +179,7 @@ class Dropdown extends Widget
     /**
      * @return string
      */
-    public function getButtonId()
+    public function getButtonId(): string
     {
         return $this->buttonId;
     }
@@ -185,11 +187,11 @@ class Dropdown extends Widget
     /**
      * @return string
      */
-    protected function renderOptions()
+    protected function renderOptions(): string
     {
         $html = '';
 
-        foreach ($this->options as &$items) {
+        foreach ($this->options as $items) {
             [$title, $options] = $items;
 
             if ($title) {
@@ -207,9 +209,9 @@ class Dropdown extends Widget
     /**
      * @param  mixed  $k
      * @param  mixed  $v
-     * @return mixed|string
+     * @return string
      */
-    protected function renderOption($k, $v)
+    protected function renderOption(mixed $k, mixed $v): string
     {
         if ($v === static::DIVIDER) {
             return static::$dividerHtml;
@@ -232,6 +234,7 @@ class Dropdown extends Widget
 
     /**
      * @return string
+     * @throws Throwable
      */
     public function render(): string
     {

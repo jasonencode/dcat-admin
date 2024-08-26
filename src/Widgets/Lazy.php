@@ -10,8 +10,8 @@ class Lazy extends Widget
 {
     use InteractsWithRenderApi;
 
-    protected $target = 'lazy';
-    protected $load = true;
+    protected string $target = 'lazy';
+    protected bool $load = true;
 
     public function __construct(LazyRenderable $renderable = null, bool $load = true)
     {
@@ -29,16 +29,16 @@ class Lazy extends Widget
      * @param  bool  $value
      * @return $this
      */
-    public function load(bool $value)
+    public function load(bool $value): static
     {
         $this->load = $value;
 
         return $this;
     }
 
-    protected function addScript()
+    protected function addScript(): void
     {
-        $loader = $this->load ? "target.trigger('{$this->target}:load')" : '';
+        $loader = $this->load ? "target.trigger('$this->target:load')" : '';
 
         $this->script = <<<JS
 Dcat.init('{$this->getElementSelector()}', function (target) {

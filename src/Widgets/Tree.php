@@ -87,10 +87,10 @@ class Tree extends Widget
     }
 
     /**
-     * @param  array  $data
+     * @param  array|Arrayable  $data
      * @return $this
      */
-    public function nodes(array $data): static
+    public function nodes(array|Arrayable $data): static
     {
         if ($data instanceof Arrayable) {
             $data = $data->toArray();

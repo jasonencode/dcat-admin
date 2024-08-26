@@ -15,29 +15,29 @@ class DialogForm
     /**
      * @var string
      */
-    public static $contentView = 'admin::layouts.form-content';
+    public static string $contentView = 'admin::layouts.form-content';
 
     /**
      * @var array
      */
-    protected $options = [
-        'title'          => 'Form',
-        'area'           => ['700px', '670px'],
-        'defaultUrl'     => null,
+    protected array $options = [
+        'title' => 'Form',
+        'area' => ['700px', '670px'],
+        'defaultUrl' => null,
         'buttonSelector' => null,
-        'query'          => null,
-        'lang'           => null,
-        'forceRefresh'   => false,
-        'resetButton'    => true,
+        'query' => null,
+        'lang' => null,
+        'forceRefresh' => false,
+        'resetButton' => true,
     ];
 
     /**
      * @var array
      */
-    protected $handlers = [
-        'saved'   => null,
+    protected array $handlers = [
+        'saved' => null,
         'success' => null,
-        'error'   => null,
+        'error' => null,
     ];
 
     public function __construct(?string $title = null, $url = null)
@@ -51,7 +51,7 @@ class DialogForm
      * @param  array  $options
      * @return $this
      */
-    public function options($options = [])
+    public function options(array $options = []): static
     {
         if ($options instanceof Arrayable) {
             $options = $options->toArray();
@@ -65,10 +65,10 @@ class DialogForm
     /**
      * 设置弹窗标题.
      *
-     * @param  string  $title
+     * @param  string|null  $title
      * @return $this
      */
-    public function title(?string $title)
+    public function title(?string $title): static
     {
         $this->options['title'] = $title;
 
@@ -81,7 +81,7 @@ class DialogForm
      * @param  string  $buttonSelector
      * @return $this
      */
-    public function click(string $buttonSelector)
+    public function click(string $buttonSelector): static
     {
         $this->options['buttonSelector'] = $buttonSelector;
 
@@ -93,7 +93,7 @@ class DialogForm
      *
      * @return $this
      */
-    public function forceRefresh()
+    public function forceRefresh(): static
     {
         $this->options['forceRefresh'] = true;
 
@@ -106,7 +106,7 @@ class DialogForm
      * @param  bool  $value
      * @return $this
      */
-    public function resetButton(bool $value = true)
+    public function resetButton(bool $value = true): static
     {
         $this->options['resetButton'] = $value;
 
@@ -119,7 +119,7 @@ class DialogForm
      * @param  string  $script
      * @return $this
      */
-    public function saved(string $script)
+    public function saved(string $script): static
     {
         $this->handlers['saved'] = $script;
 
@@ -132,7 +132,7 @@ class DialogForm
      * @param  string  $script
      * @return $this
      */
-    public function error(string $script)
+    public function error(string $script): static
     {
         $this->handlers['error'] = $script;
 
@@ -145,7 +145,7 @@ class DialogForm
      * @param  string  $script
      * @return $this
      */
-    public function success(string $script)
+    public function success(string $script): static
     {
         $this->handlers['success'] = $script;
 
@@ -160,7 +160,7 @@ class DialogForm
      * @param  string  $height
      * @return $this
      */
-    public function dimensions(string $width, string $height)
+    public function dimensions(string $width, string $height): static
     {
         $this->options['area'] = [$width, $height];
 
@@ -174,7 +174,7 @@ class DialogForm
      * @param  string|null  $width
      * @return $this
      */
-    public function width(?string $width)
+    public function width(?string $width): static
     {
         $this->options['area'][0] = $width;
 
@@ -188,7 +188,7 @@ class DialogForm
      * @param  string|null  $height
      * @return $this
      */
-    public function height(?string $height)
+    public function height(?string $height): static
     {
         $this->options['area'][1] = $height;
 
@@ -201,7 +201,7 @@ class DialogForm
      * @param  null|string  $url
      * @return $this
      */
-    public function url(?string $url)
+    public function url(?string $url): static
     {
         if ($url) {
             $this->options['defaultUrl'] = Helper::urlWithQuery(
@@ -216,7 +216,7 @@ class DialogForm
     /**
      * @return string
      */
-    protected function render()
+    protected function render(): string
     {
         $this->setUpOptions();
 
@@ -224,23 +224,25 @@ class DialogForm
 
         Admin::script(
             <<<JS
-(function () {
-    var opts = {$opts};
-
-    opts.success = function (success, response) {
-        {$this->handlers['success']}
-    };
-    opts.error = function (success, response) {
-        {$this->handlers['error']}
-    };
-    opts.saved = function (success, response) {
-        {$this->handlers['saved']}
-    };
-
-    Dcat.DialogForm(opts);
-})();
-JS
+                (function () {
+                    var opts = $opts;
+                
+                    opts.success = function (success, response) {
+                        {$this->handlers['success']}
+                    };
+                    opts.error = function (success, response) {
+                        {$this->handlers['error']}
+                    };
+                    opts.saved = function (success, response) {
+                        {$this->handlers['saved']}
+                    };
+                
+                    Dcat.DialogForm(opts);
+                })();
+                JS
         );
+
+        return '';
     }
 
     /**
@@ -248,11 +250,11 @@ JS
      *
      * @return void
      */
-    protected function setUpOptions()
+    protected function setUpOptions(): void
     {
         $this->options['lang'] = [
             'submit' => trans('admin.submit'),
-            'reset'  => trans('admin.reset'),
+            'reset' => trans('admin.reset'),
         ];
 
         $this->options['query'] = static::QUERY_NAME;
@@ -263,17 +265,17 @@ JS
      *
      * @return bool
      */
-    public static function is()
+    public static function is(): bool
     {
-        return request(static::QUERY_NAME) ? true : false;
+        return (bool) request(static::QUERY_NAME);
     }
 
     /**
      * @param  Form  $form
      */
-    public static function prepare(Form $form)
+    public static function prepare(Form $form): void
     {
-        if (! static::is()) {
+        if (!static::is()) {
             return;
         }
 
@@ -289,7 +291,7 @@ JS
         $form->disableHeader();
         $form->disableFooter();
 
-        $form->width(9, 2);
+        $form->width(9);
 
         $form->composing(function ($form) {
             static::addScript($form);
@@ -300,14 +302,14 @@ JS
         });
     }
 
-    protected static function addScript(Form $form)
+    protected static function addScript(Form $form): void
     {
         $confirm = json_encode($form->builder()->confirm);
 
         Admin::script(
             <<<JS
-Dcat.FormConfirm = {$confirm};
-JS
+                Dcat.FormConfirm = $confirm;
+                JS
         );
     }
 

@@ -87,10 +87,10 @@ abstract class Widget implements Renderable
     /**
      * 批量设置选项.
      *
-     * @param  array  $options
+     * @param  array|Arrayable  $options
      * @return $this
      */
-    public function options(array $options = []): static
+    public function options(array|Arrayable $options = []): static
     {
         if ($options instanceof Arrayable) {
             $options = $options->toArray();

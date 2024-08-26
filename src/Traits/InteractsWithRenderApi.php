@@ -12,12 +12,12 @@ trait InteractsWithRenderApi
     /**
      * @var LazyRenderable
      */
-    protected $renderable;
+    protected LazyRenderable $renderable;
 
     /**
      * @var string
      */
-    protected $loadScript;
+    protected string $loadScript;
 
     /**
      * 监听异步渲染完成事件.
@@ -25,29 +25,29 @@ trait InteractsWithRenderApi
      * @param  string  $script
      * @return $this
      */
-    public function onLoad(string $script)
+    public function onLoad(string $script): static
     {
         $this->loadScript .= ";$script";
 
         return $this;
     }
 
-    public function getRenderable()
+    public function getRenderable(): LazyRenderable
     {
         return $this->renderable;
     }
 
-    public function setRenderable(?LazyRenderable $renderable)
+    public function setRenderable(?LazyRenderable $renderable): static
     {
         $this->renderable = $renderable;
 
         return $this;
     }
 
-    protected function getRenderableScript()
+    protected function getRenderableScript(): string
     {
         if (! $this->getRenderable()) {
-            return;
+            return '';
         }
 
         $url = $this->renderable->getUrl();

@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 class Checkbox extends Radio
 {
     protected string $view = 'admin::widgets.checkbox';
-    protected $type = 'checkbox';
+    protected string $type = 'checkbox';
     protected $checked = [];
 
     /**
@@ -27,10 +27,10 @@ class Checkbox extends Radio
     /**
      * 选中所有选项.
      *
-     * @param  string|array  $excepts
+     * @param  array|string  $excepts
      * @return $this
      */
-    public function checkAll($excepts = [])
+    public function checkAll(array|string $excepts = []): static
     {
         return $this->check(
             array_keys(Arr::except($this->options, $excepts))

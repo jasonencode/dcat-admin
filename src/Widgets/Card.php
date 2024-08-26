@@ -2,20 +2,20 @@
 
 namespace Dcat\Admin\Widgets;
 
+use Closure;
 use Dcat\Admin\Grid\LazyRenderable as LazyGrid;
-use Dcat\Admin\Traits\LazyWidget;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Str;
 
 class Card extends Widget
 {
     protected string $view = 'admin::widgets.card';
-    protected        $title;
-    protected $content;
-    protected $footer;
-    protected $tools = [];
-    protected $divider = false;
-    protected $padding;
+    protected string $title;
+    protected string $content;
+    protected string $footer;
+    protected array $tools = [];
+    protected bool $divider = false;
+    protected string $padding;
 
     public function __construct($title = '', $content = null)
     {
@@ -34,7 +34,7 @@ class Card extends Widget
     /**
      * @return $this
      */
-    public function withHeaderBorder()
+    public function withHeaderBorder(): static
     {
         $this->divider = true;
 
@@ -45,24 +45,25 @@ class Card extends Widget
      * 设置卡片间距.
      *
      * @param  string  $padding
+     * @return Card
      */
-    public function padding(string $padding)
+    public function padding(string $padding): static
     {
         $this->padding = 'padding:'.$padding;
 
         return $this;
     }
 
-    public function noPadding()
+    public function noPadding(): Card|static
     {
         return $this->padding('0');
     }
 
     /**
-     * @param  string|\Closure|Renderable|LazyWidget  $content
+     * @param  Closure|string|Renderable  $content
      * @return $this
      */
-    public function content($content)
+    public function content(Renderable|Closure|string $content): static
     {
         if ($content instanceof LazyGrid) {
             $content->simple();
@@ -77,7 +78,7 @@ class Card extends Widget
      * @param  string  $content
      * @return $this
      */
-    public function footer($content)
+    public function footer(string $content): static
     {
         $this->footer = $content;
 
@@ -88,7 +89,7 @@ class Card extends Widget
      * @param  string  $title
      * @return $this
      */
-    public function title($title)
+    public function title(string $title): static
     {
         $this->title = $title;
 
@@ -96,10 +97,10 @@ class Card extends Widget
     }
 
     /**
-     * @param  string|Renderable|\Closure  $content
+     * @param  string|Closure|Renderable  $content
      * @return $this
      */
-    public function tool($content)
+    public function tool(Renderable|string|Closure $content): static
     {
         $this->tools[] = $this->toString($content);
 
@@ -112,13 +113,13 @@ class Card extends Widget
     public function defaultVariables(): array
     {
         return [
-            'title'      => $this->title,
-            'content'    => $this->toString($this->content),
-            'footer'     => $this->toString($this->footer),
-            'tools'      => $this->tools,
+            'title' => $this->title,
+            'content' => $this->toString($this->content),
+            'footer' => $this->toString($this->footer),
+            'tools' => $this->tools,
             'attributes' => $this->formatHtmlAttributes(),
-            'padding'    => $this->padding,
-            'divider'    => $this->divider,
+            'padding' => $this->padding,
+            'divider' => $this->divider,
         ];
     }
 }

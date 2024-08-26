@@ -9,12 +9,12 @@ use Throwable;
 class Radio extends Widget
 {
     protected string $view = 'admin::widgets.radio';
-    protected $type = 'radio';
+    protected string $type = 'radio';
     protected string $style = 'primary';
     protected string $right = '16px';
     protected $checked;
     protected array $disabledValues = [];
-    protected $size;
+    protected string $size;
     protected bool $inline = false;
 
     public function __construct(
@@ -118,10 +118,10 @@ class Radio extends Widget
      *         ...
      *     ]
      *
-     * @param  array|Collection  $options
+     * @param  array|Collection|Arrayable  $options
      * @return $this
      */
-    public function options(array|Collection $options = []): static
+    public function options(array|Collection|Arrayable $options = []): static
     {
         if ($options instanceof Arrayable) {
             $options = $options->toArray();

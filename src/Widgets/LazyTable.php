@@ -14,31 +14,31 @@ class LazyTable extends Widget
     /**
      * @var LazyRenderable
      */
-    protected $renderable;
+    protected LazyRenderable $renderable;
 
     /**
      * 设置是否自动加载.
      *
      * @var bool
      */
-    protected $load = true;
+    protected bool $load = true;
 
     /**
      * 设置是否启用表格简化模式.
      *
      * @var bool
      */
-    protected $simple;
+    protected bool $simple = false;
 
     /**
      * @var string
      */
-    protected $loadScript = '';
+    protected string $loadScript = '';
 
     /**
      * LazyTable constructor.
      *
-     * @param  LazyRenderable  $renderable
+     * @param  LazyRenderable|null  $renderable
      * @param  bool  $load
      */
     public function __construct(LazyRenderable $renderable = null, bool $load = true)
@@ -57,9 +57,9 @@ class LazyTable extends Widget
      * @param  LazyRenderable|null  $renderable
      * @return $this
      */
-    public function from(?LazyRenderable $renderable)
+    public function from(?LazyRenderable $renderable): static
     {
-        if (! $renderable) {
+        if (!$renderable) {
             return $this;
         }
 
@@ -71,7 +71,7 @@ class LazyTable extends Widget
     /**
      * @return LazyRenderable
      */
-    public function getRenderable()
+    public function getRenderable(): LazyRenderable
     {
         return $this->renderable;
     }
@@ -82,7 +82,7 @@ class LazyTable extends Widget
      * @param  bool  $value
      * @return $this
      */
-    public function load(bool $value)
+    public function load(bool $value): static
     {
         $this->load = $value;
 
@@ -95,7 +95,7 @@ class LazyTable extends Widget
      * @param  bool  $value
      * @return $this
      */
-    public function simple(bool $value = true)
+    public function simple(bool $value = true): static
     {
         $this->simple = $value;
 
@@ -108,43 +108,41 @@ class LazyTable extends Widget
      * @param  string  $script
      * @return $this
      */
-    public function onLoad(string $script)
+    public function onLoad(string $script): static
     {
-        $this->loadScript .= "\$this.on('table:loaded', function (event) { {$script} });";
+        $this->loadScript .= "\$this.on('table:loaded', function (event) { $script });";
 
         return $this;
     }
 
-    protected function addScript()
+    protected function addScript(): void
     {
         $this->script = <<<JS
-Dcat.init('{$this->getElementSelector()}', function (\$this) {
-    Dcat.grid.AsyncTable({container: \$this})
-
-    {$this->loadScript}
-
-    {$this->getLoadScript()}
-});
-JS;
+            Dcat.init('{$this->getElementSelector()}', function (\$this) {
+                Dcat.grid.AsyncTable({container: \$this})
+                {$this->loadScript}
+                {$this->getLoadScript()}
+            });
+            JS;
     }
 
     /**
      * @return string
      */
-    protected function getLoadScript()
+    protected function getLoadScript(): string
     {
-        if (! $this->load) {
-            return;
+        if (!$this->load) {
+            return '';
         }
 
         return <<<'JS'
-$this.trigger('table:load');
-JS;
+            $this.trigger('table:load');
+            JS;
     }
 
     public function render(): string
     {
-        if ($this->simple !== null) {
+        if ($this->simple) {
             $this->renderable->simple($this->simple);
         }
 
@@ -160,7 +158,7 @@ JS;
         ]);
 
         return <<<HTML
-<div {$this->formatHtmlAttributes()} style="min-height: 200px"></div>        
-HTML;
+            <div {$this->formatHtmlAttributes()} style="min-height: 200px"></div>        
+            HTML;
     }
 }

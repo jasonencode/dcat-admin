@@ -32,29 +32,29 @@ class Code extends Markdown
      * @param  string  $lang
      * @return $this
      */
-    public function lang(string $lang)
+    public function lang(string $lang): static
     {
         $this->lang = $lang;
 
         return $this;
     }
 
-    public function javascript()
+    public function javascript(): static
     {
         return $this->lang('javascript');
     }
 
-    public function asHtml()
+    public function asHtml(): static
     {
         return $this->lang('html');
     }
 
-    public function java()
+    public function java(): static
     {
         return $this->lang('java');
     }
 
-    public function python()
+    public function python(): static
     {
         return $this->lang('python');
     }
@@ -64,10 +64,10 @@ class Code extends Markdown
      *
      * @param  string  $file
      * @param  int  $lineNumber
-     * @param  int  $padding
+     * @param  int  $context
      * @return $this
      */
-    public function section($file, $lineNumber = 1, $context = 5)
+    public function section(string $file, int $lineNumber = 1, int $context = 5): static
     {
         return $this->readFileContent($file, $lineNumber - $context, $lineNumber + $context);
     }
@@ -80,9 +80,9 @@ class Code extends Markdown
      * @param  int  $end
      * @return $this
      */
-    public function readFileContent($file, $start = 1, $end = 10)
+    public function readFileContent(string $file, int $start = 1, int $end = 10): static
     {
-        if (! $file or ! is_readable($file) || $end < $start) {
+        if (!$file or !is_readable($file) || $end < $start) {
             return $this;
         }
 
@@ -105,14 +105,14 @@ class Code extends Markdown
         return $this->content($source);
     }
 
-    protected function renderContent()
+    protected function renderContent(): string
     {
         $content = parent::renderContent();
 
         return <<<EOF
-```{$this->lang}
-{$content}
-```
-EOF;
+            ```{$this->lang}
+            {$content}
+            ```
+            EOF;
     }
 }

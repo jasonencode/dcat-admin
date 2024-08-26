@@ -10,17 +10,17 @@ class Tooltip extends Widget
 {
     protected static string $style = '.tooltip-inner{padding:7px 13px;border-radius:2px;font-size:13px;max-width:250px}';
 
-    protected $selector;
+    protected string $selector;
 
-    protected $title;
+    protected string $title;
 
-    protected $background;
+    protected string $background;
 
     protected int $maxWidth = 210;
 
     protected int $placement = 1;
 
-    protected $built;
+    protected bool $built = false;
 
     public function __construct(string $selector = '')
     {
@@ -104,10 +104,10 @@ class Tooltip extends Widget
     public function placement(string $placement = 'auto'): static
     {
         $map = [
-            'top'    => 1,
-            'right'  => 2,
+            'top' => 1,
+            'right' => 2,
             'bottom' => 3,
-            'left'   => 4,
+            'left' => 4,
         ];
 
         $this->placement = $map[$placement] ?? 1;
@@ -118,25 +118,25 @@ class Tooltip extends Widget
     protected function addScript(): void
     {
         $background = $this->background ?: Admin::color()->primary(-5);
-        $title      = $this->title;
+        $title = $this->title;
 
         Admin::script(
             <<<JS
-$('$this->selector').on('mouseover', function () {
-    var title = '$title' || $(this).data('title');
-    var idx = layer.tips(title, this, {
-      tips: ['$this->placement', '$background'],
-      time: 0,
-      maxWidth: $this->maxWidth,
-    });
-
-    $(this).attr('layer-idx', idx);
-}).on('mouseleave', function () {
-    layer.close($(this).attr('layer-idx'));
-
-    $(this).attr('layer-idx', '');
-});
-JS
+                $('$this->selector').on('mouseover', function () {
+                    var title = '$title' || $(this).data('title');
+                    var idx = layer.tips(title, this, {
+                      tips: ['$this->placement', '$background'],
+                      time: 0,
+                      maxWidth: $this->maxWidth,
+                    });
+                
+                    $(this).attr('layer-idx', idx);
+                }).on('mouseleave', function () {
+                    layer.close($(this).attr('layer-idx'));
+                
+                    $(this).attr('layer-idx', '');
+                });
+                JS
         );
     }
 
@@ -148,6 +148,7 @@ JS
         $this->built = true;
 
         $this->addScript();
+
         return parent::render();
     }
 }

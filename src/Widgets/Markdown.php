@@ -13,7 +13,7 @@ class Markdown extends Widget
     /**
      * @var string|Renderable
      */
-    protected $content;
+    protected string|Renderable $content;
 
     /**
      * 配置.
@@ -42,14 +42,14 @@ class Markdown extends Widget
      * @param  string|Renderable  $markdown
      * @return $this
      */
-    public function content($markdown)
+    public function content(Renderable|string $markdown): static
     {
         $this->content = &$markdown;
 
         return $this;
     }
 
-    protected function renderContent()
+    protected function renderContent(): string
     {
         return Helper::render($this->content);
     }

@@ -2,16 +2,17 @@
 
 namespace Dcat\Admin\Widgets;
 
+use Closure;
 use Dcat\Admin\Grid\LazyRenderable as LazyGrid;
 use Illuminate\Contracts\Support\Renderable;
 
 class Box extends Widget
 {
-    protected string $view  = 'admin::widgets.box';
-    protected        $title = 'Box header';
-    protected $content = 'here is the box content.';
-    protected $tools = [];
-    protected $padding;
+    protected string $view = 'admin::widgets.box';
+    protected string $title = 'Box header';
+    protected string $content = 'here is the box content.';
+    protected array $tools = [];
+    protected string $padding;
 
     public function __construct($title = '', $content = '')
     {
@@ -30,8 +31,9 @@ class Box extends Widget
      * Set content padding.
      *
      * @param  string  $padding
+     * @return Box
      */
-    public function padding(string $padding)
+    public function padding(string $padding): static
     {
         $this->padding = 'padding:'.$padding;
 
@@ -44,7 +46,7 @@ class Box extends Widget
      * @param  string  $content
      * @return $this
      */
-    public function content($content)
+    public function content(string $content): static
     {
         if ($content instanceof LazyGrid) {
             $content->simple();
@@ -61,22 +63,9 @@ class Box extends Widget
      * @param  string  $title
      * @return $this
      */
-    public function title($title)
+    public function title(string $title): static
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Set box as collapsable.
-     *
-     * @return $this
-     */
-    public function collapsable()
-    {
-        $this->tools[] =
-            '<button class="border-0 bg-white" data-action="collapse"><i class="feather icon-minus"></i></button>';
 
         return $this;
     }
@@ -86,7 +75,7 @@ class Box extends Widget
      *
      * @return $this
      */
-    public function removable()
+    public function removable(): static
     {
         $this->tools[] =
             '<button class="border-0 bg-white" data-action="remove"><i class="feather icon-x"></i></button>';
@@ -100,7 +89,7 @@ class Box extends Widget
      * @param  string  $styles
      * @return $this|Box
      */
-    public function style($styles)
+    public function style(string $styles): Box|static
     {
         $styles = array_map(function ($style) {
             return 'box-'.$style;
@@ -112,10 +101,10 @@ class Box extends Widget
     }
 
     /**
-     * @param  string|Renderable|\Closure  $content
+     * @param  string|Closure|Renderable  $content
      * @return $this
      */
-    public function tool($content)
+    public function tool(Renderable|string|Closure $content): static
     {
         $this->tools[] = $this->toString($content);
 
@@ -127,7 +116,7 @@ class Box extends Widget
      *
      * @return $this
      */
-    public function solid()
+    public function solid(): static
     {
         return $this->style('solid');
     }
@@ -140,11 +129,11 @@ class Box extends Widget
     public function defaultVariables(): array
     {
         return [
-            'title'      => $this->title,
-            'content'    => $this->toString($this->content),
-            'tools'      => $this->tools,
+            'title' => $this->title,
+            'content' => $this->toString($this->content),
+            'tools' => $this->tools,
             'attributes' => $this->formatHtmlAttributes(),
-            'padding'    => $this->padding,
+            'padding' => $this->padding,
         ];
     }
 }

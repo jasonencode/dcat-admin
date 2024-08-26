@@ -2,9 +2,11 @@
 
 namespace Dcat\Admin\Widgets;
 
+use Closure;
 use Dcat\Admin\Grid\LazyRenderable;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Renderable;
+use Throwable;
 
 class DialogTable extends Widget
 {
@@ -13,46 +15,46 @@ class DialogTable extends Widget
     /**
      * @var string
      */
-    protected $title;
+    protected string $title;
 
     /**
      * @var LazyTable
      */
-    protected $table;
+    protected LazyTable $table;
 
     /**
      * @var string
      */
-    protected $width = '825px';
+    protected string $width = '825px';
 
     /**
-     * @var string|\Closure|Renderable
+     * @var string|Closure|Renderable
      */
-    protected $button;
+    protected string|Closure|Renderable $button;
 
     /**
-     * @var string|\Closure|Renderable
+     * @var string|Closure|Renderable
      */
-    protected $footer;
+    protected string|Closure|Renderable $footer;
 
     /**
      * show max or min.
      *
      * @var bool
      */
-    protected $maxmin = true;
+    protected bool $maxmin = true;
 
     /**
      * resize setting.
      *
      * @var bool
      */
-    protected $resize = true;
+    protected bool $resize = true;
 
     /**
      * @var array
      */
-    protected $events = ['shown' => null, 'hidden' => null, 'load' => null];
+    protected array $events = ['shown' => null, 'hidden' => null, 'load' => null];
 
     public function __construct($title = null, LazyRenderable $table = null)
     {
@@ -75,9 +77,9 @@ class DialogTable extends Widget
      * @param  LazyRenderable|null  $renderable
      * @return $this
      */
-    public function from(?LazyRenderable $renderable)
+    public function from(?LazyRenderable $renderable): static
     {
-        if (! $renderable) {
+        if (!$renderable) {
             return $this;
         }
 
@@ -92,7 +94,7 @@ class DialogTable extends Widget
      * @param  string  $title
      * @return $this
      */
-    public function title($title)
+    public function title(string $title): static
     {
         $this->title = $title;
 
@@ -102,14 +104,14 @@ class DialogTable extends Widget
     /**
      * 设置弹窗宽度.
      *
+     * @param  string  $width
+     * @return $this
      * @example
      *    $this->width('500px');
      *    $this->width('50%');
      *
-     * @param  string  $width
-     * @return $this
      */
-    public function width($width)
+    public function width(string $width): static
     {
         $this->width = $width;
 
@@ -122,7 +124,7 @@ class DialogTable extends Widget
      * @param  bool  $maxmin
      * @return $this
      */
-    public function maxmin(bool $maxmin)
+    public function maxmin(bool $maxmin): static
     {
         $this->maxmin = $maxmin;
 
@@ -135,7 +137,7 @@ class DialogTable extends Widget
      * @param  bool  $resize
      * @return $this
      */
-    public function resize(bool $resize)
+    public function resize(bool $resize): static
     {
         $this->resize = $resize;
 
@@ -145,10 +147,10 @@ class DialogTable extends Widget
     /**
      * 设置点击按钮HTML.
      *
-     * @param  string|\Closure|Renderable  $button
+     * @param  string|Closure|Renderable  $button
      * @return $this
      */
-    public function button($button)
+    public function button(Renderable|string|Closure $button): static
     {
         $this->button = $button;
 
@@ -161,7 +163,7 @@ class DialogTable extends Widget
      * @param  string  $script
      * @return $this
      */
-    public function onShown(string $script)
+    public function onShown(string $script): static
     {
         $this->events['shown'] .= ';'.$script;
 
@@ -174,7 +176,7 @@ class DialogTable extends Widget
      * @param  string  $script
      * @return $this
      */
-    public function onHidden(string $script)
+    public function onHidden(string $script): static
     {
         $this->events['hidden'] .= ';'.$script;
 
@@ -187,7 +189,7 @@ class DialogTable extends Widget
      * @param  string  $script
      * @return $this
      */
-    public function onLoad(string $script)
+    public function onLoad(string $script): static
     {
         $this->events['load'] .= ';'.$script;
 
@@ -197,10 +199,10 @@ class DialogTable extends Widget
     /**
      * 设置弹窗底部内容.
      *
-     * @param  string|\Closure|Renderable  $footer
+     * @param  string|Closure|Renderable  $footer
      * @return $this
      */
-    public function footer($footer)
+    public function footer(Renderable|string|Closure $footer): static
     {
         $this->footer = $footer;
 
@@ -210,7 +212,7 @@ class DialogTable extends Widget
     /**
      * @return LazyTable
      */
-    public function getTable()
+    public function getTable(): LazyTable
     {
         return $this->table;
     }
@@ -218,10 +220,10 @@ class DialogTable extends Widget
     public function render(): string
     {
         $this->addVariables([
-            'title'  => $this->title,
-            'width'  => $this->width,
+            'title' => $this->title,
+            'width' => $this->width,
             'button' => $this->renderButton(),
-            'table'  => $this->renderTable(),
+            'table' => $this->renderTable(),
             'footer' => $this->renderFooter(),
             'events' => $this->events,
             'maxmin' => $this->maxmin,
@@ -231,27 +233,30 @@ class DialogTable extends Widget
         return parent::render();
     }
 
-    protected function renderTable()
+    /**
+     * @throws Throwable
+     */
+    protected function renderTable(): string
     {
         return $this->table->render();
     }
 
-    protected function renderFooter()
+    protected function renderFooter(): string
     {
         return Helper::render($this->footer);
     }
 
-    protected function renderButton()
+    protected function renderButton(): string
     {
-        if (! $this->button) {
-            return;
+        if (!$this->button) {
+            return '';
         }
 
         $button = Helper::render($this->button);
 
         // 如果没有HTML标签则添加一个 a 标签
-        if (! preg_match('/(\<\/[\d\w]+\s*\>+)/i', $button)) {
-            $button = "<a href=\"javascript:void(0)\">{$button}</a>";
+        if (!preg_match('/(<\/\w+\s*>+)/i', $button)) {
+            $button = "<a href=\"javascript:void(0)\">$button</a>";
         }
 
         return $button;

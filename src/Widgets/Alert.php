@@ -2,16 +2,17 @@
 
 namespace Dcat\Admin\Widgets;
 
+use Closure;
 use Illuminate\Contracts\Support\Renderable;
 
 class Alert extends Widget
 {
     protected string $view = 'admin::widgets.alert';
-    protected        $title;
-    protected $content;
-    protected $style;
-    protected $icon;
-    protected $showCloseBtn = false;
+    protected string $title;
+    protected string $content;
+    protected string $style;
+    protected string $icon;
+    protected bool $showCloseBtn = false;
 
     public function __construct($content = '', $title = null, $style = 'danger')
     {
@@ -28,7 +29,7 @@ class Alert extends Widget
      * @param  string  $title
      * @return $this
      */
-    public function title($title)
+    public function title(string $title): static
     {
         $this->title = $title;
 
@@ -38,17 +39,17 @@ class Alert extends Widget
     /**
      * Set contents.
      *
-     * @param  string|\Closure|Renderable  $content
+     * @param  string|Closure|Renderable  $content
      * @return $this
      */
-    public function content($content)
+    public function content(Renderable|string|Closure $content): static
     {
         $this->content = $this->toString($content);
 
         return $this;
     }
 
-    public function primary()
+    public function primary(): static
     {
         return $this->style('primary');
     }
@@ -58,9 +59,9 @@ class Alert extends Widget
      *
      * @return $this
      */
-    public function info()
+    public function info(): static
     {
-        return $this->style('info')->icon('fa fa-info');
+        return $this->style()->icon('fa fa-info');
     }
 
     /**
@@ -68,7 +69,7 @@ class Alert extends Widget
      *
      * @return $this
      */
-    public function success()
+    public function success(): static
     {
         return $this->style('success')->icon('fa fa-check');
     }
@@ -78,7 +79,7 @@ class Alert extends Widget
      *
      * @return $this
      */
-    public function warning()
+    public function warning(): static
     {
         return $this->style('warning')->icon('fa fa-warning');
     }
@@ -88,7 +89,7 @@ class Alert extends Widget
      *
      * @return $this
      */
-    public function danger()
+    public function danger(): static
     {
         return $this->style('danger')->icon('fa fa-ban');
     }
@@ -99,7 +100,7 @@ class Alert extends Widget
      * @param  bool  $value
      * @return $this
      */
-    public function removable(bool $value = true)
+    public function removable(bool $value = true): static
     {
         $this->showCloseBtn = $value;
 
@@ -112,7 +113,7 @@ class Alert extends Widget
      * @param  string  $style
      * @return $this
      */
-    public function style($style = 'info')
+    public function style(string $style = 'info'): static
     {
         $this->style = $style;
 
@@ -125,7 +126,7 @@ class Alert extends Widget
      * @param  string  $icon
      * @return $this
      */
-    public function icon($icon)
+    public function icon(string $icon): static
     {
         $this->icon = $icon;
 
@@ -137,13 +138,13 @@ class Alert extends Widget
      */
     public function defaultVariables(): array
     {
-        $this->class("alert alert-{$this->style} alert-dismissable");
+        $this->class("alert alert-$this->style alert-dismissable");
 
         return [
-            'title'        => $this->title,
-            'content'      => $this->content,
-            'icon'         => $this->icon,
-            'attributes'   => $this->formatHtmlAttributes(),
+            'title' => $this->title,
+            'content' => $this->content,
+            'icon' => $this->icon,
+            'attributes' => $this->formatHtmlAttributes(),
             'showCloseBtn' => $this->showCloseBtn,
         ];
     }
