@@ -8,14 +8,14 @@ use Illuminate\Support\Fluent;
 abstract class RowAction extends GridAction
 {
     /**
-     * @var Model|Fluent
+     * @var Model|Fluent|null
      */
-    protected Model|Fluent $row;
+    protected Model|Fluent|null $row = null;
 
     /**
-     * @var Column
+     * @var Column|null
      */
-    protected Column $column;
+    protected Column|null $column = null;
 
     /**
      * Get primary key value of current row.
@@ -24,7 +24,11 @@ abstract class RowAction extends GridAction
      */
     public function getKey(): mixed
     {
-        return $this->row->{$this->parent->getKeyName()};
+        if ($this->row) {
+            return $this->row->{$this->parent->getKeyName()};
+        }
+
+        return parent::getKey();
     }
 
     /**
