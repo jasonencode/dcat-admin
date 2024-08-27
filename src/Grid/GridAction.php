@@ -11,9 +11,9 @@ use Dcat\Admin\Grid;
 abstract class GridAction extends Action
 {
     /**
-     * @var Grid
+     * @var Grid|null
      */
-    protected Grid $parent;
+    protected ?Grid $parent = null;
 
     /**
      * @param  Grid  $grid

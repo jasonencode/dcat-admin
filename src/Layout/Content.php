@@ -6,6 +6,7 @@ use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Traits\HasBuilderEvents;
+use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\ViewErrorBag;
@@ -145,7 +146,7 @@ class Content implements Renderable
      *
      * @param  array  ...$breadcrumb
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      * @example
      *     $this->breadcrumb('Menu', 'auth/menu', 'fa fa-align-justify');
      *     $this->breadcrumb([
@@ -166,7 +167,7 @@ class Content implements Renderable
      * @param  array  $breadcrumb
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function formatBreadcrumb(array &$breadcrumb): void
     {
@@ -175,7 +176,7 @@ class Content implements Renderable
         }
 
         $notArray = false;
-        foreach ($breadcrumb as &$item) {
+        foreach ($breadcrumb as $item) {
             $isArray = is_array($item);
             if ($isArray && ! isset($item['text'])) {
                 throw new RuntimeException('Breadcrumb format error!');
@@ -263,8 +264,8 @@ class Content implements Renderable
     /**
      * Build html of content.
      *
-     * @return array|string|\Symfony\Component\HttpFoundation\Response|null
-     * @throws \Exception
+     * @return array|string|Response|null
+     * @throws Exception
      */
     public function build(): array|string|Response|null
     {
@@ -282,9 +283,9 @@ class Content implements Renderable
     }
 
     /**
-     * @param  \Throwable  $e
-     * @return array|string|\Symfony\Component\HttpFoundation\Response|null
-     * @throws \Exception
+     * @param  Throwable  $e
+     * @return array|string|Response|null
+     * @throws Exception
      */
     protected function handleException(Throwable $e): array|string|Response|null
     {
@@ -514,7 +515,7 @@ class Content implements Renderable
      * Render this content.
      *
      * @return string
-     * @throws \Exception|\Throwable
+     * @throws Exception|Throwable
      */
     public function render(): string
     {

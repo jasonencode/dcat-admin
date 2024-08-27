@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Layout;
 
+use Closure;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Traits\HasBuilderEvents;
 use Illuminate\Contracts\Support\Htmlable;
@@ -30,7 +31,7 @@ class Navbar implements Renderable
     }
 
     /**
-     * @param  string|\Closure|Renderable|Htmlable  $element
+     * @param  string|Closure|Renderable|Htmlable  $element
      * @return $this
      */
     public function left($element)
@@ -41,7 +42,7 @@ class Navbar implements Renderable
     }
 
     /**
-     * @param  string|\Closure|Renderable|Htmlable  $element
+     * @param  string|Closure|Renderable|Htmlable  $element
      * @return $this
      */
     public function right($element)

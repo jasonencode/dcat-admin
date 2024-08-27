@@ -3,6 +3,7 @@
 namespace Dcat\Admin\Http\Controllers;
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Exception\InvalidArgumentException;
 use Dcat\Admin\Form;
 use Dcat\Admin\Http\Repositories\Permission;
 use Dcat\Admin\Layout\Content;
@@ -16,6 +17,9 @@ class PermissionController extends AdminController
         return trans('admin.permissions');
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function index(Content $content): Content
     {
         return $content
@@ -24,6 +28,9 @@ class PermissionController extends AdminController
             ->body($this->treeView());
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     protected function treeView()
     {
         $model = config('admin.database.permissions_model');
@@ -46,7 +53,7 @@ class PermissionController extends AdminController
                 $max = 3;
                 if (count($path) > $max) {
                     $path = array_slice($path, 0, $max);
-                    array_push($path, '...');
+                    $path[] = '...';
                 }
 
                 $method = $branch['http_method'] ?: [];
@@ -79,6 +86,9 @@ class PermissionController extends AdminController
         });
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function form()
     {
         $with = [];

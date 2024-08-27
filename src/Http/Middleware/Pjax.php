@@ -17,7 +17,7 @@ class Pjax
      *
      * @param  Request  $request
      * @param  Closure  $next
-     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function handle(Request $request, Closure $next): RedirectResponse|Response
     {
@@ -43,7 +43,7 @@ class Pjax
      * Handle Response with exceptions.
      *
      * @param  Response  $response
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     protected function handleErrorResponse(Response $response): RedirectResponse
     {

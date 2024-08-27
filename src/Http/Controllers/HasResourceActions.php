@@ -2,13 +2,15 @@
 
 namespace Dcat\Admin\Http\Controllers;
 
+use Illuminate\Http\Response;
+
 trait HasResourceActions
 {
     /**
      * Update the specified resource in storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update($id)
     {
@@ -29,7 +31,7 @@ trait HasResourceActions
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Http\Controllers;
 
+use Dcat\Admin\Exception\InvalidArgumentException;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Auth\Permission;
@@ -14,11 +15,14 @@ use Illuminate\Http\JsonResponse;
 
 class UserController extends AdminController
 {
-    public function title(): string
+    protected function title(): string
     {
         return trans('admin.administrator');
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     protected function grid()
     {
         return Grid::make(Administrator::with(['roles']), function (Grid $grid) {
@@ -30,11 +34,11 @@ class UserController extends AdminController
                 $grid->column('roles')->pluck('name')->label('primary', 3);
 
                 $permissionModel = config('admin.database.permissions_model');
-                $roleModel       = config('admin.database.roles_model');
-                $nodes           = (new $permissionModel())->allNodes();
+                $roleModel = config('admin.database.roles_model');
+                $nodes = (new $permissionModel())->allNodes();
                 $grid->column('permissions')
                     ->if(function () {
-                        return ! $this->roles->isEmpty();
+                        return !$this->roles->isEmpty();
                     })
                     ->showTreeInDialog(function (Grid\Displayers\DialogTree $tree) use (&$nodes, $roleModel) {
                         $tree->nodes($nodes);
@@ -67,6 +71,9 @@ class UserController extends AdminController
         });
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     protected function detail($id)
     {
         return Show::make($id, Administrator::with(['roles']), function (Show $show) {
@@ -78,7 +85,7 @@ class UserController extends AdminController
 
             if (config('admin.permission.enable')) {
                 $show->field('roles')->as(function ($roles) {
-                    if (! $roles) {
+                    if (!$roles) {
                         return;
                     }
 
@@ -89,9 +96,9 @@ class UserController extends AdminController
                     $roles = $this->roles->toArray();
 
                     $permissionModel = config('admin.database.permissions_model');
-                    $roleModel       = config('admin.database.roles_model');
+                    $roleModel = config('admin.database.roles_model');
                     $permissionModel = new $permissionModel();
-                    $nodes           = $permissionModel->allNodes();
+                    $nodes = $permissionModel->allNodes();
 
                     $tree = Tree::make($nodes);
 
@@ -103,7 +110,7 @@ class UserController extends AdminController
                         }
                     }
 
-                    if (! $isAdministrator) {
+                    if (!$isAdministrator) {
                         $keyName = $permissionModel->getKeyName();
                         $tree->check(
                             $roleModel::getPermissionId(array_column($roles, $keyName))->flatten()
@@ -119,6 +126,9 @@ class UserController extends AdminController
         });
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function form()
     {
         return Form::make(Administrator::with(['roles']), function (Form $form) {
@@ -178,7 +188,7 @@ class UserController extends AdminController
                 $form->password = bcrypt($form->password);
             }
 
-            if (! $form->password) {
+            if (!$form->password) {
                 $form->deleteInput('password');
             }
         });

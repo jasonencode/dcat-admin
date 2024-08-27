@@ -7,6 +7,9 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Renderable;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 class Column implements Renderable
 {
@@ -91,6 +94,9 @@ class Column implements Renderable
      * Build column html.
      *
      * @return string
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Throwable
      */
     public function render(): string
     {

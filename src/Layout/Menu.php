@@ -5,6 +5,7 @@ namespace Dcat\Admin\Layout;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Facades\Lang;
+use Throwable;
 
 class Menu
 {
@@ -12,8 +13,10 @@ class Menu
 
     public function register(): void
     {
-        if (! admin_has_default_section(Admin::SECTION['LEFT_SIDEBAR_MENU'])) {
-            admin_inject_default_section(Admin::SECTION['LEFT_SIDEBAR_MENU'], function () {
+        if (!admin_has_default_section(Admin::SECTION['LEFT_SIDEBAR_MENU'])) {
+            admin_inject_default_section(/**
+             * @throws Throwable
+             */ Admin::SECTION['LEFT_SIDEBAR_MENU'], function () {
                 $menuModel = config('admin.database.menu_model');
 
                 return $this->toHtml((new $menuModel())->allNodes()->toArray());
@@ -25,9 +28,9 @@ class Menu
      * 增加菜单节点.
      *
      * @param  array  $nodes
-     * @param  int  $priority
+     * @param  int    $priority
      * @return void
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function add(array $nodes = [], int $priority = 10): void
     {
@@ -42,7 +45,7 @@ class Menu
      * @param  array  $nodes
      * @return string
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function toHtml(array $nodes): string
     {
@@ -73,7 +76,7 @@ class Menu
      *
      * @param  array  $item
      * @return string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(array $item): string
     {
@@ -83,7 +86,7 @@ class Menu
     /**
      * 判断是否选中.
      *
-     * @param  array  $item
+     * @param  array        $item
      * @param  null|string  $path
      * @return bool
      */
@@ -105,7 +108,7 @@ class Menu
             if ($path == trim($this->getPath($v['uri']), '/')) {
                 return true;
             }
-            if (! empty($v['children'])) {
+            if (!empty($v['children'])) {
                 if ($this->isActive($v, $path)) {
                     return true;
                 }
@@ -124,14 +127,14 @@ class Menu
     public function visible(array $item): bool
     {
         if (
-            ! $this->checkPermission($item)
-            || ! $this->userCanSeeMenu($item)
+            !$this->checkPermission($item)
+            || !$this->userCanSeeMenu($item)
         ) {
             return false;
         }
 
         $show = $item['show'] ?? null;
-        if ($show !== null && ! $show) {
+        if ($show !== null && !$show) {
             return false;
         }
 
@@ -148,7 +151,7 @@ class Menu
     {
         $user = Admin::user();
 
-        if (! $user || ! method_exists($user, 'canSeeMenu')) {
+        if (!$user || !method_exists($user, 'canSeeMenu')) {
             return true;
         }
 
@@ -169,7 +172,7 @@ class Menu
             return true;
         }
 
-        $roles       = array_column(Helper::array($item['roles'] ?? []), 'slug');
+        $roles = array_column(Helper::array($item['roles'] ?? []), 'slug');
         $permissions = array_column(Helper::array($item['permissions'] ?? []), 'slug');
 
         if ($user->visible($roles)) {

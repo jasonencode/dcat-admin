@@ -2,16 +2,23 @@
 
 namespace Dcat\Admin\Http\Controllers;
 
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class EditorMDController
 {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function upload(Request $request)
     {
         $file = $request->file('editormd-image-file');
-        $dir  = trim($request->get('dir'), '/');
+        $dir = trim($request->get('dir'), '/');
         $disk = $this->disk();
 
         $newName = $this->generateNewName($file);
@@ -27,9 +34,9 @@ class EditorMDController
     }
 
     /**
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @return Filesystem
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function disk()
     {

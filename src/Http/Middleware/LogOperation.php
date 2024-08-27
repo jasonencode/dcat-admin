@@ -31,8 +31,8 @@ class LogOperation
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  Request  $request
+     * @param  Closure  $next
      *
      * @return mixed
      */
@@ -43,10 +43,10 @@ class LogOperation
 
             $log = [
                 'user_id' => $user ? $user->getKey() : 0,
-                'path'    => substr($request->path(), 0, 255),
-                'method'  => $request->method(),
-                'ip'      => $request->getClientIp(),
-                'input'   => $this->formatInput($request->input()),
+                'path' => substr($request->path(), 0, 255),
+                'method' => $request->method(),
+                'ip' => $request->getClientIp(),
+                'input' => $this->formatInput($request->input()),
             ];
 
             try {
@@ -66,7 +66,7 @@ class LogOperation
     protected function formatInput(array $input): string
     {
         foreach ($this->getSecretFields() as $field) {
-            if ($field && ! empty($input[$field])) {
+            if ($field && !empty($input[$field])) {
                 $input[$field] = Str::limit($input[$field], 3, '******');
             }
         }
@@ -81,7 +81,7 @@ class LogOperation
      */
     protected function shouldLogOperation(Request $request): bool
     {
-        return ! $this->inExceptArray($request)
+        return !$this->inExceptArray($request)
             && $this->inAllowedMethods($request->method());
     }
 
@@ -108,7 +108,7 @@ class LogOperation
     /**
      * Determine if the request has a URI that should pass through CSRF verification.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      *
      * @return bool
      */

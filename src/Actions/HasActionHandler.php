@@ -8,7 +8,7 @@ use Dcat\Admin\Traits\HasAuthorization;
 trait HasActionHandler
 {
     use HasAuthorization {
-        failedAuthorization as parentFailedAuthorization;
+        HasAuthorization::failedAuthorization as parentFailedAuthorization;
     }
 
     /**
@@ -103,7 +103,7 @@ trait HasActionHandler
         $script = <<<JS
 Dcat.Action({
     selector: '{$this->selector()}',
-    event: '{$this->event}',
+    event: '$this->event',
     method: '{$this->method()}',
     key: '{$this->getKey()}',
     url: '{$this->handlerRoute()}',
@@ -129,8 +129,8 @@ JS;
     protected function actionScript(): string
     {
         // 发起请求之前回调，返回false可以中断请求
-        return <<<'JS'
-function (data, target, action) { }
+        return <<<JS
+function(data, target, action) { }
 JS;
     }
 
@@ -142,8 +142,8 @@ JS;
     protected function resolverScript(): string
     {
         // 请求成功回调，返回false可以中断默认的成功处理逻辑
-        return <<<'JS'
-function (target, results) {}
+        return <<<JS
+function(target, results) {}
 JS;
     }
 
@@ -154,8 +154,8 @@ JS;
      */
     protected function handleHtmlResponse(): string
     {
-        return <<<'JS'
-function (target, html, data) {
+        return <<<JS
+function(target, html, data) {
     target.html(html);
 }
 JS;
@@ -168,8 +168,8 @@ JS;
      */
     protected function rejectScript(): string
     {
-        return <<<'JS'
-function (target, results) {}
+        return <<<JS
+function(target, results) {}
 JS;
     }
 

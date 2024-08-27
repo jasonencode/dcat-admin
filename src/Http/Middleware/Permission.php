@@ -21,17 +21,17 @@ class Permission
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  Request  $request
+     * @param  Closure  $next
      * @return mixed
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @throws RuntimeException
      */
     public function handle(Request $request, Closure $next): Response
     {
         $user = Admin::user();
 
         if (
-            ! config('admin.permission.enable')
+            !config('admin.permission.enable')
             || $this->shouldPassThrough($request)
             || $user->isAdministrator()
             || $this->checkRoutePermission($request)
@@ -39,7 +39,7 @@ class Permission
             return $next($request);
         }
 
-        if (! $user->allPermissions()->first(function ($permission) use ($request) {
+        if (!$user->allPermissions()->first(function ($permission) use ($request) {
             return $permission->shouldPassThrough($request);
         })) {
             Checker::error();
@@ -54,11 +54,11 @@ class Permission
      *
      * @param  Request  $request
      * @return bool
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @throws RuntimeException
      */
     public function checkRoutePermission(Request $request): bool
     {
-        if (! $middleware = collect($request->route()->middleware())->first(function ($middleware) {
+        if (!$middleware = collect($request->route()->middleware())->first(function ($middleware) {
             return Str::startsWith($middleware, $this->middlewarePrefix);
         })) {
             return false;
@@ -68,7 +68,7 @@ class Permission
 
         $method = array_shift($args);
 
-        if (! method_exists(Checker::class, $method)) {
+        if (!method_exists(Checker::class, $method)) {
             throw new RuntimeException("Invalid permission method [$method].");
         }
 
@@ -78,7 +78,7 @@ class Permission
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return bool
      */
     protected function isApiRoute(Request $request): bool
@@ -89,7 +89,7 @@ class Permission
     /**
      * Determine if the request has a URI that should pass through verification.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return bool
      */
     public function shouldPassThrough(Request $request): bool

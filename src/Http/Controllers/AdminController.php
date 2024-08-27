@@ -130,7 +130,7 @@ class AdminController extends Controller
      * Update the specified resource in storage.
      *
      * @param  int|string  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function update(int|string $id): JsonResponse
     {
@@ -140,7 +140,7 @@ class AdminController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(): JsonResponse
     {
@@ -151,7 +151,7 @@ class AdminController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int|string  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroy(int|string $id): JsonResponse
     {

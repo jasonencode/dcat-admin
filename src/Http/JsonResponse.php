@@ -34,11 +34,11 @@ use Throwable;
  */
 class JsonResponse implements Arrayable
 {
-    protected bool   $status     = true;
-    protected int    $statusCode = 200;
-    protected array  $data       = [];
-    protected string $html       = '';
-    protected array  $options    = [];
+    protected bool $status = true;
+    protected int $statusCode = 200;
+    protected array $data = [];
+    protected string $html = '';
+    protected array $options = [];
 
     public function __construct(array $data = [])
     {
@@ -328,7 +328,7 @@ class JsonResponse implements Arrayable
     /**
      * 响应异常.
      *
-     * @param  \Throwable  $exception
+     * @param  Throwable  $exception
      * @return $this
      */
     public function withException(Throwable $exception): static
@@ -348,7 +348,7 @@ class JsonResponse implements Arrayable
      * Flash a piece of data to the session.
      *
      * @param  array|string  $key
-     * @param  mixed|null  $value
+     * @param  mixed|null    $value
      * @return $this
      */
     public function with(array|string $key, mixed $value = null): static
@@ -385,7 +385,7 @@ class JsonResponse implements Arrayable
     }
 
     /**
-     * @throws \Dcat\Admin\Exception\AdminException
+     * @throws AdminException
      */
     public function __call($method, $arguments)
     {
@@ -406,7 +406,7 @@ class JsonResponse implements Arrayable
      * @param  mixed  ...$params
      * @return $this
      */
-    public static function make(...$params)
+    public static function make(...$params): static
     {
         return new static(...$params);
     }

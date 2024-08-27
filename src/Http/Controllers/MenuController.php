@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Http\Controllers;
 
+use Dcat\Admin\Exception\InvalidArgumentException;
 use Dcat\Admin\Form;
 use Dcat\Admin\Http\Actions\Menu\Show;
 use Dcat\Admin\Http\Repositories\Menu;
@@ -58,7 +59,8 @@ class MenuController extends AdminController
     }
 
     /**
-     * @return \Dcat\Admin\Tree
+     * @return Tree
+     * @throws InvalidArgumentException
      */
     protected function treeView()
     {
@@ -100,6 +102,7 @@ class MenuController extends AdminController
      * Make a form builder.
      *
      * @return Form
+     * @throws InvalidArgumentException
      */
     public function form()
     {
@@ -172,6 +175,6 @@ class MenuController extends AdminController
      */
     protected function iconHelp()
     {
-        return 'For more icons please see <a href="http://fontawesome.io/icons/" target="_blank">http://fontawesome.io/icons/</a>';
+        return 'For more icons please see <a href="https://fontawesome.io/icons/" target="_blank">http://fontawesome.io/icons/</a>';
     }
 }

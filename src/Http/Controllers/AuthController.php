@@ -3,13 +3,20 @@
 namespace Dcat\Admin\Http\Controllers;
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Exception\InvalidArgumentException;
 use Dcat\Admin\Form;
 use Dcat\Admin\Http\Repositories\Administrator;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Traits\HasFormResponse;
 use Illuminate\Auth\GuardHelpers;
+use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 
@@ -30,7 +37,7 @@ class AuthController extends Controller
     /**
      * 显示登录页面
      *
-     * @return Content|\Illuminate\Http\RedirectResponse
+     * @return Content|RedirectResponse
      */
     public function getLogin(Content $content)
     {
@@ -45,7 +52,7 @@ class AuthController extends Controller
      * 登录逻辑
      *
      * @param  Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function postLogin(Request $request)
     {
@@ -73,7 +80,7 @@ class AuthController extends Controller
     /**
      * User logout.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
+     * @return Application|\Illuminate\Foundation\Application|RedirectResponse|Redirector|string
      */
     public function getLogout(Request $request)
     {
@@ -90,7 +97,7 @@ class AuthController extends Controller
     }
 
     /**
-     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|\Illuminate\Foundation\Application|string|null
+     * @return array|Application|Translator|\Illuminate\Foundation\Application|string|null
      */
     protected function getFailedLoginMessage()
     {
@@ -113,7 +120,7 @@ class AuthController extends Controller
      * Send the response after the user was authenticated.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function sendLoginResponse(Request $request)
     {
@@ -141,13 +148,16 @@ class AuthController extends Controller
     /**
      * Get the guard to be used during authentication.
      *
-     * @return \Illuminate\Contracts\Auth\StatefulGuard|GuardHelpers
+     * @return StatefulGuard|GuardHelpers
      */
     protected function guard()
     {
         return Admin::guard();
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function getSetting(Content $content)
     {
         $form = $this->settingForm();
@@ -160,6 +170,9 @@ class AuthController extends Controller
             ->body($form->edit(Admin::user()->getKey()));
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function putSetting()
     {
         $form = $this->settingForm();
@@ -191,6 +204,9 @@ class AuthController extends Controller
             ->validateCredentials($user, ['password' => $oldPassword]);
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     protected function settingForm()
     {
         return new Form(new Administrator(), function (Form $form) {

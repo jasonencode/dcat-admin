@@ -3,18 +3,25 @@
 namespace Dcat\Admin\Http\Controllers;
 
 use Dcat\Admin\Exception\AdminException;
+use Dcat\Admin\Exception\UploadException;
 use Dcat\Admin\Form\Field\Embeds;
 use Dcat\Admin\Form\Field\File;
 use Dcat\Admin\Form\Field\HasMany;
 use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Traits\HasUploadedFile;
 use Dcat\Admin\Widgets\Form;
+use Exception;
 use Illuminate\Http\Request;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class HandleFormController
 {
     use HasUploadedFile;
 
+    /**
+     * @throws AdminException
+     */
     public function handle(Request $request)
     {
         $form = $this->resolveForm($request);
@@ -34,6 +41,12 @@ class HandleFormController
         return $this->sendResponse($form->handle($input));
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws UploadException
+     * @throws AdminException
+     */
     public function uploadFile(Request $request)
     {
         $form = $this->resolveForm($request);
@@ -72,6 +85,10 @@ class HandleFormController
         }
     }
 
+    /**
+     * @throws AdminException
+     * @throws Exception
+     */
     public function destroyFile(Request $request)
     {
         $form = $this->resolveForm($request);

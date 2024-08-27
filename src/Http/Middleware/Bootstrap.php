@@ -56,7 +56,7 @@ class Bootstrap
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return void
      */
     protected function storeCurrentUrl(Request $request)
@@ -76,7 +76,7 @@ class Bootstrap
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return bool
      */
     public function prefetch($request)
