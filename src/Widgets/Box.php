@@ -12,7 +12,7 @@ class Box extends Widget
     protected string $title = 'Box header';
     protected string $content = 'here is the box content.';
     protected array $tools = [];
-    protected string $padding;
+    protected string $padding = '';
 
     public function __construct($title = '', $content = '')
     {

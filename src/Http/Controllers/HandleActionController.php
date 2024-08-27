@@ -24,7 +24,7 @@ class HandleActionController
         if (!$action->passesAuthorization()) {
             $response = $action->failedAuthorization();
         } else {
-            $response = $action->handle($request);
+            $response = $action->handle();
         }
 
         return $response instanceof Response ? $response->send() : $response;
