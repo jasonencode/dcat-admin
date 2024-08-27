@@ -17,7 +17,7 @@ trait InteractsWithRenderApi
     /**
      * @var string
      */
-    protected string $loadScript;
+    protected string $loadScript = '';
 
     /**
      * 监听异步渲染完成事件.
@@ -56,9 +56,9 @@ trait InteractsWithRenderApi
 target.on('$this->target:load', function () {
     Dcat.helpers.asyncRender('$url', function (html) {
         body.html(html);
-        
+
         {$this->loadScript}
-        
+
         target.trigger('$this->target:loaded');
     });
 });

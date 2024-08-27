@@ -18,19 +18,19 @@ class Modal extends Widget
     protected $target = 'modal';
 
     /**
-     * @var string|Closure|Renderable
+     * @var string|Closure|Renderable|null
      */
-    protected Closure|string|Renderable $title;
+    protected Closure|string|Renderable|null $title = null;
+
+    /**
+     * @var string|Closure|Renderable|null
+     */
+    protected string|Closure|Renderable|null $content;
 
     /**
      * @var string|Closure|Renderable
      */
-    protected string|Closure|Renderable $content;
-
-    /**
-     * @var string|Closure|Renderable
-     */
-    protected string|Closure|Renderable $footer;
+    protected string|Closure|Renderable $footer = '';
 
     /**
      * @var string|Closure|Renderable
@@ -181,10 +181,10 @@ class Modal extends Widget
     /**
      * 设置弹窗标题.
      *
-     * @param  string|Closure|Renderable  $title
+     * @param  Renderable|string|Closure|null  $title
      * @return $this
      */
-    public function title(Renderable|string|Closure $title): static
+    public function title(Renderable|string|Closure|null $title): static
     {
         $this->title = $title;
 
@@ -194,10 +194,10 @@ class Modal extends Widget
     /**
      * 设置弹窗内容.
      *
-     * @param  Closure|string|LazyRenderable|Renderable  $content
+     * @param  Renderable|Closure|string|LazyRenderable|null  $content
      * @return $this
      */
-    public function content(Renderable|Closure|string|LazyRenderable $content): static
+    public function content(Renderable|Closure|string|LazyRenderable|null $content): static
     {
         if ($content instanceof LazyGrid) {
             $content = $table =
@@ -342,7 +342,7 @@ class Modal extends Widget
 
         $this->on('show.bs.modal', <<<JS
                       body.html('<div style="min-height:150px"></div>').loading();
-                      
+
                       setTimeout(function () {
                           target.trigger('$this->target:load')
                       }, $this->delay);

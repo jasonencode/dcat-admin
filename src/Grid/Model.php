@@ -460,6 +460,7 @@ class Model
             return $this->paginator->getCollection();
         }
 
+
         if ($this->builder && is_callable($this->builder)) {
             $results = call_user_func($this->builder, $this);
         } else {

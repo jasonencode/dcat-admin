@@ -14,7 +14,7 @@ class Radio extends Widget
     protected string $right = '16px';
     protected $checked;
     protected array $disabledValues = [];
-    protected string $size;
+    protected string $size = '';
     protected bool $inline = false;
 
     public function __construct(

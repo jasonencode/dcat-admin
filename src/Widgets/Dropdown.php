@@ -23,7 +23,7 @@ class Dropdown extends Widget
      * @var array
      */
     protected array $button = [
-        'text'  => null,
+        'text' => null,
         'class' => 'btn btn-sm btn-white waves-effect',
         'style' => null,
     ];
@@ -31,17 +31,17 @@ class Dropdown extends Widget
     /**
      * @var string
      */
-    protected string $buttonId;
+    protected string $buttonId = '';
 
     /**
-     * @var Closure
+     * @var Closure|null
      */
-    protected Closure $builder;
+    protected ?Closure $builder = null;
 
     /**
      * @var bool
      */
-    protected bool $divider;
+    protected bool $divider = false;
 
     /**
      * @var bool
@@ -62,12 +62,12 @@ class Dropdown extends Widget
      * Set the options of dropdown menus.
      *
      * @param  array|Arrayable  $options
-     * @param  string|null  $title
+     * @param  string|null      $title
      * @return $this
      */
     public function options(array|Arrayable $options = [], ?string $title = null): static
     {
-        if (! $options) {
+        if (!$options) {
             return $this;
         }
 
@@ -239,10 +239,10 @@ class Dropdown extends Widget
     public function render(): string
     {
         $this->addVariables([
-            'options'   => $this->renderOptions(),
-            'button'    => $this->button,
-            'buttonId'  => $this->buttonId,
-            'click'     => $this->click,
+            'options' => $this->renderOptions(),
+            'button' => $this->button,
+            'buttonId' => $this->buttonId,
+            'click' => $this->click,
             'direction' => $this->direction,
         ]);
 
