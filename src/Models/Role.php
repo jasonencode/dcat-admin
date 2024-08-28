@@ -128,7 +128,7 @@ class Role extends Model
      * @param  string|null  $slug
      * @return bool
      */
-    public static function isAdministrator(?string $slug): bool
+    public static function isAdministrator(?string $slug = null): bool
     {
         return $slug === static::ADMINISTRATOR;
     }

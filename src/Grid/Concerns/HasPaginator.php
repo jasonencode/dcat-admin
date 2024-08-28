@@ -2,16 +2,16 @@
 
 namespace Dcat\Admin\Grid\Concerns;
 
-use Dcat\Admin\Grid\Tools;
+use Dcat\Admin\Grid\Tools\Paginator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 
 trait HasPaginator
 {
     /**
-     * @var \Dcat\Admin\Grid\Tools\Paginator|null
+     * @var Paginator|null
      */
-    protected Tools\Paginator|null $paginator = null;
+    protected Paginator|null $paginator = null;
 
     /**
      * Per-page options.
@@ -75,12 +75,12 @@ trait HasPaginator
     /**
      * Get the grid paginator.
      *
-     * @return \Dcat\Admin\Grid\Tools\Paginator
+     * @return Paginator
      */
-    public function paginator(): Tools\Paginator
+    public function paginator(): Paginator
     {
         if (! $this->paginator) {
-            $paginatorClass = $this->options['paginator_class'] ?: (config('admin.grid.paginator_class') ?: Tools\Paginator::class);
+            $paginatorClass = $this->options['paginator_class'] ?: (config('admin.grid.paginator_class') ?: Paginator::class);
 
             $this->paginator = new $paginatorClass($this);
         }
@@ -157,7 +157,7 @@ trait HasPaginator
      *
      * @Date   : 2024/8/15 17:11
      * @Author : <Jason.C>
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return Factory|View
      */
     public function renderPagination(): Factory|View
     {

@@ -219,9 +219,9 @@ class Form implements Renderable
     /**
      * Model of the form.
      *
-     * @var Fluent
+     * @var Fluent|Model
      */
-    protected Fluent $model;
+    protected Fluent|Model $model;
 
     /**
      * @var Validator
@@ -622,8 +622,10 @@ class Form implements Renderable
      * @return RedirectResponse|Redirector|\Illuminate\Http\JsonResponse|Response
      * @throws Exception
      */
-    public function store(?array $data = null, $redirectTo = null): \Illuminate\Http\JsonResponse|Redirector|RedirectResponse|Response
-    {
+    public function store(
+        ?array $data = null,
+        $redirectTo = null
+    ): \Illuminate\Http\JsonResponse|Redirector|RedirectResponse|Response {
         try {
             if ($data) {
                 $this->request->replace($data);
@@ -1294,7 +1296,7 @@ class Form implements Renderable
         }
 
         if (is_array($column)) {
-            foreach ($column as $k => &$v) {
+            foreach ($column as &$v) {
                 $v = (array) $v;
             }
             $this->validationMessages->merge($column);
