@@ -6,7 +6,9 @@ use Dcat\Admin\Contracts\TreeRepository;
 use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Show;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -60,7 +62,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
     /**
      * @return string
      */
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }
@@ -68,7 +70,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
     /**
      * @return string
      */
-    public function getCreatedAtColumn()
+    public function getCreatedAtColumn(): string
     {
         return $this->createdAtColumn;
     }
@@ -76,7 +78,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
     /**
      * @return string
      */
-    public function getUpdatedAtColumn()
+    public function getUpdatedAtColumn(): string
     {
         return $this->updatedAtColumn;
     }
@@ -86,7 +88,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      *
      * @return array
      */
-    public function getGridColumns()
+    public function getGridColumns(): array
     {
         return ['*'];
     }
@@ -96,7 +98,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      *
      * @return array
      */
-    public function getFormColumns()
+    public function getFormColumns(): array
     {
         return ['*'];
     }
@@ -106,7 +108,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      *
      * @return array
      */
-    public function getDetailColumns()
+    public function getDetailColumns(): array
     {
         return ['*'];
     }
@@ -115,9 +117,9 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 查询Grid表格数据.
      *
      * @param  Grid\Model  $model
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Collection|array
+     * @return LengthAwarePaginator|Collection|array
      */
-    public function get(Grid\Model $model)
+    public function get(Grid\Model $model): LengthAwarePaginator|array|Collection
     {
         $this->setSort($model);
         $this->setPaginate($model);
@@ -143,7 +145,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * @param  Grid\Model  $model
      * @return void
      */
-    protected function setSort(Grid\Model $model)
+    protected function setSort(Grid\Model $model): void
     {
         [$column, $type] = $model->getSort();
 
@@ -168,7 +170,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * @param  string  $type
      * @return void
      */
-    protected function setRelationSort(Grid\Model $model, $column, $type)
+    protected function setRelationSort(Grid\Model $model, string $column, string $type): void
     {
         [$relationName, $relationColumn] = explode('.', $column);
 
@@ -192,13 +194,13 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * @param  Grid\Model  $model
      * @return void
      */
-    protected function setPaginate(Grid\Model $model)
+    protected function setPaginate(Grid\Model $model): void
     {
         $paginate = $model->findQueryByMethod('paginate')->first();
 
         $model->rejectQuery(['paginate']);
 
-        if (! $model->allowPagination()) {
+        if (!$model->allowPagination()) {
             $model->addQuery('get', [$this->getGridColumns()]);
         } else {
             $model->addQuery('paginate', $this->resolvePerPage($model, $paginate));
@@ -212,7 +214,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * @param  array|null  $paginate
      * @return array
      */
-    protected function resolvePerPage(Grid\Model $model, $paginate)
+    protected function resolvePerPage(Grid\Model $model, ?array $paginate): array
     {
         if ($paginate && is_array($paginate)) {
             if ($perPage = request()->input($model->getPerPageName())) {
@@ -242,7 +244,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
             ->where($this->getKeyName(), $form->getKey())
             ->first($this->getFormColumns());
 
-        if (! $result) {
+        if (!$result) {
             abort(404);
         }
 
@@ -261,7 +263,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
             ->where($this->getKeyName(), $show->getKey())
             ->first($this->getDetailColumns());
 
-        if (! $result) {
+        if (!$result) {
             abort(404);
         }
 
@@ -272,9 +274,9 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 新增记录.
      *
      * @param  Form  $form
-     * @return int|null
+     * @return bool|int|JsonResponse
      */
-    public function store(Form $form)
+    public function store(Form $form): bool|int|JsonResponse
     {
         $result = null;
 
@@ -301,9 +303,9 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 更新数据.
      *
      * @param  Form  $form
-     * @return int|null
+     * @return bool|JsonResponse
      */
-    public function update(Form $form)
+    public function update(Form $form): bool|JsonResponse
     {
         $result = null;
 
@@ -321,9 +323,9 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 数据行排序上移一个单位.
      *
      * @return bool
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @throws RuntimeException
      */
-    public function moveOrderUp()
+    public function moveOrderUp(): bool
     {
         throw new RuntimeException('Not support.');
     }
@@ -332,9 +334,9 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 数据行排序下移一个单位.
      *
      * @return bool
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @throws RuntimeException
      */
-    public function moveOrderDown()
+    public function moveOrderDown(): bool
     {
         throw new RuntimeException('Not support.');
     }
@@ -344,9 +346,9 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      *
      * @param  Form  $form
      * @param  array  $deletingData
-     * @return bool
+     * @return bool|int|JsonResponse
      */
-    public function delete(Form $form, array $deletingData)
+    public function delete(Form $form, array $deletingData): bool|int|JsonResponse
     {
         $id = $form->getKey();
 
@@ -355,7 +357,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
         collect(explode(',', $id))->filter()->each(function ($id) use ($form, $deletingData) {
             $data = $deletingData->get($id, []);
 
-            if (! $data) {
+            if (!$data) {
                 return;
             }
 
@@ -398,9 +400,9 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 获取父级ID字段名称.
      *
      * @return string
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @throws RuntimeException
      */
-    public function getParentColumn()
+    public function getParentColumn(): string
     {
         throw new RuntimeException('Not support.');
     }
@@ -409,9 +411,9 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 获取标题字段名称.
      *
      * @return string
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @throws RuntimeException
      */
-    public function getTitleColumn()
+    public function getTitleColumn(): string
     {
         throw new RuntimeException('Not support.');
     }
@@ -420,9 +422,9 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 获取排序字段名称.
      *
      * @return string
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @throws RuntimeException
      */
-    public function getOrderColumn()
+    public function getOrderColumn(): string
     {
         throw new RuntimeException('Not support.');
     }
@@ -432,9 +434,9 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      *
      * @param  array  $tree
      * @param  int  $parentId
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @throws RuntimeException
      */
-    public function saveOrder($tree = [], $parentId = 0)
+    public function saveOrder(array $tree = [], int $parentId = 0)
     {
         throw new RuntimeException('Not support.');
     }
@@ -444,9 +446,9 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      *
      * @param $queryCallback
      * @return $this
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @throws RuntimeException
      */
-    public function withQuery($queryCallback)
+    public function withQuery($queryCallback): static
     {
         throw new RuntimeException('Not support.');
     }
@@ -455,9 +457,9 @@ class QueryBuilderRepository extends Repository implements TreeRepository
      * 获取层级数据.
      *
      * @return array
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @throws RuntimeException
      */
-    public function toTree()
+    public function toTree(): array
     {
         throw new RuntimeException('Not support.');
     }
@@ -465,7 +467,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
     /**
      * @return Builder
      */
-    protected function newQuery()
+    protected function newQuery(): Builder
     {
         return clone $this->queryBuilder;
     }

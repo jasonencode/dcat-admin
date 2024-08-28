@@ -10,13 +10,13 @@ class UpdateCommand extends Command
 
     protected $description = 'Update the admin package';
 
-    public function handle()
+    public function handle(): void
     {
         $this->call('admin:publish', [
-            '--assets'     => true,
+            '--assets' => true,
             '--migrations' => true,
-            '--lang'       => true,
-            '--force'      => true,
+            '--lang' => true,
+            '--force' => true,
         ]);
         $this->call('migrate');
     }

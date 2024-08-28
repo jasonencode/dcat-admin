@@ -12,7 +12,10 @@ namespace Dcat\Admin\Contracts;
 
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Show;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 
 interface Repository
@@ -22,91 +25,91 @@ interface Repository
      *
      * @return string|array
      */
-    public function getKeyName();
+    public function getKeyName(): array|string;
 
     /**
      * 获取创建时间字段.
      *
      * @return string
      */
-    public function getCreatedAtColumn();
+    public function getCreatedAtColumn(): string;
 
     /**
      * 获取更新时间字段.
      *
      * @return string
      */
-    public function getUpdatedAtColumn();
+    public function getUpdatedAtColumn(): string;
 
     /**
      * 是否使用软删除.
      *
      * @return bool
      */
-    public function isSoftDeletes();
+    public function isSoftDeletes(): bool;
 
     /**
      * 获取Grid表格数据.
      *
      * @param  Grid\Model  $model
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Collection|array
+     * @return LengthAwarePaginator|Collection|array
      */
-    public function get(Grid\Model $model);
+    public function get(Grid\Model $model): LengthAwarePaginator|array|Collection;
 
     /**
      * 获取编辑页面数据.
      *
      * @param  Form  $form
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return array|Arrayable
      */
-    public function edit(Form $form);
+    public function edit(Form $form): array|Arrayable;
 
     /**
      * 获取详情页面数据.
      *
      * @param  Show  $show
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return array|Arrayable
      */
-    public function detail(Show $show);
+    public function detail(Show $show): array|Arrayable;
 
     /**
      * 新增记录.
      *
      * @param  Form  $form
-     * @return int|bool|\Dcat\Admin\Http\JsonResponse
+     * @return int|bool|JsonResponse
      */
-    public function store(Form $form);
+    public function store(Form $form): bool|int|JsonResponse;
 
     /**
      * 查询更新前的行数据.
      *
      * @param  Form  $form
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return array|Arrayable
      */
-    public function updating(Form $form);
+    public function updating(Form $form): array|Arrayable;
 
     /**
      * 更新数据.
      *
      * @param  Form  $form
-     * @return bool|\Dcat\Admin\Http\JsonResponse
+     * @return bool|JsonResponse
      */
-    public function update(Form $form);
+    public function update(Form $form): bool|JsonResponse;
 
     /**
      * 删除数据.
      *
      * @param  Form  $form
      * @param  array  $deletingData
-     * @return mixed|\Dcat\Admin\Http\JsonResponse
+     * @return mixed|JsonResponse
      */
-    public function delete(Form $form, array $deletingData);
+    public function delete(Form $form, array $deletingData): mixed;
 
     /**
      * 查询删除前的行数据.
      *
      * @param  Form  $form
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return array|Arrayable
      */
-    public function deleting(Form $form);
+    public function deleting(Form $form): array|Arrayable;
 }

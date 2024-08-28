@@ -21,7 +21,7 @@ trait HasEvents
      * @param  Closure  $callback
      * @return $this
      */
-    public function creating(Closure $callback)
+    public function creating(Closure $callback): static
     {
         Event::listen(Events\Creating::class, $this->makeListener($callback));
 

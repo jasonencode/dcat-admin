@@ -17,28 +17,28 @@ interface TreeRepository
      *
      * @return string
      */
-    public function getPrimaryKeyColumn();
+    public function getPrimaryKeyColumn(): string;
 
     /**
      * 获取父级ID字段名称.
      *
      * @return string
      */
-    public function getParentColumn();
+    public function getParentColumn(): string;
 
     /**
      * 获取标题字段名称.
      *
      * @return string
      */
-    public function getTitleColumn();
+    public function getTitleColumn(): string;
 
     /**
      * 获取排序字段名称.
      *
      * @return string
      */
-    public function getOrderColumn();
+    public function getOrderColumn(): string;
 
     /**
      * 保存层级数据排序.
@@ -46,20 +46,20 @@ interface TreeRepository
      * @param  array  $tree
      * @param  int  $parentId
      */
-    public function saveOrder($tree = [], $parentId = 0);
+    public function saveOrder(array $tree = [], int $parentId = 0);
 
     /**
      * 设置数据查询回调.
      *
-     * @param  \Closure|null  $query
+     * @param $queryCallback
      * @return $this
      */
-    public function withQuery($queryCallback);
+    public function withQuery($queryCallback): static;
 
     /**
      * 获取层级数据.
      *
      * @return array
      */
-    public function toTree();
+    public function toTree(): array;
 }

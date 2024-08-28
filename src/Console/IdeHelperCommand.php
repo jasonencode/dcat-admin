@@ -5,11 +5,15 @@ namespace Dcat\Admin\Console;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use ReflectionClass;
+use Route;
+use Throwable;
 
 /**
  * Class IdeHelperCommand.
@@ -35,40 +39,40 @@ class IdeHelperCommand extends Command
     /**
      * @var array
      */
-    protected $patterns = [
-        'grid'        => '/(?:grid)->([\w0-9_]+)(?:\(|;|->|\s)/i',
-        'show'        => '/show->([\w0-9_]+)(?:\(|;|->|\s)/i',
+    protected array $patterns = [
+        'grid' => '/(?:grid)->([\w0-9_]+)(?:\(|;|->|\s)/i',
+        'show' => '/show->([\w0-9_]+)(?:\(|;|->|\s)/i',
         'grid-column' => '/@method[\s]+\$this[\s]+([\w0-9_]+)/i',
-        'form-field'  => '/@method[\s]+[\\\\\w0-9_]+[\s]+([\w0-9_]+)/i',
+        'form-field' => '/@method[\s]+[\\\\\w0-9_]+[\s]+([\w0-9_]+)/i',
         'grid-filter' => '/@method[\s]+[\\\\\w0-9_]+[\s]+([\w0-9_]+)/i',
     ];
 
     /**
      * @var array
      */
-    protected $templates = [
+    protected array $templates = [
         'grid' => [
-            'method'   => '* @method Grid\Column|Collection %s(string $label = null)',
+            'method' => '* @method Grid\Column|Collection %s(string $label = null)',
             'property' => '* @property Grid\Column|Collection %s',
         ],
         'show' => [
-            'method'   => '* @method Show\Field|Collection %s(string $label = null)',
+            'method' => '* @method Show\Field|Collection %s(string $label = null)',
             'property' => '* @property Show\Field|Collection %s',
         ],
-        'form'        => '* @method %s %s(...$params)',
+        'form' => '* @method %s %s(...$params)',
         'grid-column' => '* @method $this %s(...$params)',
         'grid-filter' => '* @method %s %s(...$params)',
         'show-column' => '* @method $this %s(...$params)',
     ];
 
-    protected $path = 'dcat_admin_ide_helper.php';
+    protected string $path = 'dcat_admin_ide_helper.php';
 
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
-        if (! config('app.debug')) {
+        if (!config('app.debug')) {
             $this->error('Permission deny!');
 
             return;
@@ -95,7 +99,7 @@ class IdeHelperCommand extends Command
      * @param  array  $reject
      * @return Collection
      */
-    protected function getFieldsFromDatabase(array $reject = [])
+    protected function getFieldsFromDatabase(array $reject = []): Collection
     {
         $databases = Arr::where(config('database.connections', []), function ($value) {
             $supports = ['mysql'];
@@ -112,7 +116,8 @@ class IdeHelperCommand extends Command
 
         try {
             foreach ($databases as $connectName => $value) {
-                $sql = sprintf('SELECT * FROM information_schema.columns WHERE table_schema = "%s"', $value['database']);
+                $sql = sprintf('SELECT * FROM information_schema.columns WHERE table_schema = "%s"',
+                    $value['database']);
 
                 $each = collect(DB::connection($connectName)->select($sql))
                     ->map(function ($v) use ($exceptTables, &$reject) {
@@ -128,7 +133,7 @@ class IdeHelperCommand extends Command
 
                 $data = $data->merge($each);
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable) {
         }
 
         return $data->unique();
@@ -138,14 +143,14 @@ class IdeHelperCommand extends Command
      * @param  array  $reject
      * @return Collection
      */
-    protected function getFieldsFromControllerFiles(array $reject = [])
+    protected function getFieldsFromControllerFiles(array $reject = []): Collection
     {
         $option = $this->option('controller');
 
         return $this->getAllControllers()
             ->merge(explode(',', $option))
             ->map(function ($controller) use (&$reject) {
-                if (! $controller || ! $content = $this->getClassContent($controller)) {
+                if (!$controller || !$content = $this->getClassContent($controller)) {
                     return [];
                 }
 
@@ -167,7 +172,7 @@ class IdeHelperCommand extends Command
     /**
      * @param  Collection  $fields
      */
-    protected function write(Collection $fields)
+    protected function write(Collection $fields): void
     {
         $content = str_replace(
             [
@@ -197,7 +202,7 @@ class IdeHelperCommand extends Command
      * @param  Collection  $fields
      * @return string
      */
-    public function generate(string $type, Collection $fields)
+    public function generate(string $type, Collection $fields): string
     {
         $methods = $properties = [];
         $space = str_repeat(' ', 5);
@@ -213,7 +218,7 @@ class IdeHelperCommand extends Command
     /**
      * @return string
      */
-    protected function generateGridFilters()
+    protected function generateGridFilters(): string
     {
         $content = $this->getClassContent(Grid\Filter::class);
 
@@ -239,7 +244,7 @@ class IdeHelperCommand extends Command
     /**
      * @return string
      */
-    protected function generateShowFields()
+    protected function generateShowFields(): string
     {
         $extensions = collect(Show\Field::extensions());
 
@@ -257,7 +262,7 @@ class IdeHelperCommand extends Command
     /**
      * @return string
      */
-    protected function generateFormFields()
+    protected function generateFormFields(): string
     {
         $content = $this->getClassContent(Form::class);
 
@@ -283,7 +288,7 @@ class IdeHelperCommand extends Command
     /**
      * @return string
      */
-    protected function generateGridColumns()
+    protected function generateGridColumns(): string
     {
         $content = $this->getClassContent(Grid\Column::class);
 
@@ -309,16 +314,16 @@ class IdeHelperCommand extends Command
     /**
      * @return array
      */
-    protected function getBuilderMethods()
+    protected function getBuilderMethods(): array
     {
-        $grid = new \ReflectionClass(Grid::class);
+        $grid = new ReflectionClass(Grid::class);
 
         $grids = collect($grid->getMethods())
             ->pluck('name')
             ->merge(collect($grid->getProperties())->pluck('name'))
             ->all();
 
-        $show = new \ReflectionClass(Show::class);
+        $show = new ReflectionClass(Show::class);
 
         return collect($show->getMethods())
             ->pluck('name')
@@ -331,7 +336,7 @@ class IdeHelperCommand extends Command
     /**
      * @return string
      */
-    protected function getStub()
+    protected function getStub(): string
     {
         return __DIR__.'/stubs/ide-helper.stub';
     }
@@ -341,9 +346,9 @@ class IdeHelperCommand extends Command
      *
      * @return Collection
      */
-    public function getAllControllers()
+    public function getAllControllers(): Collection
     {
-        return collect(\Route::getRoutes())->map(function ($route) {
+        return collect(Route::getRoutes())->map(function ($route) {
             try {
                 $action = $route->getActionName();
 
@@ -352,7 +357,7 @@ class IdeHelperCommand extends Command
                 }
 
                 return explode('@', $action)[0];
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
         })->filter();
     }
@@ -368,12 +373,12 @@ class IdeHelperCommand extends Command
      * @param  string  $class
      * @return string
      */
-    public function getFileNameByClass($class)
+    public function getFileNameByClass(string $class): string
     {
-        if (! class_exists($class)) {
-            return;
+        if (!class_exists($class)) {
+            return '';
         }
 
-        return (new \ReflectionClass($class))->getFileName();
+        return (new ReflectionClass($class))->getFileName();
     }
 }

@@ -13,19 +13,19 @@ interface UploadField
      * @param  UploadedFile  $file
      * @return Response
      */
-    public function upload(UploadedFile $file);
+    public function upload(UploadedFile $file): Response;
 
     /**
      * Destroy original files.
      *
      * @return void.
      */
-    public function destroy();
+    public function destroy(): void;
 
     /**
      * Destroy files.
      *
-     * @param  string|array  $path
+     * @param  array|string  $path
      */
-    public function deleteFile($path);
+    public function deleteFile(array|string $path);
 }

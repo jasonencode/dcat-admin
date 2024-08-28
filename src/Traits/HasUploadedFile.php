@@ -54,16 +54,15 @@ trait HasUploadedFile
     /**
      * 删除文件.
      *
-     * @param  null  $disk
-     * @param  null  $path
+     * @param  array|string|null  $path
      * @return bool
      * @throws \Exception
      */
-    public function deleteFile($disk = null, $path = null)
+    public function deleteFile(array|string $path = null)
     {
-        $disk = $disk ?: $this->disk();
+        $path = $path ?: $this->disk();
 
-        return $disk->delete($path ?: request()->key);
+        return $path->delete($path ?: request()->key);
     }
 
     /**

@@ -2,7 +2,11 @@
 
 namespace Dcat\Admin\Console;
 
+use DB;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class ExportSeedCommand extends Command
 {
@@ -25,8 +29,11 @@ class ExportSeedCommand extends Command
      * Execute the console command.
      *
      * @return void
+     * @throws ContainerExceptionInterface
+     * @throws FileNotFoundException
+     * @throws NotFoundExceptionInterface
      */
-    public function handle()
+    public function handle(): void
     {
         $name = $this->argument('classname');
         $exceptFields = [];
@@ -78,10 +85,10 @@ class ExportSeedCommand extends Command
         $this->laravel['files']->put($seedFile, $contents);
 
         $this->line('<info>Admin tables seed file was created:</info> '.str_replace(base_path(), '', $seedFile));
-        $this->line("Use: <info>php artisan db:seed --class={$name}</info>");
+        $this->line("Use: <info>php artisan db:seed --class=$name</info>");
     }
 
-    protected function getTableName($config)
+    protected function getTableName($config): string
     {
         return trim(str_replace('Dcat\\Admin\\', '', config($config)), '\\');
     }
@@ -93,12 +100,12 @@ class ExportSeedCommand extends Command
      * @param  array  $exceptFields
      * @return string
      */
-    protected function getTableDataArrayAsString($table, $exceptFields = [])
+    protected function getTableDataArrayAsString(string $table, array $exceptFields = []): string
     {
-        $fields = \DB::getSchemaBuilder()->getColumnListing($table);
+        $fields = DB::getSchemaBuilder()->getColumnListing($table);
         $fields = array_diff($fields, $exceptFields);
 
-        $array = \DB::table($table)->get($fields)->map(function ($item) {
+        $array = DB::table($table)->get($fields)->map(function ($item) {
             return (array) $item;
         })->all();
 
@@ -110,8 +117,11 @@ class ExportSeedCommand extends Command
      *
      * @param $name
      * @return string
+     * @throws FileNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function getStub($name)
+    protected function getStub($name): string
     {
         return $this->laravel['files']->get(__DIR__."/stubs/$name.stub");
     }
@@ -123,7 +133,7 @@ class ExportSeedCommand extends Command
      * @param  string  $indent
      * @return string
      */
-    protected function varExport($var, $indent = '')
+    protected function varExport($var, string $indent = ''): string
     {
         switch (gettype($var)) {
 
@@ -138,7 +148,7 @@ class ExportSeedCommand extends Command
                 foreach ($var as $key => $value) {
                     $r[] = "$indent    "
                         .($indexed ? '' : $this->varExport($key).' => ')
-                        .$this->varExport($value, "{$indent}    ");
+                        .$this->varExport($value, "$indent    ");
                 }
 
                 return "[\n".implode(",\n", $r)."\n".$indent.']';

@@ -2,6 +2,8 @@
 
 namespace Dcat\Admin\Grid\Concerns;
 
+use Dcat\Admin\Grid;
+
 trait HasOptions
 {
     /**
@@ -147,7 +149,7 @@ trait HasOptions
     }
 
     /**
-     * @return \Dcat\Admin\Grid|null
+     * @return Grid|null
      */
     public function enableDialogCreate(): null|static
     {
@@ -166,7 +168,7 @@ trait HasOptions
 
     /**
      * @param  string  $mode
-     * @return \Dcat\Admin\Grid|null
+     * @return Grid|null
      */
     public function createMode(string $mode): null|static
     {

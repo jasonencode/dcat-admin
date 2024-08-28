@@ -51,10 +51,11 @@ trait HasActionHandler
     /**
      * Confirm message of action.
      *
-     * @return void|array|string
+     * @return array
      */
-    public function confirm()
+    public function confirm(): array
     {
+        return ['Confirm?', 'Confirm do this'];
     }
 
     /**
@@ -101,21 +102,21 @@ trait HasActionHandler
     protected function addHandlerScript(): void
     {
         $script = <<<JS
-Dcat.Action({
-    selector: '{$this->selector()}',
-    event: '$this->event',
-    method: '{$this->method()}',
-    key: '{$this->getKey()}',
-    url: '{$this->handlerRoute()}',
-    data: {$this->normalizeParameters()},
-    confirm: {$this->normalizeConfirmData()},
-    calledClass: '{$this->makeCalledClass()}',
-    before: {$this->actionScript()},
-    html: {$this->handleHtmlResponse()},
-    success: {$this->resolverScript()},
-    error: {$this->rejectScript()},
-});
-JS;
+            Dcat.Action({
+                selector: '{$this->selector()}',
+                event: '$this->event',
+                method: '{$this->method()}',
+                key: '{$this->getKey()}',
+                url: '{$this->handlerRoute()}',
+                data: {$this->normalizeParameters()},
+                confirm: {$this->normalizeConfirmData()},
+                calledClass: '{$this->makeCalledClass()}',
+                before: {$this->actionScript()},
+                html: {$this->handleHtmlResponse()},
+                success: {$this->resolverScript()},
+                error: {$this->rejectScript()},
+            });
+            JS;
 
         Admin::script($script);
         Admin::js('@admin/dcat/extra/action.js');
@@ -130,8 +131,8 @@ JS;
     {
         // 发起请求之前回调，返回false可以中断请求
         return <<<JS
-function(data, target, action) { }
-JS;
+            function(data, target, action) { }
+            JS;
     }
 
     /**
@@ -143,8 +144,8 @@ JS;
     {
         // 请求成功回调，返回false可以中断默认的成功处理逻辑
         return <<<JS
-function(target, results) {}
-JS;
+            function(target, results) {}
+            JS;
     }
 
     /**
@@ -155,10 +156,10 @@ JS;
     protected function handleHtmlResponse(): string
     {
         return <<<JS
-function(target, html, data) {
-    target.html(html);
-}
-JS;
+            function(target, html, data) {
+                target.html(html);
+            }
+            JS;
     }
 
     /**

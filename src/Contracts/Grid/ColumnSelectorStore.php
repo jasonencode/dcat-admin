@@ -10,7 +10,7 @@ interface ColumnSelectorStore
      * @param  Grid  $grid
      * @return mixed
      */
-    public function setGrid(Grid $grid);
+    public function setGrid(Grid $grid): mixed;
 
     /**
      * 存储数据.
@@ -18,19 +18,19 @@ interface ColumnSelectorStore
      * @param  array  $input
      * @return void
      */
-    public function store(array $input);
+    public function store(array $input): void;
 
     /**
      * 获取数据.
      *
      * @return array|null
      */
-    public function get();
+    public function get(): ?array;
 
     /**
      * 移除.
      *
      * @return void
      */
-    public function forget();
+    public function forget(): void;
 }

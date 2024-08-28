@@ -40,7 +40,7 @@ class Builder implements FieldsCollection
     /**
      * @var mixed
      */
-    protected $id;
+    protected mixed $id;
 
     /**
      * @var Form

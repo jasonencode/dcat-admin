@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
 use Dcat\Admin\Contracts\FieldsCollection;
 use Dcat\Admin\Form\EmbeddedForm;
 use Dcat\Admin\Form\Field;
@@ -16,9 +17,9 @@ class Embeds extends Field implements FieldsCollection
     use ResolveField;
 
     /**
-     * @var \Closure
+     * @var Closure
      */
-    protected $builder = null;
+    protected ?Closure $builder = null;
 
     /**
      * Create a new HasMany field instance.
@@ -276,7 +277,7 @@ class Embeds extends Field implements FieldsCollection
      * @param  string  $column
      * @return Field|null
      */
-    public function field($name)
+    public function field(string|Field $name)
     {
         return $this->buildEmbeddedForm()->fields()->first(function (Field $field) use ($name) {
             return $field->column() == $name;

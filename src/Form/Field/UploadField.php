@@ -408,22 +408,22 @@ trait UploadField
     /**
      * Destroy files.
      *
-     * @param $paths
+     * @param  array|string  $path
      * @throws \Exception
      */
-    public function deleteFile($paths): void
+    public function deleteFile(array|string $path): void
     {
-        if (! $paths || $this->retainable) {
+        if (! $path || $this->retainable) {
             return;
         }
 
         if (method_exists($this, 'destroyThumbnail')) {
-            $this->destroyThumbnail($paths);
+            $this->destroyThumbnail($path);
         }
 
         $storage = $this->getStorage();
 
-        foreach ((array) $paths as $path) {
+        foreach ((array) $path as $path) {
             if ($storage->exists($path)) {
                 $storage->delete($path);
             } else {

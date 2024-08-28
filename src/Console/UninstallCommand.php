@@ -26,9 +26,9 @@ class UninstallCommand extends Command
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        if (! $this->confirm('Are you sure to uninstall dcat-admin?')) {
+        if (!$this->confirm('Are you sure to uninstall dcat-admin?')) {
             return;
         }
 
@@ -42,7 +42,7 @@ class UninstallCommand extends Command
      *
      * @return void
      */
-    protected function removeFilesAndDirectories()
+    protected function removeFilesAndDirectories(): void
     {
         $this->laravel['files']->deleteDirectory(config('admin.directory'));
         $this->laravel['files']->deleteDirectory(public_path(Admin::asset()->getRealPath('@extension')));

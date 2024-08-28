@@ -5,6 +5,8 @@ namespace Dcat\Admin\Grid\ColumnSelector;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Contracts\Grid\ColumnSelectorStore;
 use Dcat\Admin\Grid;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class SessionStore implements ColumnSelectorStore
 {
@@ -23,6 +25,10 @@ class SessionStore implements ColumnSelectorStore
         session()->put($this->getKey(), $input);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function get()
     {
         return session()->get($this->getKey());

@@ -4,6 +4,8 @@ namespace Dcat\Admin\Console;
 
 use Dcat\Admin\Support\Helper;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
@@ -17,8 +19,8 @@ class MinifyCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'admin:minify {name} 
-        {--color= : Theme color code} 
+    protected $signature = 'admin:minify {name}
+        {--color= : Theme color code}
         {--publish : Publish assets files}';
 
     /**
@@ -31,7 +33,7 @@ class MinifyCommand extends Command
     /**
      * @var array
      */
-    protected $colors = [
+    protected array $colors = [
         self::DEFAULT => '',
         'blue'        => '#6d8be6',
         'blue-light'  => '#62a8ea',
@@ -41,15 +43,16 @@ class MinifyCommand extends Command
     /**
      * @var string
      */
-    protected $packagePath;
+    protected string $packagePath;
 
     /**
-     * @var \Illuminate\Filesystem\Filesystem
+     * @var Filesystem
      */
-    protected $files;
+    protected Filesystem $files;
 
     /**
      * Execute the console command.
+     * @throws FileNotFoundException
      */
     public function handle()
     {
@@ -75,7 +78,7 @@ class MinifyCommand extends Command
             $this->info("[$name][$color] npm run production...");
 
             // 编译
-            $this->runProcess("cd {$this->packagePath} && npm run prod", 1800);
+            $this->runProcess("cd $this->packagePath && npm run prod");
 
             if ($publish) {
                 $this->publishAssets();
@@ -89,7 +92,7 @@ class MinifyCommand extends Command
     /**
      * 编译所有内置主题.
      */
-    protected function compileAllColors()
+    protected function compileAllColors(): void
     {
         foreach ($this->colors as $name => $_) {
             $this->call('admin:minify', ['name' => $name]);
@@ -99,7 +102,7 @@ class MinifyCommand extends Command
     /**
      * 发布静态资源.
      */
-    protected function publishAssets()
+    protected function publishAssets(): void
     {
         $options = ['--provider' => 'Dcat\Admin\AdminServiceProvider', '--force' => true, '--tag' => 'dcat-admin-assets'];
 
@@ -111,15 +114,16 @@ class MinifyCommand extends Command
      *
      * @param $name
      * @param $color
+     * @throws FileNotFoundException
      */
-    protected function replaceFiles($name, $color)
+    protected function replaceFiles($name, $color): void
     {
         if ($name === static::DEFAULT) {
             return;
         }
 
         $mixFile = $this->getMixFile();
-        $contents = str_replace('let theme = null', "let theme = '{$name}'", $this->files->get($mixFile));
+        $contents = str_replace('let theme = null', "let theme = '$name'", $this->files->get($mixFile));
         $this->files->put($mixFile, $contents);
 
         $colorFile = $this->getColorFile();
@@ -129,7 +133,7 @@ class MinifyCommand extends Command
     /**
      * 备份文件.
      */
-    protected function backupFiles()
+    protected function backupFiles(): void
     {
         if (! is_file($this->getMixBakFile())) {
             $this->files->copy($this->getMixFile(), $this->getMixBakFile());
@@ -146,7 +150,7 @@ class MinifyCommand extends Command
     /**
      * 重置文件.
      */
-    protected function resetFiles()
+    protected function resetFiles(): void
     {
         $mixFile = $this->getMixFile();
         $mixBakFile = $this->getMixBakFile();
@@ -170,15 +174,15 @@ class MinifyCommand extends Command
     /**
      * @return string
      */
-    protected function getMixFile()
+    protected function getMixFile(): string
     {
         return $this->packagePath.'/webpack.mix.js';
     }
 
     /**
-     * @return mixed
+     * @return array|string|string[]
      */
-    protected function getMixBakFile()
+    protected function getMixBakFile(): array|string
     {
         return str_replace('.js', '.bak.js', $this->getMixFile());
     }
@@ -186,15 +190,15 @@ class MinifyCommand extends Command
     /**
      * @return string
      */
-    protected function getColorFile()
+    protected function getColorFile(): string
     {
         return $this->packagePath.'/resources/assets/dcat/sass/theme/_primary.scss';
     }
 
     /**
-     * @return mixed
+     * @return array|string|string[]
      */
-    protected function getColorBakFile()
+    protected function getColorBakFile(): array|string
     {
         return str_replace('.scss', '.bak.scss', $this->getColorFile());
     }
@@ -202,7 +206,7 @@ class MinifyCommand extends Command
     /**
      * 安装依赖.
      */
-    protected function npmInstall()
+    protected function npmInstall(): void
     {
         if (is_dir($this->packagePath.'/node_modules')) {
             return;
@@ -210,7 +214,7 @@ class MinifyCommand extends Command
 
         $this->info('npm install...');
 
-        $this->runProcess("cd {$this->packagePath} && npm install");
+        $this->runProcess("cd $this->packagePath && npm install");
     }
 
     /**
@@ -219,7 +223,7 @@ class MinifyCommand extends Command
      * @param  string  $name
      * @return string
      */
-    protected function getColor($name)
+    protected function getColor(string $name): string
     {
         if ($name === static::DEFAULT) {
             return '';
@@ -248,7 +252,7 @@ class MinifyCommand extends Command
      * @param  string  $color
      * @return string
      */
-    protected function formatColor($color)
+    protected function formatColor(string $color): string
     {
         if ($color && ! Str::startsWith($color, '#')) {
             $color = "#$color";
@@ -263,7 +267,7 @@ class MinifyCommand extends Command
      * @param  string  $command
      * @param  int  $timeout
      */
-    protected function runProcess($command, $timeout = 1800)
+    protected function runProcess(string $command, int $timeout = 1800): void
     {
         $process = Helper::process($command, $timeout);
 

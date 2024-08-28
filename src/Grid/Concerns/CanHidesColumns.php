@@ -7,6 +7,9 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Tools\ColumnSelector;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Collection;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 trait CanHidesColumns
 {
@@ -32,7 +35,7 @@ trait CanHidesColumns
      */
     public function disableColumnSelector(bool $disable = true): static
     {
-        return $this->option('show_column_selector', ! $disable);
+        return $this->option('show_column_selector', !$disable);
     }
 
     /**
@@ -41,7 +44,7 @@ trait CanHidesColumns
      */
     public function showColumnSelector(bool $show = true): static
     {
-        return $this->disableColumnSelector(! $show);
+        return $this->disableColumnSelector(!$show);
     }
 
     /**
@@ -54,13 +57,13 @@ trait CanHidesColumns
 
     /**
      * @return string
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Throwable
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Throwable
      */
     public function renderColumnSelector(): string
     {
-        if (! $this->allowColumnSelector()) {
+        if (!$this->allowColumnSelector()) {
             return '';
         }
 
@@ -98,12 +101,12 @@ trait CanHidesColumns
      * Get visible columns from request query.
      *
      * @return array
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getVisibleColumnsFromQuery(): array
     {
-        if (! $this->allowColumnSelector()) {
+        if (!$this->allowColumnSelector()) {
             return [];
         }
 
@@ -113,7 +116,7 @@ trait CanHidesColumns
 
         $columns = $input = Helper::array($this->request->get($this->getColumnSelectorQueryName()));
 
-        if (! $input && ! $this->hasColumnSelectorRequestInput()) {
+        if (!$input && !$this->hasColumnSelectorRequestInput()) {
             $columns = $this->getVisibleColumnsFromStorage() ?: array_values(array_diff(
                 $this->getComplexHeaderNames() ?: $this->columnNames, $this->hiddenColumns
             ));
@@ -126,7 +129,7 @@ trait CanHidesColumns
 
     protected function formatWithComplexHeaders(array $columns)
     {
-        if (! $columns) {
+        if (!$columns) {
             return $this->getComplexHeaders();
         }
 
@@ -136,7 +139,7 @@ trait CanHidesColumns
 
         return $this->getComplexHeaders()
             ->map(function (Grid\ComplexHeader $header) use ($columns) {
-                if (! in_array($header->getName(), $columns, true)) {
+                if (!in_array($header->getName(), $columns, true)) {
                     return;
                 }
 
@@ -149,8 +152,8 @@ trait CanHidesColumns
 
     /**
      * @return mixed
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getVisibleComplexHeaders(): mixed
     {
@@ -171,12 +174,12 @@ trait CanHidesColumns
      * Get all visible column instances.
      *
      * @return Collection|static
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getVisibleColumns(): Collection|static
     {
-        if (! $this->allowColumnSelector()) {
+        if (!$this->allowColumnSelector()) {
             return $this->columns;
         }
 
@@ -199,12 +202,12 @@ trait CanHidesColumns
      * Get all visible column names.
      *
      * @return array
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getVisibleColumnNames(): array
     {
-        if (! $this->allowColumnSelector()) {
+        if (!$this->allowColumnSelector()) {
             return $this->columnNames;
         }
 
@@ -230,7 +233,7 @@ trait CanHidesColumns
 
     protected function storeVisibleColumns(array $input): void
     {
-        if (! $this->hasColumnSelectorRequestInput()) {
+        if (!$this->hasColumnSelectorRequestInput()) {
             return;
         }
 
@@ -252,7 +255,7 @@ trait CanHidesColumns
 
     protected function makeColumnSelectorStorage()
     {
-        $store  = config('admin.grid.column_selector.store') ?: Grid\ColumnSelector\SessionStore::class;
+        $store = config('admin.grid.column_selector.store') ?: Grid\ColumnSelector\SessionStore::class;
         $params = (array) config('admin.grid.column_selector.store_params') ?: [];
 
         $storage = app($store, $params);

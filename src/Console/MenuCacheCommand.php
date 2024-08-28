@@ -25,7 +25,7 @@ class MenuCacheCommand extends Command
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $menuModel = config('admin.database.menu_model');
         $menuModel = new $menuModel();

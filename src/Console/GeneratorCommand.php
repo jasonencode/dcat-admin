@@ -5,34 +5,38 @@ namespace Dcat\Admin\Console;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Console\Command;
 use Illuminate\Console\Concerns\CreatesMatchingTest;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use ReflectionException;
 use Symfony\Component\Console\Input\InputArgument;
 
 abstract class GeneratorCommand extends Command
 {
-    protected $baseDirectory;
+    protected string $baseDirectory;
 
     /**
      * The filesystem instance.
      *
-     * @var \Illuminate\Filesystem\Filesystem
+     * @var Filesystem
      */
-    protected $files;
+    protected Filesystem $files;
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type;
+    protected string $type;
 
     /**
      * Reserved names that cannot be used for generation.
      *
      * @var string[]
      */
-    protected $reservedNames = [
+    protected array $reservedNames = [
         '__halt_compiler',
         'abstract',
         'and',
@@ -106,7 +110,7 @@ abstract class GeneratorCommand extends Command
     /**
      * Create a new controller creator command instance.
      *
-     * @param  \Illuminate\Filesystem\Filesystem  $files
+     * @param  Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)
@@ -125,16 +129,19 @@ abstract class GeneratorCommand extends Command
      *
      * @return string
      */
-    abstract protected function getStub();
+    abstract protected function getStub(): string;
 
     /**
      * Execute the console command.
      *
      * @return bool|null
      *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws FileNotFoundException
+     * @throws NotFoundExceptionInterface
+     * @throws ReflectionException
      */
-    public function handle()
+    public function handle(): ?bool
     {
         // First we need to ensure that the given name is not a reserved word within the PHP
         // language and that the class name will actually be valid. If it is not valid we
@@ -152,8 +159,8 @@ abstract class GeneratorCommand extends Command
         // Next, We will check to see if the class already exists. If it does, we don't want
         // to create the class and overwrite the user's code. So, we will bail out so the
         // code is untouched. Otherwise, we will continue generating this class' files.
-        if ((! $this->hasOption('force') ||
-                ! $this->option('force')) &&
+        if ((!$this->hasOption('force') ||
+                !$this->option('force')) &&
             $this->alreadyExists($this->getNameInput())) {
             $this->error($this->type.' already exists!');
 
@@ -172,6 +179,8 @@ abstract class GeneratorCommand extends Command
         if (in_array(CreatesMatchingTest::class, class_uses_recursive($this))) {
             $this->handleTestCreation($path);
         }
+
+        return false;
     }
 
     /**
@@ -180,7 +189,7 @@ abstract class GeneratorCommand extends Command
      * @param  string  $name
      * @return string
      */
-    protected function qualifyClass($name)
+    protected function qualifyClass(string $name): string
     {
         $name = ltrim($name, '\\/');
 
@@ -203,7 +212,7 @@ abstract class GeneratorCommand extends Command
      * @param  string  $model
      * @return string
      */
-    protected function qualifyModel(string $model)
+    protected function qualifyModel(string $model): string
     {
         $model = ltrim($model, '\\/');
 
@@ -226,7 +235,7 @@ abstract class GeneratorCommand extends Command
      * @param  string  $rootNamespace
      * @return string
      */
-    protected function getDefaultNamespace($rootNamespace)
+    protected function getDefaultNamespace(string $rootNamespace): string
     {
         return $rootNamespace;
     }
@@ -236,8 +245,9 @@ abstract class GeneratorCommand extends Command
      *
      * @param  string  $rawName
      * @return bool
+     * @throws ReflectionException
      */
-    protected function alreadyExists($rawName)
+    protected function alreadyExists(string $rawName): bool
     {
         return $this->files->exists($this->getPath($this->qualifyClass($rawName)));
     }
@@ -248,9 +258,9 @@ abstract class GeneratorCommand extends Command
      * @param  string  $path
      * @return string
      */
-    protected function makeDirectory($path)
+    protected function makeDirectory(string $path): string
     {
-        if (! $this->files->isDirectory(dirname($path))) {
+        if (!$this->files->isDirectory(dirname($path))) {
             $this->files->makeDirectory(dirname($path), 0777, true, true);
         }
 
@@ -263,9 +273,11 @@ abstract class GeneratorCommand extends Command
      * @param  string  $name
      * @return string
      *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws FileNotFoundException
+     * @throws NotFoundExceptionInterface
      */
-    protected function buildClass($name)
+    protected function buildClass(string $name): string
     {
         $stub = $this->files->get($this->getStub());
 
@@ -277,9 +289,11 @@ abstract class GeneratorCommand extends Command
      *
      * @param  string  $stub
      * @param  string  $name
-     * @return \Illuminate\Console\GeneratorCommand
+     * @return GeneratorCommand
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function replaceNamespace(&$stub, $name)
+    protected function replaceNamespace(string &$stub, string $name): static
     {
         $searches = [
             ['DummyNamespace', 'DummyRootNamespace', 'NamespacedDummyUserModel'],
@@ -304,7 +318,7 @@ abstract class GeneratorCommand extends Command
      * @param  string  $name
      * @return string
      */
-    protected function getNamespace($name)
+    protected function getNamespace(string $name): string
     {
         return trim(implode('\\', array_slice(explode('\\', $name), 0, -1)), '\\');
     }
@@ -316,7 +330,7 @@ abstract class GeneratorCommand extends Command
      * @param  string  $name
      * @return string
      */
-    protected function replaceClass($stub, $name)
+    protected function replaceClass(string $stub, string $name): string
     {
         $class = str_replace($this->getNamespace($name).'\\', '', $name);
 
@@ -329,7 +343,7 @@ abstract class GeneratorCommand extends Command
      * @param  string  $stub
      * @return string
      */
-    protected function sortImports($stub)
+    protected function sortImports(string $stub): string
     {
         if (preg_match('/(?P<imports>(?:use [^;]+;$\n?)+)/m', $stub, $match)) {
             $imports = explode("\n", trim($match['imports']));
@@ -347,7 +361,7 @@ abstract class GeneratorCommand extends Command
      *
      * @return string
      */
-    protected function getNameInput()
+    protected function getNameInput(): string
     {
         return trim($this->argument('name'));
     }
@@ -356,14 +370,16 @@ abstract class GeneratorCommand extends Command
      * Get the model for the default guard's user provider.
      *
      * @return string|null
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function userProviderModel()
+    protected function userProviderModel(): ?string
     {
         $config = $this->laravel['config'];
 
         $provider = $config->get('auth.guards.'.$config->get('auth.defaults.guard').'.provider');
 
-        return $config->get("auth.providers.{$provider}.model");
+        return $config->get("auth.providers.$provider.model");
     }
 
     /**
@@ -372,7 +388,7 @@ abstract class GeneratorCommand extends Command
      * @param  string  $name
      * @return bool
      */
-    protected function isReservedName($name)
+    protected function isReservedName(string $name): bool
     {
         $name = strtolower($name);
 
@@ -385,7 +401,7 @@ abstract class GeneratorCommand extends Command
      * @param  string  $path
      * @return string
      */
-    protected function viewPath($path = '')
+    protected function viewPath(string $path = ''): string
     {
         $views = $this->laravel['config']['view.paths'][0] ?? resource_path('views');
 
@@ -397,7 +413,7 @@ abstract class GeneratorCommand extends Command
      *
      * @return array
      */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return [
             ['name', InputArgument::REQUIRED, 'The name of the class'],
@@ -409,7 +425,7 @@ abstract class GeneratorCommand extends Command
      *
      * @return string
      */
-    protected function rootNamespace()
+    protected function rootNamespace(): string
     {
         return $this->getDefaultNamespace(null);
     }
@@ -419,8 +435,9 @@ abstract class GeneratorCommand extends Command
      *
      * @param  string  $name
      * @return string
+     * @throws ReflectionException
      */
-    protected function getPath($name)
+    protected function getPath(string $name): string
     {
         return Helper::guessClassFileName($name);
     }
@@ -428,7 +445,7 @@ abstract class GeneratorCommand extends Command
     /**
      * @return string
      */
-    protected function getBaseDir()
+    protected function getBaseDir(): string
     {
         if ($this->baseDirectory) {
             return trim(base_path($this->baseDirectory), '/');
@@ -444,9 +461,9 @@ abstract class GeneratorCommand extends Command
     /**
      * @return void
      */
-    protected function askBaseDirectory()
+    protected function askBaseDirectory(): void
     {
-        if (! Str::startsWith(config('admin.route.namespace'), 'App')) {
+        if (!Str::startsWith(config('admin.route.namespace'), 'App')) {
             $dir = explode('\\', config('admin.route.namespace'))[0];
 
             $this->baseDirectory = trim($this->ask('Please enter the application path', Helper::slug($dir)));

@@ -12,7 +12,7 @@ interface FieldsCollection
      *
      * @return Collection
      */
-    public function fields();
+    public function fields(): Collection;
 
     /**
      * Get specify field.
@@ -20,5 +20,5 @@ interface FieldsCollection
      * @param  string|Field  $name
      * @return Field|null
      */
-    public function field($name);
+    public function field(string|Field $name): ?Field;
 }

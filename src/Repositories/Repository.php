@@ -90,7 +90,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * 获取Grid表格数据.
      *
      * @param  Grid\Model  $model
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Collection|array
+     * @return LengthAwarePaginator|Collection|array
      */
     public function get(Grid\Model $model): LengthAwarePaginator|array|Collection
     {
@@ -101,7 +101,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * 获取编辑页面数据.
      *
      * @param  Form  $form
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return array|Arrayable
      */
     public function edit(Form $form): array|Arrayable
     {
@@ -112,7 +112,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * 获取详情页面数据.
      *
      * @param  Show  $show
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return array|Arrayable
      */
     public function detail(Show $show): array|Arrayable
     {
@@ -123,7 +123,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * 新增记录.
      *
      * @param  Form  $form
-     * @return int|bool|\Dcat\Admin\Http\JsonResponse
+     * @return int|bool|JsonResponse
      */
     public function store(Form $form): bool|int|JsonResponse
     {
@@ -134,7 +134,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * 查询更新前的行数据.
      *
      * @param  Form  $form
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return array|Arrayable
      */
     public function updating(Form $form): array|Arrayable
     {
@@ -145,7 +145,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * 更新数据.
      *
      * @param  Form  $form
-     * @return bool|\Dcat\Admin\Http\JsonResponse
+     * @return bool|JsonResponse
      */
     public function update(Form $form): bool|JsonResponse
     {
@@ -157,7 +157,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      *
      * @param  Form  $form
      * @param  array  $deletingData
-     * @return bool|int|\Dcat\Admin\Http\JsonResponse
+     * @return bool|int|JsonResponse
      */
     public function delete(Form $form, array $deletingData): bool|int|JsonResponse
     {
@@ -221,7 +221,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
      * @param  array  $tree
      * @param  int  $parentId
      */
-    public function saveOrder($tree = [], $parentId = 0)
+    public function saveOrder(array $tree = [], int $parentId = 0)
     {
         throw new RuntimeException('This repository does not support "saveOrder" method.');
     }

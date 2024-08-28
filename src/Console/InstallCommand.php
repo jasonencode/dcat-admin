@@ -4,6 +4,9 @@ namespace Dcat\Admin\Console;
 
 use Dcat\Admin\Models\AdminTablesSeeder;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class InstallCommand extends Command
 {
@@ -32,9 +35,9 @@ class InstallCommand extends Command
      * Execute the console command.
      *
      * @return void
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws FileNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function handle(): void
     {
@@ -75,9 +78,9 @@ class InstallCommand extends Command
      * Initialize the admin directory.
      *
      * @return void
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws FileNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function initAdminDirectory(): void
     {
@@ -107,9 +110,9 @@ class InstallCommand extends Command
      * Create HomeController.
      *
      * @return void
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws FileNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function createHomeController(): void
     {
@@ -131,9 +134,9 @@ class InstallCommand extends Command
      * Create AuthController.
      *
      * @return void
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws FileNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function createAuthController(): void
     {
@@ -153,19 +156,19 @@ class InstallCommand extends Command
 
     /**
      * @return void
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws FileNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function createMetricCards(): void
     {
         $map = [
-            '/Metrics/Examples/NewUsers.php'      => 'metrics/NewUsers',
-            '/Metrics/Examples/NewDevices.php'    => 'metrics/NewDevices',
+            '/Metrics/Examples/NewUsers.php' => 'metrics/NewUsers',
+            '/Metrics/Examples/NewDevices.php' => 'metrics/NewDevices',
             '/Metrics/Examples/ProductOrders.php' => 'metrics/ProductOrders',
-            '/Metrics/Examples/Sessions.php'      => 'metrics/Sessions',
-            '/Metrics/Examples/Tickets.php'       => 'metrics/Tickets',
-            '/Metrics/Examples/TotalUsers.php'    => 'metrics/TotalUsers',
+            '/Metrics/Examples/Sessions.php' => 'metrics/Sessions',
+            '/Metrics/Examples/Tickets.php' => 'metrics/Tickets',
+            '/Metrics/Examples/TotalUsers.php' => 'metrics/TotalUsers',
         ];
 
         $namespace = $this->namespace('Metrics\\Examples');
@@ -197,9 +200,9 @@ class InstallCommand extends Command
      * Create routes file.
      *
      * @return void
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws FileNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function createBootstrapFile(): void
     {
@@ -214,9 +217,9 @@ class InstallCommand extends Command
      * Create routes file.
      *
      * @return void
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws FileNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function createRoutesFile(): void
     {
@@ -232,9 +235,9 @@ class InstallCommand extends Command
      *
      * @param $name
      * @return string
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws FileNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function getStub($name): string
     {

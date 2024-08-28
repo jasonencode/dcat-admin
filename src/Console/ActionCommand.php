@@ -21,7 +21,7 @@ class ActionCommand extends GeneratorCommand
     /**
      * @var string
      */
-    protected $choice;
+    protected string $choice;
 
     /**
      * @var string
@@ -92,7 +92,7 @@ class ActionCommand extends GeneratorCommand
      * @param  string  $name
      * @return string
      */
-    protected function replaceClass($stub, $name)
+    protected function replaceClass(string $stub, string $name)
     {
         $stub = parent::replaceClass($stub, $name);
 
@@ -123,7 +123,7 @@ class ActionCommand extends GeneratorCommand
      * @param  string  $rootNamespace
      * @return string
      */
-    protected function getDefaultNamespace($rootNamespace)
+    protected function getDefaultNamespace(string $rootNamespace)
     {
         if ($this->namespace) {
             return $this->namespace;

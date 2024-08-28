@@ -41,7 +41,7 @@ trait HasFields
      * @param  string|Field  $name
      * @return Field|null
      */
-    public function field($name)
+    public function field(string|Field $name)
     {
         return $this->fields()->first(function (Field $field) use ($name) {
             if (is_array($field->column())) {

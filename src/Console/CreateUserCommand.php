@@ -23,7 +23,7 @@ class CreateUserCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $userModel = config('admin.database.users_model');
         $roleModel = config('admin.database.roles_model');

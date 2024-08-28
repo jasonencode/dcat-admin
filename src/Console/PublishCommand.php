@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Filesystem as Flysystem;
+use League\Flysystem\FilesystemException;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\Flysystem\MountManager;
 
@@ -33,14 +34,14 @@ class PublishCommand extends Command
     protected $description = "Re-publish dcat-admin's assets, configuration, language and migration files. If you want overwrite the existing files, you can add the `--force` option";
 
     /**
-     * @var \Illuminate\Filesystem\Filesystem
+     * @var Filesystem
      */
-    protected $files;
+    protected Filesystem $files;
 
     /**
      * @var array
      */
-    protected $tags = [];
+    protected array $tags = [];
 
     public function __construct(Filesystem $files)
     {
@@ -49,7 +50,10 @@ class PublishCommand extends Command
         $this->files = $files;
     }
 
-    public function handle()
+    /**
+     * @throws FilesystemException
+     */
+    public function handle(): void
     {
         $options = [];
 
@@ -70,7 +74,7 @@ class PublishCommand extends Command
         $this->call('view:clear');
     }
 
-    protected function getTags()
+    protected function getTags(): array
     {
         $tags = [];
 
@@ -88,7 +92,7 @@ class PublishCommand extends Command
         }
 
         // 设置默认标签.
-        if (! $tags && ! $this->tags) {
+        if (!$tags && !$this->tags) {
             $this->tags[] = 'dcat-admin-lang';
             $tags = [
                 'dcat-admin-migrations',
@@ -100,7 +104,10 @@ class PublishCommand extends Command
         return $tags;
     }
 
-    protected function publishTag($tag)
+    /**
+     * @throws FilesystemException
+     */
+    protected function publishTag($tag): void
     {
         $published = false;
 
@@ -117,11 +124,14 @@ class PublishCommand extends Command
         }
     }
 
-    protected function pathsToPublish($tag)
+    protected function pathsToPublish($tag): array
     {
         return ServiceProvider::pathsToPublish(null, $tag);
     }
 
+    /**
+     * @throws FilesystemException
+     */
     protected function publishItem($from, $to)
     {
         if ($this->files->isFile($from)) {
@@ -130,12 +140,12 @@ class PublishCommand extends Command
             return $this->publishDirectory($from, $to);
         }
 
-        $this->error("Can't locate path: <{$from}>");
+        $this->error("Can't locate path: <$from>");
     }
 
-    protected function publishFile($from, $to)
+    protected function publishFile($from, $to): void
     {
-        if (! $this->files->exists($to) || $this->option('force')) {
+        if (!$this->files->exists($to) || $this->option('force')) {
             $this->createParentDirectory(dirname($to));
 
             $this->files->copy($from, $to);
@@ -144,7 +154,10 @@ class PublishCommand extends Command
         }
     }
 
-    protected function publishDirectory($from, $to)
+    /**
+     * @throws FilesystemException
+     */
+    protected function publishDirectory($from, $to): void
     {
         $localClass = class_exists(LocalAdapter::class) ? LocalAdapter::class : LocalFilesystemAdapter::class;
 
@@ -156,14 +169,17 @@ class PublishCommand extends Command
         $this->status($from, $to, 'Directory');
     }
 
-    protected function moveManagedFiles(MountManager $manager)
+    /**
+     * @throws FilesystemException
+     */
+    protected function moveManagedFiles(MountManager $manager): void
     {
         if (method_exists($manager, 'put')) {
             foreach ($manager->listContents('from://', true) as $file) {
                 if (
                     $file['type'] === 'file'
-                    && (! $manager->has('to://'.$file['path']) || $this->option('force'))
-                    && ! $this->isExceptPath($manager, $file['path'])
+                    && (!$manager->has('to://'.$file['path']) || $this->option('force'))
+                    && !$this->isExceptPath($manager, $file['path'])
                 ) {
                     $manager->put('to://'.$file['path'], $manager->read('from://'.$file['path']));
                 }
@@ -175,25 +191,25 @@ class PublishCommand extends Command
         foreach ($manager->listContents('from://', true) as $file) {
             $path = Str::after($file['path'], 'from://');
 
-            if ($file['type'] === 'file' && (! $manager->fileExists('to://'.$path) || $this->option('force'))) {
+            if ($file['type'] === 'file' && (!$manager->fileExists('to://'.$path) || $this->option('force'))) {
                 $manager->write('to://'.$path, $manager->read($file['path']));
             }
         }
     }
 
-    protected function isExceptPath($manager, $path)
+    protected function isExceptPath($manager, $path): bool
     {
         return $manager->has('to://'.$path) && Str::contains($path, ['/menu.php', '/global.php']);
     }
 
-    protected function createParentDirectory($directory)
+    protected function createParentDirectory($directory): void
     {
-        if (! $this->files->isDirectory($directory)) {
+        if (!$this->files->isDirectory($directory)) {
             $this->files->makeDirectory($directory, 0755, true);
         }
     }
 
-    protected function status($from, $to, $type)
+    protected function status($from, $to, $type): void
     {
         $from = str_replace(base_path(), '', realpath($from));
 

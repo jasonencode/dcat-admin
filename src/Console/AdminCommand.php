@@ -26,20 +26,20 @@ class AdminCommand extends Command
     /**
      * @var string
      */
-    public static $logo = <<<LOGO
-    
+    public static string $logo = <<<LOGO
+
     ____   ______ ___   ______   ___     ____   __  ___ ____ _   __
    / __ \ / ____//   | /_  __/  /   |   / __ \ /  |/  //  _// | / /
-  / / / // /    / /| |  / /    / /| |  / / / // /|_/ / / / /  |/ / 
- / /_/ // /___ / ___ | / /    / ___ | / /_/ // /  / /_/ / / /|  /  
-/_____/ \____//_/  |_|/_/    /_/  |_|/_____//_/  /_//___//_/ |_/   
-                                                                                         
+  / / / // /    / /| |  / /    / /| |  / / / // /|_/ / / / /  |/ /
+ / /_/ // /___ / ___ | / /    / ___ | / /_/ // /  / /_/ / / /|  /
+/_____/ \____//_/  |_|/_/    /_/  |_|/_____//_/  /_//___//_/ |_/
+
 LOGO;
 
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $this->line(static::$logo);
         $this->line(Admin::longVersion());
@@ -55,7 +55,7 @@ LOGO;
      *
      * @return void
      */
-    protected function listAdminCommands()
+    protected function listAdminCommands(): void
     {
         $commands = collect(Artisan::all())->mapWithKeys(function ($command, $key) {
             if (Str::startsWith($key, 'admin:')) {
@@ -77,7 +77,7 @@ LOGO;
      * @param (Command|string)[] $commands
      * @return int
      */
-    private function getColumnWidth(array $commands)
+    private function getColumnWidth(array $commands): int
     {
         $widths = [];
 
@@ -97,7 +97,7 @@ LOGO;
      * @param  string  $string  The string to check its length
      * @return int The length of the string
      */
-    public static function strlen($string)
+    public static function strlen(string $string): int
     {
         if (false === $encoding = mb_detect_encoding($string, null, true)) {
             return strlen($string);

@@ -411,7 +411,7 @@ class Form implements Renderable
      * @param  Model|array|Fluent|null  $model
      * @return Fluent|void
      */
-    public function model(Model|Fluent|array $model = null)
+    public function model(Model|Fluent|array|null $model = null)
     {
         if ($model === null) {
             return $this->model;

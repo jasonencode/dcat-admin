@@ -23,14 +23,15 @@ class ResetPasswordCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $userModel = config('admin.database.users_model');
 
         $users = $userModel::all();
 
         askForUserName:
-        $username = $this->askWithCompletion('Please enter a username who needs to reset his password', $users->pluck('username')->toArray());
+        $username = $this->askWithCompletion('Please enter a username who needs to reset his password',
+            $users->pluck('username')->toArray());
 
         $user = $users->first(function ($user) use ($username) {
             return $user->username == $username;

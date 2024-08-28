@@ -14,11 +14,11 @@ class Handler implements ExceptionHandler
     /**
      * 处理异常.
      *
-     * @param  \Throwable  $e
-     * @return string
-     * @throws \Throwable
+     * @param  Throwable  $e
+     * @return string|null
+     * @throws Throwable
      */
-    public function handle(Throwable $e)
+    public function handle(Throwable $e): ?string
     {
         if ($e instanceof HttpResponseException) {
             throw $e;
@@ -32,10 +32,10 @@ class Handler implements ExceptionHandler
     /**
      * 显示异常信息.
      *
-     * @param  \Throwable  $exception
+     * @param  Throwable  $exception
      * @return string|void
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(Throwable $exception)
     {
@@ -48,11 +48,11 @@ class Handler implements ExceptionHandler
         }
 
         $error = new MessageBag([
-            'type'    => get_class($exception),
+            'type' => get_class($exception),
             'message' => $exception->getMessage(),
-            'file'    => $exception->getFile(),
-            'line'    => $exception->getLine(),
-            'trace'   => $this->replaceBasePath($exception->getTraceAsString()),
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine(),
+            'trace' => $this->replaceBasePath($exception->getTraceAsString()),
         ]);
 
         $errors = new ViewErrorBag();
@@ -64,9 +64,9 @@ class Handler implements ExceptionHandler
     /**
      * 上报异常信息.
      *
-     * @param  \Throwable  $e
+     * @param  Throwable  $e
      */
-    public function report(Throwable $e)
+    public function report(Throwable $e): void
     {
         report($e);
     }
@@ -75,7 +75,7 @@ class Handler implements ExceptionHandler
      * @param  string  $path
      * @return array|string|string[]
      */
-    protected function replaceBasePath(string $path)
+    protected function replaceBasePath(string $path): array|string
     {
         return str_replace(
             str_replace('\\', '/', base_path().'/'),

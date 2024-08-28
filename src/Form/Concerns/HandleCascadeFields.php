@@ -9,7 +9,7 @@ trait HandleCascadeFields
 {
     /**
      * @param  array  $dependency
-     * @param  \Closure  $closure
+     * @param  Closure  $closure
      * @return Field\CascadeGroup
      */
     public function cascadeGroup(Closure $closure, array $dependency): Field\CascadeGroup

@@ -2,6 +2,11 @@
 
 namespace Dcat\Admin\Console;
 
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use ReflectionException;
+
 class FormCommand extends GeneratorCommand
 {
     /**
@@ -9,7 +14,7 @@ class FormCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'admin:form {name} 
+    protected $signature = 'admin:form {name}
         {--namespace=}
         {--base=}';
 
@@ -23,9 +28,12 @@ class FormCommand extends GeneratorCommand
     /**
      * @return bool|null
      *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws FileNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws ReflectionException
      */
-    public function handle()
+    public function handle(): ?bool
     {
         $this->askBaseDirectory();
 
@@ -37,7 +45,7 @@ class FormCommand extends GeneratorCommand
      *
      * @return string
      */
-    protected function getStub()
+    protected function getStub(): string
     {
         return __DIR__.'/stubs/form.stub';
     }
@@ -48,7 +56,7 @@ class FormCommand extends GeneratorCommand
      * @param  string  $rootNamespace
      * @return string
      */
-    protected function getDefaultNamespace($rootNamespace)
+    protected function getDefaultNamespace(string $rootNamespace): string
     {
         if ($namespace = $this->option('namespace')) {
             return $namespace;
@@ -62,7 +70,7 @@ class FormCommand extends GeneratorCommand
      *
      * @return string
      */
-    protected function getNameInput()
+    protected function getNameInput(): string
     {
         $name = trim($this->argument('name'));
 

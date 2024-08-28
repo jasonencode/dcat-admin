@@ -3,7 +3,10 @@
 namespace Dcat\Admin\Console;
 
 use Dcat\Admin\Support\Helper;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class AppCommand extends InstallCommand
 {
@@ -25,8 +28,11 @@ class AppCommand extends InstallCommand
      * Execute the console command.
      *
      * @return void
+     * @throws FileNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function handle()
+    public function handle(): void
     {
         $this->addConfig();
         $this->initAdminDirectory();
@@ -34,7 +40,10 @@ class AppCommand extends InstallCommand
         $this->info('Done.');
     }
 
-    protected function addConfig()
+    /**
+     * @throws FileNotFoundException
+     */
+    protected function addConfig(): void
     {
         /* @var Filesystem $files */
         $files = $this->laravel['files'];
@@ -58,7 +67,7 @@ class AppCommand extends InstallCommand
      *
      * @return void
      */
-    protected function setDirectory()
+    protected function setDirectory(): void
     {
         $this->directory = app_path($this->argument('name'));
     }
