@@ -7,6 +7,7 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
+use Throwable;
 
 class DialogTree extends AbstractDisplayer
 {
@@ -17,19 +18,19 @@ class DialogTree extends AbstractDisplayer
     protected array $area = ['580px', '600px'];
 
     protected array $options = [
-        'plugins'  => ['checkbox', 'types'],
-        'core'     => [
+        'plugins' => ['checkbox', 'types'],
+        'core' => [
             'check_callback' => true,
 
             'themes' => [
-                'name'       => 'proton',
+                'name' => 'proton',
                 'responsive' => true,
             ],
         ],
         'checkbox' => [
             'keep_selected_style' => false,
         ],
-        'types'    => [
+        'types' => [
             'default' => [
                 'icon' => false,
             ],
@@ -37,8 +38,8 @@ class DialogTree extends AbstractDisplayer
     ];
 
     protected array $columnNames = [
-        'id'     => 'id',
-        'text'   => 'name',
+        'id' => 'id',
+        'text' => 'name',
         'parent' => 'parent_id',
     ];
 
@@ -140,7 +141,7 @@ class DialogTree extends AbstractDisplayer
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function display($callbackOrNodes = null): string
     {
@@ -151,14 +152,14 @@ class DialogTree extends AbstractDisplayer
         }
 
         return Admin::view('admin::grid.displayer.dialogtree', [
-            'value'        => $this->format($this->value),
-            'nodes'        => $this->nodes,
-            'title'        => $this->title ?: $this->column->getLabel(),
-            'options'      => $this->options,
-            'area'         => $this->area,
-            'columnNames'  => $this->columnNames,
-            'url'          => $this->url,
-            'checkAll'     => $this->checkAll,
+            'value' => $this->format($this->value),
+            'nodes' => $this->nodes,
+            'title' => $this->title ?: $this->column->getLabel(),
+            'options' => $this->options,
+            'area' => $this->area,
+            'columnNames' => $this->columnNames,
+            'url' => $this->url,
+            'checkAll' => $this->checkAll,
             'rootParentId' => $this->rootParentId,
         ]);
     }

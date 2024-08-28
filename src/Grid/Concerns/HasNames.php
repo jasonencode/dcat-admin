@@ -2,6 +2,9 @@
 
 namespace Dcat\Admin\Grid\Concerns;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+
 trait HasNames
 {
     /**
@@ -40,8 +43,8 @@ trait HasNames
      *
      * @param  string  $key
      * @return mixed
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getRequestInput(string $key): mixed
     {

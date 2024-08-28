@@ -11,6 +11,8 @@ use Dcat\Admin\Grid\Tools;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * @property Collection $columns
@@ -31,10 +33,10 @@ trait HasQuickSearch
     protected ?Tools\QuickSearch $quickSearch = null;
 
     /**
-     * @param  array|\Closure|string|null  $search
+     * @param  array|Closure|string|null  $search
      * @return Tools\QuickSearch
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function quickSearch(Closure|array|string $search = null): Tools\QuickSearch
     {
@@ -75,7 +77,7 @@ trait HasQuickSearch
 
     public function renderQuickSearch(): string
     {
-        if (! $this->quickSearch) {
+        if (!$this->quickSearch) {
             return '';
         }
 
@@ -85,11 +87,11 @@ trait HasQuickSearch
     /**
      * Apply the search query to the query.
      *
-     * @return \Dcat\Admin\Grid\Model|void
+     * @return Model|void
      */
     public function applyQuickSearch()
     {
-        if (! $this->quickSearch) {
+        if (!$this->quickSearch) {
             return;
         }
 
@@ -139,7 +141,7 @@ trait HasQuickSearch
     protected function addWhereBindings(string $query): void
     {
         $queries = preg_split('/\s(?=([^"]*"[^"]*")*[^"]*$)/', trim($query));
-        if (! $queries = $this->parseQueryBindings($queries)) {
+        if (!$queries = $this->parseQueryBindings($queries)) {
             $this->addWhereBasicBinding($this->model(), $this->getKeyName(), false, '=', '___');
 
             return;
@@ -194,7 +196,7 @@ trait HasQuickSearch
     {
         $columnMap = $this->columns->mapWithKeys(function (Column $column) {
             $label = $column->getLabel();
-            $name  = $column->getName();
+            $name = $column->getName();
 
             return [$label => $name, $name => $name];
         });
@@ -209,13 +211,13 @@ trait HasQuickSearch
             [$column, $condition] = $segments;
 
             if (Str::startsWith($column, '|')) {
-                $or     = true;
+                $or = true;
                 $column = substr($column, 1);
             }
 
             $column = $columnMap[$column] ?? null;
 
-            if (! $column) {
+            if (!$column) {
                 return;
             }
 
@@ -234,7 +236,7 @@ trait HasQuickSearch
     protected function addWhereLikeBinding(mixed $query, ?string $column, ?bool $or, ?string $pattern): void
     {
         $likeOperator = 'like';
-        $method       = $or ? 'orWhere' : 'where';
+        $method = $or ? 'orWhere' : 'where';
 
         Helper::withQueryCondition($query, $column, $method, [$likeOperator, $pattern]);
     }
@@ -248,8 +250,13 @@ trait HasQuickSearch
      * @param  string|null  $function
      * @param  string|null  $value
      */
-    protected function addWhereDatetimeBinding(mixed $query, ?string $column, ?bool $or, ?string $function, ?string $value): void
-    {
+    protected function addWhereDatetimeBinding(
+        mixed $query,
+        ?string $column,
+        ?bool $or,
+        ?string $function,
+        ?string $value
+    ): void {
         $method = ($or ? 'orWhere' : 'where').ucfirst($function);
 
         Helper::withQueryCondition($query, $column, $method, [$value]);
@@ -274,7 +281,7 @@ trait HasQuickSearch
             }
         }
 
-        $where  = $or ? 'orWhere' : 'where';
+        $where = $or ? 'orWhere' : 'where';
         $method = $where.($not ? 'NotIn' : 'In');
 
         Helper::withQueryCondition($query, $column, $method, [$values]);
@@ -289,8 +296,13 @@ trait HasQuickSearch
      * @param  string|null  $start
      * @param  string|null  $end
      */
-    protected function addWhereBetweenBinding(mixed $query, ?string $column, ?bool $or, ?string $start, ?string $end): void
-    {
+    protected function addWhereBetweenBinding(
+        mixed $query,
+        ?string $column,
+        ?bool $or,
+        ?string $start,
+        ?string $end
+    ): void {
         $method = $or ? 'orWhereBetween' : 'whereBetween';
 
         Helper::withQueryCondition($query, $column, $method, [[$start, $end]]);
@@ -305,13 +317,18 @@ trait HasQuickSearch
      * @param  string|null  $operator
      * @param  string|null  $value
      */
-    protected function addWhereBasicBinding(mixed $query, ?string $column, ?bool $or, ?string $operator, ?string $value): void
-    {
-        $method   = $or ? 'orWhere' : 'where';
+    protected function addWhereBasicBinding(
+        mixed $query,
+        ?string $column,
+        ?bool $or,
+        ?string $operator,
+        ?string $value
+    ): void {
+        $method = $or ? 'orWhere' : 'where';
         $operator = $operator ?: '=';
         if ($operator == '%') {
             $operator = 'like';
-            $value    = "%$value%";
+            $value = "%$value%";
         }
 
         if ($value === 'NULL') {
@@ -326,8 +343,8 @@ trait HasQuickSearch
     }
 
     /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function addQuickSearchScript(): void
     {

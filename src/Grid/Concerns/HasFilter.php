@@ -6,8 +6,12 @@ use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Support\Helper;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 trait HasFilter
 {
@@ -32,9 +36,9 @@ trait HasFilter
      * Process the grid filter.
      *
      * @return Collection
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Exception
      */
     public function processFilter(): Collection
     {
@@ -51,7 +55,7 @@ trait HasFilter
     /**
      * Get or set the grid filter.
      *
-     * @param \Closure|null $callback
+     * @param  Closure|null $callback
      * @return $this|Grid\Filter
      */
     public function filter(Closure $callback = null): Grid\Filter|static
@@ -68,7 +72,7 @@ trait HasFilter
     /**
      * Render the grid filter.
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderFilter(): string|View
     {
@@ -139,8 +143,8 @@ trait HasFilter
     }
 
     /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function addFilterScript(): void
     {

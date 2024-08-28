@@ -3,6 +3,7 @@
 namespace Dcat\Admin\Grid\Displayers;
 
 use Dcat\Admin\Admin;
+use Exception;
 
 class Tree extends AbstractDisplayer
 {
@@ -21,17 +22,17 @@ class Tree extends AbstractDisplayer
         $showNextPage = $model->showAllChildrenNodes() ? 'false' : 'true';
 
         $script = <<<JS
-Dcat.grid.Tree({
-    button: '.{$tableId}-grid-load-children',
-    table: '#{$tableId}',
-    url: '{$model->generateTreeUrl()}',
-    perPage: '{$model->getPerPage()}',
-    showNextPage: {$showNextPage},
-    pageQueryName: '{$pageName}',
-    parentIdQueryName: '{$model->getParentIdQueryName()}',
-    depthQueryName: '{$model->getDepthQueryName()}',
-});
-JS;
+            Dcat.grid.Tree({
+                button: '.$tableId-grid-load-children',
+                table: '#$tableId',
+                url: '{$model->generateTreeUrl()}',
+                perPage: '{$model->getPerPage()}',
+                showNextPage: $showNextPage,
+                pageQueryName: '$pageName',
+                parentIdQueryName: '{$model->getParentIdQueryName()}',
+                depthQueryName: '{$model->getDepthQueryName()}',
+            });
+            JS;
         Admin::script($script);
     }
 
@@ -46,18 +47,21 @@ JS;
         $indents = str_repeat(' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ', $depth);
 
         return <<<EOT
-<a href="javascript:void(0)" class="{$tableId}-grid-load-children" data-depth="{$depth}" data-inserted="0" data-key="{$key}">
-   {$indents}<i class="fa fa-angle-right"></i> &nbsp; {$this->value}
-</a>
-EOT;
+            <a href="javascript:void(0)" class="$tableId-grid-load-children" data-depth="$depth" data-inserted="0" data-key="$key">
+               $indents<i class="fa fa-angle-right"></i> &nbsp; {$this->value}
+            </a>
+            EOT;
     }
 
+    /**
+     * @throws Exception
+     */
     protected function showNextPage(): bool
     {
         $model = $this->grid->model();
 
         $showNextPage = $this->grid->allowPagination();
-        if (! $model->showAllChildrenNodes() && $showNextPage) {
+        if (!$model->showAllChildrenNodes() && $showNextPage) {
             $showNextPage =
                 $model->getCurrentChildrenPage() < $model->paginator()->lastPage()
                 && $model->buildData()->count() == $model->getPerPage();

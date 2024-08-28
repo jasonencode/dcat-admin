@@ -27,7 +27,7 @@ trait HasExporter
     /**
      * Set exporter driver for Grid to export.
      *
-     * @param  \Dcat\Admin\Grid\Exporters\AbstractExporter|array|string|false|null  $exporterDriver
+     * @param  AbstractExporter|array|string|false|null  $exporterDriver
      * @return Exporter
      */
     public function export(AbstractExporter|array|string|false $exporterDriver = null): Exporter

@@ -10,6 +10,7 @@ use Dcat\Admin\Grid\Actions\QuickEdit;
 use Dcat\Admin\Grid\Actions\Show;
 use Dcat\Admin\Grid\RowAction;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Traits\Macroable;
@@ -34,10 +35,10 @@ class Actions extends AbstractDisplayer
      * @var array
      */
     protected array $actions = [
-        'view'      => true,
-        'edit'      => true,
+        'view' => true,
+        'edit' => true,
         'quickEdit' => false,
-        'delete'    => true,
+        'delete' => true,
     ];
 
     /**
@@ -103,7 +104,7 @@ class Actions extends AbstractDisplayer
      */
     public function disableView(bool $disable = true): static
     {
-        return $this->setAction('view', ! $disable);
+        return $this->setAction('view', !$disable);
     }
 
     public function delete(bool $value = true): static
@@ -119,7 +120,7 @@ class Actions extends AbstractDisplayer
      */
     public function disableDelete(bool $disable = true): static
     {
-        return $this->setAction('delete', ! $disable);
+        return $this->setAction('delete', !$disable);
     }
 
     public function edit(bool $value = true): static
@@ -135,7 +136,7 @@ class Actions extends AbstractDisplayer
      */
     public function disableEdit(bool $disable = true): static
     {
-        return $this->setAction('edit', ! $disable);
+        return $this->setAction('edit', !$disable);
     }
 
     public function quickEdit(bool $value = true): static
@@ -151,7 +152,7 @@ class Actions extends AbstractDisplayer
      */
     public function disableQuickEdit(bool $disable = true): static
     {
-        return $this->setAction('quickEdit', ! $disable);
+        return $this->setAction('quickEdit', !$disable);
     }
 
     /**
@@ -225,11 +226,11 @@ class Actions extends AbstractDisplayer
         $toString = [Helper::class, 'render'];
 
         $prepends = array_map($toString, $this->prepends);
-        $appends  = array_map($toString, $this->appends);
+        $appends = array_map($toString, $this->appends);
 
         foreach ($this->actions as $action => $enable) {
             if ($enable) {
-                $method     = 'render'.ucfirst($action);
+                $method = 'render'.ucfirst($action);
                 $prepends[] = $this->{$method}();
             }
         }
@@ -241,7 +242,7 @@ class Actions extends AbstractDisplayer
      * Render view action.
      *
      * @return string
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     protected function renderView(): string
     {
@@ -265,7 +266,7 @@ class Actions extends AbstractDisplayer
      * Render edit action.
      *
      * @return string
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     protected function renderEdit(): string
     {
@@ -287,7 +288,7 @@ class Actions extends AbstractDisplayer
 
     /**
      * @return string
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     protected function renderQuickEdit(): string
     {
@@ -311,7 +312,7 @@ class Actions extends AbstractDisplayer
      * Render delete action.
      *
      * @return string
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     protected function renderDelete(): string
     {

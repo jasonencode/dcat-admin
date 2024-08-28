@@ -2,6 +2,8 @@
 
 namespace Dcat\Admin\Grid\Displayers;
 
+use Throwable;
+
 abstract class Editable extends AbstractDisplayer
 {
     protected ?string $type = null;
@@ -13,6 +15,9 @@ abstract class Editable extends AbstractDisplayer
         'refresh' => false,
     ];
 
+    /**
+     * @throws Throwable
+     */
     public function display($options = []): string
     {
         if (is_bool($options)) {

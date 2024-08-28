@@ -7,6 +7,7 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Contracts\LazyRenderable;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Str;
+use Throwable;
 
 class Expand extends AbstractDisplayer
 {
@@ -19,6 +20,9 @@ class Expand extends AbstractDisplayer
         $this->button = $button;
     }
 
+    /**
+     * @throws Throwable
+     */
     public function display($callbackOrButton = null): string
     {
         $html = $this->value;

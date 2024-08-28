@@ -48,7 +48,7 @@ trait HasActions
      *
      * @Date   : 2024/8/15 17:07
      * @Author : <Jason.C>
-     * @param  \Closure|array  $callback
+     * @param  Closure|array  $callback
      * @return $this
      */
     public function actions(Closure|array $callback): static

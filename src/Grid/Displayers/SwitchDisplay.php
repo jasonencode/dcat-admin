@@ -4,6 +4,7 @@ namespace Dcat\Admin\Grid\Displayers;
 
 use Closure;
 use Dcat\Admin\Admin;
+use Throwable;
 
 class SwitchDisplay extends AbstractDisplayer
 {
@@ -14,6 +15,9 @@ class SwitchDisplay extends AbstractDisplayer
         $this->color = Admin::color()->get($color);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function display(string $color = '', $refresh = false): string
     {
         if ($color instanceof Closure) {
@@ -33,7 +37,7 @@ class SwitchDisplay extends AbstractDisplayer
         );
     }
 
-    protected function url()
+    protected function url(): string
     {
         return $this->resource().'/'.$this->getKey();
     }

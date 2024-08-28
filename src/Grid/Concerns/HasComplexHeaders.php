@@ -21,7 +21,7 @@ trait HasComplexHeaders
      * @param  array  $columnNames
      * @param  string|null  $label
      * @return ComplexHeader
-     * @throws \Dcat\Admin\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function combine(string $column, array $columnNames, string $label = null): ComplexHeader
     {

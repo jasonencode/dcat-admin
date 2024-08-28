@@ -6,6 +6,8 @@ use Closure;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Tools\Selector;
 use Dcat\Admin\Support\Helper;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * @mixin Grid
@@ -18,7 +20,7 @@ trait HasSelector
     protected Selector|null $_selector = null;
 
     /**
-     * @param  \Closure|null  $closure
+     * @param  Closure|null  $closure
      * @return $this|Selector
      */
     public function selector(Closure $closure = null): Selector|static
@@ -42,8 +44,8 @@ trait HasSelector
      * Apply selector query to grid model query.
      *
      * @return $this
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function applySelectorQuery(): static
     {
@@ -56,7 +58,7 @@ trait HasSelector
         $this->_selector->all()->each(function ($selector, $column) use ($active) {
             $key = $this->_selector->formatKey($column);
 
-            if (! array_key_exists($key, $active)) {
+            if (!array_key_exists($key, $active)) {
                 return;
             }
 
@@ -88,8 +90,8 @@ trait HasSelector
      * Render grid selector.
      *
      * @return string
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function renderSelector(): string
     {

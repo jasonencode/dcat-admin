@@ -8,6 +8,7 @@ use Dcat\Admin\Grid\Events\Fetched;
 use Dcat\Admin\Grid\Events\Fetching;
 use Dcat\Admin\Repositories\EloquentRepository;
 use Dcat\Admin\Support\Helper;
+use Exception;
 use Illuminate\Support\Collection;
 
 /**
@@ -75,7 +76,7 @@ trait HasTree
         });
 
         $this->grid()->listen(Fetched::class, function ($grid, Collection $collection) {
-            if (! $this->getParentIdFromRequest()) {
+            if (!$this->getParentIdFromRequest()) {
                 return;
             }
 
@@ -146,7 +147,7 @@ trait HasTree
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function buildChildrenNodesPagination(): void
     {
@@ -155,9 +156,9 @@ trait HasTree
 
             Admin::html(
                 <<<HTML
-<next-page class="hidden">$nextPage</next-page>
-<last-page class="hidden">{$this->paginator()->lastPage()}</last-page>
-HTML
+                    <next-page class="hidden">$nextPage</next-page>
+                    <last-page class="hidden">{$this->paginator()->lastPage()}</last-page>
+                    HTML
             );
         }
     }
@@ -177,7 +178,7 @@ HTML
 
     protected function bindChildrenNodesQuery(): void
     {
-        if (! $this->allowedTreeQuery) {
+        if (!$this->allowedTreeQuery) {
             return;
         }
 
@@ -239,7 +240,7 @@ HTML
      */
     public function withoutTreeQuery(string $url): string
     {
-        if (! $url) {
+        if (!$url) {
             return $url;
         }
 
@@ -247,7 +248,7 @@ HTML
 
         $parentId = $originalQuery[$this->getParentIdQueryName()] ?? 0;
 
-        if (! $parentId) {
+        if (!$parentId) {
             return $url;
         }
 

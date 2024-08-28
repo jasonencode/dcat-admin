@@ -6,6 +6,8 @@ use Dcat\Admin\Grid\Displayers\Actions;
 use Dcat\Admin\Grid\Displayers\DropdownActions;
 use Dcat\Admin\Grid\FixColumns;
 use Illuminate\Support\Collection;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 trait CanFixColumns
 {
@@ -43,8 +45,8 @@ trait CanFixColumns
     }
 
     /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function applyFixColumns(): void
     {

@@ -17,7 +17,7 @@ trait HasEvents
      * 监听事件.
      *
      * @param  string  $class
-     * @param  \Closure  $callback
+     * @param  Closure  $callback
      */
     public function listen(string $class, Closure $callback): void
     {
@@ -33,7 +33,7 @@ trait HasEvents
     /**
      * 触发事件.
      *
-     * @param  \Dcat\Admin\Grid\Events\Event  $event
+     * @param  Events\Event  $event
      */
     public function fire(Events\Event $event): void
     {
@@ -47,7 +47,7 @@ trait HasEvents
     /**
      * 只触发一次.
      *
-     * @param  \Dcat\Admin\Grid\Events\Event  $event
+     * @param  Events\Event  $event
      * @return void
      */
     public function fireOnce(Events\Event $event): void

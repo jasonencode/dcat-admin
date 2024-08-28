@@ -4,9 +4,13 @@ namespace Dcat\Admin\Grid\Displayers;
 
 use Closure;
 use Dcat\Admin\Admin;
+use Throwable;
 
 class Select extends AbstractDisplayer
 {
+    /**
+     * @throws Throwable
+     */
     public function display($options = [], $refresh = false): string
     {
         if ($options instanceof Closure) {
@@ -14,9 +18,9 @@ class Select extends AbstractDisplayer
         }
 
         return Admin::view('admin::grid.displayer.select', [
-            'column'  => $this->column->getName(),
-            'value'   => $this->value,
-            'url'     => $this->url(),
+            'column' => $this->column->getName(),
+            'value' => $this->value,
+            'url' => $this->url(),
             'options' => $options,
             'refresh' => $refresh,
         ]);

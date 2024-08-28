@@ -4,6 +4,7 @@ namespace Dcat\Admin\Grid\Concerns;
 
 use Closure;
 use Dcat\Admin\Grid\Tools\QuickCreate;
+use Throwable;
 
 trait HasQuickCreate
 {
@@ -39,7 +40,7 @@ trait HasQuickCreate
      * Render quick-create form.
      *
      * @return string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderQuickCreate(): string
     {

@@ -3,9 +3,13 @@
 namespace Dcat\Admin\Grid\Displayers;
 
 use Illuminate\Support\Arr;
+use Throwable;
 
 class Table extends AbstractDisplayer
 {
+    /**
+     * @throws Throwable
+     */
     public function display($titles = []): string
     {
         if (empty($this->value)) {
