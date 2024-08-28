@@ -2,11 +2,14 @@
 
 namespace Dcat\Admin\Grid\ColumnSelector;
 
+use Illuminate\Contracts\Cache\Repository;
+use Psr\SimpleCache\InvalidArgumentException;
+
 class CacheStore extends SessionStore
 {
-    protected $driver;
+    protected Repository $driver;
 
-    protected $ttl;
+    protected mixed $ttl;
 
     public function __construct($driver = 'file', $ttl = 25920000)
     {
@@ -19,6 +22,9 @@ class CacheStore extends SessionStore
         $this->driver->put($this->getKey(), $input, $this->ttl);
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function get()
     {
         return $this->driver->get($this->getKey());

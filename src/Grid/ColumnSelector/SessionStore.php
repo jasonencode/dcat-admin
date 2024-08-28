@@ -15,9 +15,11 @@ class SessionStore implements ColumnSelectorStore
      */
     protected Grid $grid;
 
-    public function setGrid(Grid $grid): void
+    public function setGrid(Grid $grid): static
     {
         $this->grid = $grid;
+
+        return $this;
     }
 
     public function store(array $input): void
@@ -29,7 +31,7 @@ class SessionStore implements ColumnSelectorStore
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function get()
+    public function get(): ?array
     {
         return session()->get($this->getKey());
     }

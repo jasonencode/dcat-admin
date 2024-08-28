@@ -8,9 +8,9 @@ interface ColumnSelectorStore
 {
     /**
      * @param  Grid  $grid
-     * @return mixed
+     * @return static
      */
-    public function setGrid(Grid $grid): mixed;
+    public function setGrid(Grid $grid): static;
 
     /**
      * 存储数据.
