@@ -33,7 +33,6 @@ class AdminServiceProvider extends ServiceProvider
         Console\CreateUserCommand::class,
         Console\ResetPasswordCommand::class,
         Console\ExportSeedCommand::class,
-        Console\IdeHelperCommand::class,
         Console\FormCommand::class,
         Console\ActionCommand::class,
         Console\MenuCacheCommand::class,
@@ -45,14 +44,14 @@ class AdminServiceProvider extends ServiceProvider
      * @var array
      */
     protected array $routeMiddleware = [
-        'admin.auth'       => Http\Middleware\Authenticate::class,
-        'admin.pjax'       => Http\Middleware\Pjax::class,
+        'admin.auth' => Http\Middleware\Authenticate::class,
+        'admin.pjax' => Http\Middleware\Pjax::class,
         'admin.permission' => Http\Middleware\Permission::class,
-        'admin.bootstrap'  => Http\Middleware\Bootstrap::class,
-        'admin.session'    => Http\Middleware\Session::class,
-        'admin.upload'     => Http\Middleware\WebUploader::class,
-        'admin.app'        => Http\Middleware\Application::class,
-        'admin.operation'  => Http\Middleware\LogOperation::class,
+        'admin.bootstrap' => Http\Middleware\Bootstrap::class,
+        'admin.session' => Http\Middleware\Session::class,
+        'admin.upload' => Http\Middleware\WebUploader::class,
+        'admin.app' => Http\Middleware\Application::class,
+        'admin.operation' => Http\Middleware\LogOperation::class,
     ];
 
     /**
@@ -166,7 +165,7 @@ class AdminServiceProvider extends ServiceProvider
     {
         config(Arr::dot(config('admin.auth', []), 'auth.'));
 
-        foreach ((array)config('admin.multi_app') as $app => $enable) {
+        foreach ((array) config('admin.multi_app') as $app => $enable) {
             if ($enable) {
                 config(Arr::dot(config($app.'.auth', []), 'auth.'));
             }
@@ -214,8 +213,8 @@ class AdminServiceProvider extends ServiceProvider
     {
         Blade::directive('primary', function ($amt = 0) {
             return <<<PHP
-<?php echo admin_color()->primary($amt); ?>
-PHP;
+                <?php echo admin_color()->primary($amt); ?>
+                PHP;
         });
     }
 

@@ -388,12 +388,12 @@ class Admin
     /**
      * 渲染内容.
      *
-     * @return string|void
+     * @return string
      */
-    public static function renderContents()
+    public static function renderContents(): string
     {
         if (!static::shouldPrevent()) {
-            return;
+            return '';
         }
 
         $results = '';

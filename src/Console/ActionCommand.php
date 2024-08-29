@@ -26,17 +26,17 @@ class ActionCommand extends GeneratorCommand
     /**
      * @var string
      */
-    protected $className;
+    protected string $className;
 
     /**
      * @var string
      */
-    protected $namespace;
+    protected string $namespace;
 
     /**
      * @var array
      */
-    protected $namespaceMap = [
+    protected array $namespaceMap = [
         'grid-batch' => 'Grid',
         'grid-row'   => 'Grid',
         'grid-tool'  => 'Grid',
@@ -46,7 +46,7 @@ class ActionCommand extends GeneratorCommand
         'tree-tool'  => 'Tree',
     ];
 
-    public function handle()
+    public function handle(): ?bool
     {
         $this->choice = $this->choice(
             'Which type of action would you like to make?',
@@ -71,7 +71,7 @@ class ActionCommand extends GeneratorCommand
     /**
      * @return array
      */
-    protected function actionTyps()
+    protected function actionTyps(): array
     {
         return [
             'default',
@@ -92,7 +92,7 @@ class ActionCommand extends GeneratorCommand
      * @param  string  $name
      * @return string
      */
-    protected function replaceClass(string $stub, string $name)
+    protected function replaceClass(string $stub, string $name): string
     {
         $stub = parent::replaceClass($stub, $name);
 
@@ -112,9 +112,9 @@ class ActionCommand extends GeneratorCommand
      *
      * @return string
      */
-    public function getStub()
+    public function getStub(): string
     {
-        return __DIR__."/stubs/actions/{$this->choice}.stub";
+        return __DIR__."/stubs/actions/$this->choice.stub";
     }
 
     /**
@@ -123,7 +123,7 @@ class ActionCommand extends GeneratorCommand
      * @param  string  $rootNamespace
      * @return string
      */
-    protected function getDefaultNamespace(string $rootNamespace)
+    protected function getDefaultNamespace(string $rootNamespace): string
     {
         if ($this->namespace) {
             return $this->namespace;
@@ -131,10 +131,10 @@ class ActionCommand extends GeneratorCommand
 
         $segments = explode('\\', config('admin.route.namespace'));
         array_pop($segments);
-        array_push($segments, 'Actions');
+        $segments[] = 'Actions';
 
         if (isset($this->namespaceMap[$this->choice])) {
-            array_push($segments, $this->namespaceMap[$this->choice]);
+            $segments[] = $this->namespaceMap[$this->choice];
         }
 
         return implode('\\', $segments);
@@ -145,7 +145,7 @@ class ActionCommand extends GeneratorCommand
      *
      * @return string
      */
-    protected function getNameInput()
+    protected function getNameInput(): string
     {
         $this->type = $this->qualifyClass($this->className);
 

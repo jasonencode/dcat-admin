@@ -20,7 +20,7 @@ use Illuminate\Support\Fluent;
  */
 class Context extends Fluent
 {
-    public function set($key, $value = null)
+    public function set($key, $value = null): static
     {
         $data = is_array($key) ? $key : [$key => $value];
 
@@ -47,12 +47,12 @@ class Context extends Fluent
         });
     }
 
-    public function getArray($key, $default = null)
+    public function getArray($key, $default = null): array
     {
         return Helper::array($this->get($key, $default), false);
     }
 
-    public function add($key, $value, $k = null)
+    public function add($key, $value, $k = null): static
     {
         $results = $this->getArray($key);
 
@@ -65,19 +65,19 @@ class Context extends Fluent
         return $this->set($key, $results);
     }
 
-    public function merge($key, array $value)
+    public function merge($key, array $value): static
     {
         $results = $this->getArray($key);
 
         return $this->set($key, array_merge($results, $value));
     }
 
-    public function forget($keys)
+    public function forget($keys): void
     {
         Arr::forget($this->attributes, $keys);
     }
 
-    public function flush()
+    public function flush(): void
     {
         $this->attributes = [];
     }
