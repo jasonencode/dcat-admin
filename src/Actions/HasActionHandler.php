@@ -50,12 +50,9 @@ trait HasActionHandler
 
     /**
      * Confirm message of action.
-     *
-     * @return array
      */
-    public function confirm(): array
+    public function confirm()
     {
-        return ['Confirm?', 'Confirm do this'];
     }
 
     /**
