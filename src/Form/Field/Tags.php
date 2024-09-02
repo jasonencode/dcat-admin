@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Arrayable;
@@ -18,27 +19,27 @@ class Tags extends Field
     /**
      * @var bool
      */
-    protected $keyAsValue = false;
+    protected bool $keyAsValue = false;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $visibleColumn = null;
+    protected ?string $visibleColumn = null;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $key = null;
+    protected ?string $key = null;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $ajaxScript = null;
+    protected ?string $ajaxScript = null;
 
     /**
      * {@inheritdoc}
      */
-    protected function formatFieldData($data)
+    protected function formatFieldData(array $data): mixed
     {
         $value = $this->getValueFromData($data);
 
@@ -53,12 +54,12 @@ class Tags extends Field
      * Set visible column and key of data.
      *
      * @param $visibleColumn
-     * @param $key
+     * @param  string  $key
      * @return $this
      */
-    public function pluck($visibleColumn, $key = 'id')
+    public function pluck($visibleColumn, string $key = 'id'): static
     {
-        if (! empty($visibleColumn) && ! empty($key)) {
+        if (!empty($visibleColumn) && !empty($key)) {
             $this->keyAsValue = true;
         }
 
@@ -75,7 +76,7 @@ class Tags extends Field
      * @param  string  $column
      * @return array
      */
-    protected function sanitizeInput($input, $column)
+    protected function sanitizeInput(array $input, string $column): array
     {
         $input = parent::sanitizeInput($input, $column);
 
@@ -91,18 +92,18 @@ class Tags extends Field
     /**
      * Set the field options.
      *
-     * @param  array|Collection|Arrayable|\Closure  $options
-     * @return $this|Field
+     * @param  array  $options
+     * @return $this
      */
-    public function options($options = [])
+    public function options(array $options = []): static
     {
-        if ($options instanceof \Closure) {
+        if ($options instanceof Closure) {
             $this->options = $options;
 
             return $this;
         }
 
-        if (! $this->keyAsValue) {
+        if (!$this->keyAsValue) {
             return parent::options($options);
         }
 
@@ -122,9 +123,9 @@ class Tags extends Field
     /**
      * {@inheritdoc}
      */
-    protected function prepareInputValue($value)
+    protected function prepareInputValue(mixed $value): mixed
     {
-        if (! is_array($value)) {
+        if (!is_array($value)) {
             return $value;
         }
 
@@ -134,10 +135,10 @@ class Tags extends Field
     /**
      * Get or set value for this field.
      *
-     * @param  mixed  $value
-     * @return $this|array|mixed
+     * @param  mixed|null  $value
+     * @return Field|null
      */
-    public function value($value = null)
+    public function value(mixed $value = null): ?static
     {
         if (is_null($value)) {
             return Helper::array(parent::value());
@@ -152,11 +153,11 @@ class Tags extends Field
      * Load options from ajax results.
      *
      * @param  string  $url
-     * @param $idField
-     * @param $textField
+     * @param  string  $idField
+     * @param  string  $textField
      * @return $this
      */
-    public function ajax(string $url, string $idField = 'id', string $textField = 'text')
+    public function ajax(string $url, string $idField = 'id', string $textField = 'text'): static
     {
         $url = admin_url($url);
 
@@ -170,7 +171,7 @@ class Tags extends Field
     {
         $value = Helper::array($this->value());
 
-        if ($this->options instanceof \Closure) {
+        if ($this->options instanceof Closure) {
             $this->options(
                 $this->options->call($this->values(), $value, $this)
             );
@@ -179,11 +180,11 @@ class Tags extends Field
         if ($this->keyAsValue) {
             $options = $value + $this->options;
         } else {
-            $options = array_unique(array_merge($value, (array) $this->options));
+            $options = array_unique(array_merge($value, $this->options));
         }
 
         $this->addVariables([
-            'options'    => $options,
+            'options' => $options,
             'keyAsValue' => $this->keyAsValue,
         ]);
 

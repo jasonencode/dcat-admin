@@ -2,20 +2,22 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Support\JavaScript;
+use const JSON_UNESCAPED_UNICODE;
 
 class Autocomplete extends Text
 {
     use HasDepends;
 
-    protected $view = 'admin::form.autocomplete';
+    protected string $view = 'admin::form.autocomplete';
 
-    protected $groups = [];
+    protected array $groups = [];
 
-    protected $groupBy = '__group__';
+    protected string $groupBy = '__group__';
 
-    protected $configs = [
+    protected array $configs = [
         'autoSelectFirst' => true,
     ];
 
@@ -26,7 +28,7 @@ class Autocomplete extends Text
         parent::__construct($column, $arguments);
     }
 
-    public function datalist($entries = [])
+    public function datalist(array $entries = []): static
     {
         return $this->options($entries);
     }
@@ -45,12 +47,12 @@ class Autocomplete extends Text
      *        ...
      *     ]
      *
-     * @param  array|\Closure  $groups
+     * @param  array|Closure  $groups
      * @return $this
      */
-    public function groups($groups = [])
+    public function groups(array|Closure $groups = []): static
     {
-        if ($groups instanceof \Closure) {
+        if ($groups instanceof Closure) {
             $groups = $groups->call($this->data(), $this->value());
         }
 
@@ -60,12 +62,12 @@ class Autocomplete extends Text
     }
 
     /**
-     * @param  array|\Closure  $options
+     * @param  array  $options
      * @return $this|Autocomplete
      */
-    public function options($options = [])
+    public function options(array $options = []): static
     {
-        if ($options instanceof \Closure) {
+        if ($options instanceof Closure) {
             $options = $options->call($this->data(), $this->value());
         }
 
@@ -79,12 +81,12 @@ class Autocomplete extends Text
      *
      * all configurations see https://github.com/devbridge/jQuery-Autocomplete
      *
-     * @param  array|\Closure  $configs
+     * @param  array|Closure  $configs
      * @return $this
      */
-    public function configs($configs = [])
+    public function configs(array|Closure $configs = []): static
     {
-        if ($configs instanceof \Closure) {
+        if ($configs instanceof Closure) {
             $configs = $configs->call($this->data(), $this->value());
         }
 
@@ -93,7 +95,7 @@ class Autocomplete extends Text
         return $this;
     }
 
-    public function groupBy(string $groupBy)
+    public function groupBy(string $groupBy): static
     {
         $this->groupBy = $groupBy;
 
@@ -104,11 +106,11 @@ class Autocomplete extends Text
      * Load options from ajax results.
      *
      * @param  string  $url
-     * @param  string|null  $valueField
-     * @param  string|null  $groupField
+     * @param  string  $valueField
+     * @param  string  $groupField
      * @return $this
      */
-    public function ajax(string $url, string $valueField = '', string $groupField = '')
+    public function ajax(string $url, string $valueField = '', string $groupField = ''): static
     {
         $url = admin_url($url);
 
@@ -124,17 +126,17 @@ class Autocomplete extends Text
         ]);
 
         $this->addVariables([
-            'options' => json_encode($this->options, \JSON_UNESCAPED_UNICODE),
+            'options' => json_encode($this->options, JSON_UNESCAPED_UNICODE),
             'configs' => JavaScript::format($this->configs),
         ]);
 
         return parent::render();
     }
 
-    protected function formatGroupOptions()
+    protected function formatGroupOptions(): static
     {
         foreach ($this->groups as $group) {
-            if (! array_key_exists('options', $group) || ! array_key_exists('label', $group)) {
+            if (!array_key_exists('options', $group) || !array_key_exists('label', $group)) {
                 continue;
             }
 
@@ -146,14 +148,14 @@ class Autocomplete extends Text
         return $this;
     }
 
-    protected function formatOptions($options, string $group = ''): array
+    protected function formatOptions(array $options): array
     {
         return array_filter(array_map(function ($opt) use ($group) {
-            if (! is_array($opt)) {
+            if (!is_array($opt)) {
                 $opt = ['value' => $opt, 'data' => []];
             }
 
-            if (! array_key_exists('value', $opt)) {
+            if (!array_key_exists('value', $opt)) {
                 return null;
             }
 

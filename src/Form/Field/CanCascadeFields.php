@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Form;
@@ -23,27 +24,25 @@ trait CanCascadeFields
     protected $cascadeGroups = [];
 
     /**
-     * @param $operator
-     * @param $value
-     * @param $closure
+     * @param  mixed  $value
+     * @param  callable  $callback
      * @return $this
      */
-    public function when($operator, $value, $closure = null)
+    public function when(mixed $value, callable $callback): static
     {
         if (func_num_args() == 2) {
-            $closure = $value;
-            $value = $operator;
-            $operator = $this->getDefaultOperator();
+            $closure = $callback;
+            $callback = $this->getDefaultOperator();
         }
 
-        $this->formatValues($operator, $value);
+        $this->formatValues($callback, $callback);
 
-        $this->addDependents($operator, $value, $closure);
+        $this->addDependents($callback, $callback, $closure);
 
         return $this;
     }
 
-    protected function getDefaultOperator()
+    protected function getDefaultOperator(): string
     {
         if ($this instanceof MultipleSelect || $this instanceof Checkbox) {
             return 'in';
@@ -56,7 +55,7 @@ trait CanCascadeFields
      * @param  string  $operator
      * @param  mixed  $value
      */
-    protected function formatValues(string $operator, &$value)
+    protected function formatValues(string $operator, &$value): void
     {
         if (in_array($operator, ['in', 'notIn'])) {
             $value = Arr::wrap($value);
@@ -72,24 +71,25 @@ trait CanCascadeFields
     /**
      * @param  string  $operator
      * @param  mixed  $value
-     * @param  \Closure  $closure
+     * @param  Closure  $closure
      */
-    protected function addDependents(string $operator, $value, \Closure $closure)
+    protected function addDependents(string $operator, $value, Closure $closure): void
     {
         $this->conditions[] = compact('operator', 'value', 'closure');
 
         ($this->parent ?: $this->form)->cascadeGroup($closure, [
             'column' => $this->column(),
-            'index'  => count($this->conditions) - 1,
-            'class'  => $this->getCascadeClass($value, $operator),
+            'index' => count($this->conditions) - 1,
+            'class' => $this->getCascadeClass($value, $operator),
         ]);
     }
 
     /**
      * @param  mixed  $value
+     * @param  string  $operator
      * @return string
      */
-    protected function getCascadeClass($value, string $operator)
+    protected function getCascadeClass($value, string $operator): string
     {
         if (is_array($value)) {
             $value = implode('-', $value);
@@ -114,18 +114,21 @@ trait CanCascadeFields
         );
     }
 
-    protected function addCascadeScript()
+    /**
+     * @throws RuntimeException
+     */
+    protected function addCascadeScript(): void
     {
-        if (! $script = $this->getCascadeScript()) {
+        if (!$script = $this->getCascadeScript()) {
             return;
         }
 
         Admin::script(
             <<<JS
-Dcat.init('{$this->getElementClassSelector()}', function (\$this) {
-    {$script}
-});
-JS
+                Dcat.init('{$this->getElementClassSelector()}', function (\$this) {
+                    {$script}
+                });
+                JS
         );
     }
 
@@ -133,113 +136,110 @@ JS
      * Add cascade scripts to contents.
      *
      * @return string
+     * @throws RuntimeException
      */
-    protected function getCascadeScript()
+    protected function getCascadeScript(): string
     {
         if (empty($this->conditions)) {
-            return;
+            return '';
         }
 
         $cascadeGroups = collect($this->conditions)->map(function ($condition) {
             return [
-                'class'    => $this->getCascadeClass($condition['value'], $condition['operator']),
+                'class' => $this->getCascadeClass($condition['value'], $condition['operator']),
                 'operator' => $condition['operator'],
-                'value'    => $condition['value'],
+                'value' => $condition['value'],
             ];
         })->toJson();
 
         return <<<JS
-(function () {
-    var compare = function (a, b, o) {
-        if (! $.isArray(b)) {
-            return operator_table[o](a, b)
-        }
+            (function () {
+                var compare = function (a, b, o) {
+                    if (! $.isArray(b)) {
+                        return operator_table[o](a, b)
+                    }
 
-        if (o === '!=') {
-            var result = true;
-            for (var i in b) {
-                if (! operator_table[o](a, b[i])) {
-                    result = false;
+                    if (o === '!=') {
+                        var result = true;
+                        for (var i in b) {
+                            if (! operator_table[o](a, b[i])) {
+                                result = false;
 
-                    break;
-                }
-            }
-            return result;
-        }
+                                break;
+                            }
+                        }
+                        return result;
+                    }
 
-        for (var i in b) {
-            if (operator_table[o](a, b[i])) {
-                return true;
-            }
-        }
-    };
+                    for (var i in b) {
+                        if (operator_table[o](a, b[i])) {
+                            return true;
+                        }
+                    }
+                };
 
-    var operator_table = {
-        '=': function(a, b) {
-            if ($.isArray(a) && $.isArray(b)) {
-                return $(a).not(b).length === 0 && $(b).not(a).length === 0;
-            }
+                var operator_table = {
+                    '=': function(a, b) {
+                        if ($.isArray(a) && $.isArray(b)) {
+                            return $(a).not(b).length === 0 && $(b).not(a).length === 0;
+                        }
 
-            return String(a) === String(b);
-        },
-        '>': function(a, b) {
-            return a > b;
-        },
-        '<': function(a, b) {
-            return a < b;
-        },
-        '>=': function(a, b) { return a >= b; },
-        '<=': function(a, b) { return a <= b; },
-        '!=': function(a, b) {
-             return ! operator_table['='](a, b);
-        },
-        'in': function(a, b) { return Dcat.helpers.inObject(a, String(b), true); },
-        'notIn': function(a, b) { return ! Dcat.helpers.inObject(a, String(b), true); },
-        'has': function(a, b) { return Dcat.helpers.inObject(b, String(b), true); },
-    };
-    var cascade_groups = {$cascadeGroups}, event = '{$this->cascadeEvent}';
+                        return String(a) === String(b);
+                    },
+                    '>': function(a, b) {
+                        return a > b;
+                    },
+                    '<': function(a, b) {
+                        return a < b;
+                    },
+                    '>=': function(a, b) { return a >= b; },
+                    '<=': function(a, b) { return a <= b; },
+                    '!=': function(a, b) {
+                         return ! operator_table['='](a, b);
+                    },
+                    'in': function(a, b) { return Dcat.helpers.inObject(a, String(b), true); },
+                    'notIn': function(a, b) { return ! Dcat.helpers.inObject(a, String(b), true); },
+                    'has': function(a, b) { return Dcat.helpers.inObject(b, String(b), true); },
+                };
+                var cascade_groups = $cascadeGroups, event = '$this->cascadeEvent';
 
-    \$this.on(event, function (e) {
-        {$this->getFormFrontValue()}
-        let parent = \$this.closest('.fields-group');
-        if (parent.length === 0){
-            parent = \$this.closest('form');
-        }
+                \$this.on(event, function (e) {
+                    {$this->getFormFrontValue()}
+                    let parent = \$this.closest('.fields-group');
+                    if (parent.length === 0){
+                        parent = \$this.closest('form');
+                    }
 
-        cascade_groups.forEach(function (event) {
-            var group = parent.find('div.cascade-group.'+event.class);
-            if (compare(checked, event.value, event.operator)) {
-                group.removeClass('d-none');
-            } else {
-                group.addClass('d-none');
-            }
-        });
-    }).trigger(event);
-})();
-JS;
+                    cascade_groups.forEach(function (event) {
+                        var group = parent.find('div.cascade-group.'+event.class);
+                        if (compare(checked, event.value, event.operator)) {
+                            group.removeClass('d-none');
+                        } else {
+                            group.addClass('d-none');
+                        }
+                    });
+                }).trigger(event);
+            })();
+            JS;
     }
 
     /**
      * @return string
+     * @throws RuntimeException
      */
-    protected function getFormFrontValue()
+    protected function getFormFrontValue(): string
     {
-        switch (get_class($this)) {
-            case Select::class:
-            case MultipleSelect::class:
-                return 'var checked = $(this).val();';
-            case Radio::class:
-                return <<<'JS'
-var checked = $(this).closest('.form-group').find(':checked').val();
-JS;
-            case Checkbox::class:
-                return <<<'JS'
+        return match (get_class($this)) {
+            Select::class, MultipleSelect::class => 'var checked = $(this).val();',
+            Radio::class => <<<'JS'
+                var checked = $(this).closest('.form-group').find(':checked').val();
+                JS,
+            Checkbox::class => <<<'JS'
 var checked = $this.closest('.form-group').find(':checked').map(function(){
   return $(this).val();
 }).get();
-JS;
-            default:
-                throw new RuntimeException('Invalid form field type');
-        }
+JS,
+            default => throw new RuntimeException('Invalid form field type'),
+        };
     }
 }

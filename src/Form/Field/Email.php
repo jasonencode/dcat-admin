@@ -2,9 +2,11 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
+
 class Email extends Text
 {
-    protected $rules = ['nullable', 'email'];
+    protected Closure|array $rules = ['nullable', 'email'];
 
     public function render(): string
     {

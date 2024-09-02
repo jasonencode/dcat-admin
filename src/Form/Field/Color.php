@@ -4,7 +4,7 @@ namespace Dcat\Admin\Form\Field;
 
 class Color extends Text
 {
-    protected $view = 'admin::form.color';
+    protected string $view = 'admin::form.color';
 
     /**
      * Use `hex` format.

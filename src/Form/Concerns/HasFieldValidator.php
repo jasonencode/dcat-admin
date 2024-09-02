@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Form\Concerns;
 
+use Closure;
 use Dcat\Admin\Form;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Arr;
@@ -17,44 +18,44 @@ trait HasFieldValidator
     /**
      * The validation rules for creation.
      *
-     * @var array|\Closure
+     * @var array|Closure
      */
-    protected $creationRules = [];
+    protected Closure|array $creationRules = [];
 
     /**
      * The validation rules for updates.
      *
-     * @var array|\Closure
+     * @var array|Closure
      */
-    protected $updateRules = [];
+    protected Closure|array $updateRules = [];
 
     /**
      * Validation rules.
      *
-     * @var array|\Closure
+     * @var array|Closure
      */
-    protected $rules = [];
+    protected Closure|array $rules = [];
 
     /**
-     * @var \Closure
+     * @var Closure
      */
-    protected $validator;
+    protected Closure $validator;
 
     /**
      * Validation messages.
      *
      * @var array
      */
-    protected $validationMessages = [];
+    protected array $validationMessages = [];
 
     /**
      * Set the update validation rules for the field.
      *
-     * @param  array|callable|string  $rules
+     * @param  callable|array|string|null  $rules
      * @param  array  $messages
      * @return $this
      */
-    public function updateRules($rules = null, $messages = [])
+    public function updateRules(callable|array|string $rules = null, array $messages = []): static
     {
         $this->updateRules = $this->mergeRules($rules, $this->updateRules);
 
@@ -68,11 +69,11 @@ trait HasFieldValidator
     /**
      * Set the creation validation rules for the field.
      *
-     * @param  array|callable|string  $rules
+     * @param  callable|array|string|null  $rules
      * @param  array  $messages
      * @return $this
      */
-    public function creationRules($rules = null, $messages = [])
+    public function creationRules(callable|array|string $rules = null, array $messages = []): static
     {
         $this->creationRules = $this->mergeRules($rules, $this->creationRules);
 
@@ -90,9 +91,9 @@ trait HasFieldValidator
      * @param  array  $messages
      * @return $this
      */
-    public function rules($rules = null, $messages = [])
+    public function rules($rules = null, array $messages = []): static
     {
-        if ($rules instanceof \Closure) {
+        if ($rules instanceof Closure) {
             $this->rules = $rules;
         }
 
@@ -116,7 +117,7 @@ trait HasFieldValidator
      *
      * @return string
      */
-    protected function getRules()
+    protected function getRules(): string
     {
         if ($this->isCreating()) {
             $rules = $this->creationRules ?: $this->rules;
@@ -126,7 +127,7 @@ trait HasFieldValidator
             $rules = $this->rules;
         }
 
-        if ($rules instanceof \Closure) {
+        if ($rules instanceof Closure) {
             $rules = $rules->call($this, $this->form);
         }
 
@@ -134,11 +135,11 @@ trait HasFieldValidator
             $rules = array_filter(explode('|', $rules));
         }
 
-        if (! $this->form) {
+        if (!$this->form) {
             return $rules;
         }
 
-        if (method_exists($this->form, 'key') || ! $id = $this->form->getKey()) {
+        if (method_exists($this->form, 'key') || !$id = $this->form->getKey()) {
             return $rules;
         }
 
@@ -159,7 +160,7 @@ trait HasFieldValidator
      * @param  array|string  $rules
      * @return array
      */
-    protected function formatRules($rules)
+    protected function formatRules(array|string $rules): array
     {
         if (is_string($rules)) {
             $rules = array_filter(explode('|', $rules));
@@ -169,16 +170,16 @@ trait HasFieldValidator
     }
 
     /**
-     * @param  string|array|\Closure  $input
-     * @param  string|array  $original
-     * @return array|\Closure
+     * @param  array|string|Closure  $input
+     * @param  array|string  $original
+     * @return array|Closure
      */
-    protected function mergeRules($input, $original)
+    protected function mergeRules(array|string|Closure $input, array|string $original): array|Closure
     {
-        if ($input instanceof \Closure) {
+        if ($input instanceof Closure) {
             $rules = $input;
         } else {
-            if (! empty($original)) {
+            if (!empty($original)) {
                 $original = $this->formatRules($original);
             }
             $rules = array_merge($original, $this->formatRules($input));
@@ -191,7 +192,7 @@ trait HasFieldValidator
      * @param  string  $rule
      * @return $this
      */
-    public function removeUpdateRule($rule)
+    public function removeUpdateRule(string $rule): static
     {
         $this->deleteRuleByKeyword($this->updateRules, $rule);
 
@@ -202,7 +203,7 @@ trait HasFieldValidator
      * @param  string  $rule
      * @return $this
      */
-    public function removeCreationRule($rule)
+    public function removeCreationRule(string $rule): static
     {
         $this->deleteRuleByKeyword($this->creationRules, $rule);
 
@@ -215,7 +216,7 @@ trait HasFieldValidator
      * @param  string  $rule
      * @return $this
      */
-    public function removeRule($rule)
+    public function removeRule(string $rule): static
     {
         $this->deleteRuleByKeyword($this->rules, $rule);
 
@@ -227,7 +228,7 @@ trait HasFieldValidator
      * @param $rule
      * @return void
      */
-    protected function deleteRuleByKeyword(&$rules, $rule)
+    protected function deleteRuleByKeyword(&$rules, $rule): void
     {
         if (is_array($rules)) {
             Helper::deleteByValue($rules, $rule);
@@ -235,11 +236,11 @@ trait HasFieldValidator
             return;
         }
 
-        if (! is_string($rules)) {
+        if (!is_string($rules)) {
             return;
         }
 
-        $pattern = "/{$rule}[^\|]?(\||$)/";
+        $pattern = "/{$rule}[^|]?(\||$)/";
 
         $rules = preg_replace($pattern, '', $rules, -1);
     }
@@ -248,7 +249,7 @@ trait HasFieldValidator
      * @param  string  $rule
      * @return bool
      */
-    public function hasUpdateRule($rule)
+    public function hasUpdateRule(string $rule): bool
     {
         return $this->isRuleExists($this->updateRules, $rule);
     }
@@ -257,7 +258,7 @@ trait HasFieldValidator
      * @param  string  $rule
      * @return bool
      */
-    public function hasCreationRule($rule)
+    public function hasCreationRule(string $rule): bool
     {
         return $this->isRuleExists($this->creationRules, $rule);
     }
@@ -266,32 +267,18 @@ trait HasFieldValidator
      * @param  string  $rule
      * @return bool
      */
-    public function hasRule($rule)
+    public function hasRule(string $rule): bool
     {
         return $this->isRuleExists($this->getRules(), $rule);
     }
 
     /**
      * @param  string  $rule
-     * @return bool|mixed
+     * @return string|false
      */
-    protected function getRule($rule)
+    protected function getRule(string $rule): string|false
     {
         $rules = $this->getRules();
-
-        if (is_array($rules)) {
-            foreach ($rules as $r) {
-                if ($this->isRuleExists($r, $rule)) {
-                    return $r;
-                }
-            }
-
-            return false;
-        }
-
-        if (! is_string($rules)) {
-            return false;
-        }
 
         foreach (explode('|', $rules) as $r) {
             if ($this->isRuleExists($r, $rule)) {
@@ -307,7 +294,7 @@ trait HasFieldValidator
      * @param $rule
      * @return bool
      */
-    protected function isRuleExists($rules, $rule)
+    protected function isRuleExists($rules, $rule): bool
     {
         if (is_array($rules)) {
             foreach ($rules as $r) {
@@ -319,13 +306,13 @@ trait HasFieldValidator
             return false;
         }
 
-        if (! is_string($rules)) {
+        if (!is_string($rules)) {
             return false;
         }
 
         $rule = str_replace(['*', '/'], ['([0-9a-z-_,:=><])*', "\/"], $rule);
 
-        $pattern = "/{$rule}[^\|]?(\||$)/";
+        $pattern = "/{$rule}[^|]?(\||$)/";
 
         return (bool) preg_match($pattern, $rules);
     }
@@ -336,7 +323,7 @@ trait HasFieldValidator
      * @param  callable  $validator
      * @return $this
      */
-    public function validator(callable $validator)
+    public function validator(callable $validator): static
     {
         $this->validator = $validator;
 
@@ -349,7 +336,7 @@ trait HasFieldValidator
      * @param  array  $input
      * @return bool|Validator
      */
-    public function getValidator(array $input)
+    public function getValidator(array $input): Validator|bool
     {
         if ($this->validator) {
             return $this->validator->call($this, $input);
@@ -357,12 +344,12 @@ trait HasFieldValidator
 
         $rules = $attributes = [];
 
-        if (! $fieldRules = $this->getRules()) {
+        if (!$fieldRules = $this->getRules()) {
             return false;
         }
 
         if (is_string($this->column)) {
-            if (! Arr::has($input, $this->column)) {
+            if (!Arr::has($input, $this->column)) {
                 return false;
             }
 
@@ -374,13 +361,13 @@ trait HasFieldValidator
 
         if (is_array($this->column)) {
             foreach ($this->column as $key => $column) {
-                if (! Arr::has($input, $column)) {
+                if (!Arr::has($input, $column)) {
                     continue;
                 }
                 $k = $column.$key;
                 Arr::set($input, $k, Arr::get($input, $column));
                 $rules[$k] = $fieldRules;
-                $attributes[$k] = "{$this->label}[$column]";
+                $attributes[$k] = "$this->label[$column]";
             }
         }
 
@@ -394,7 +381,7 @@ trait HasFieldValidator
      * @param  array  $messages
      * @return $this
      */
-    public function setValidationMessages($key, array $messages)
+    public function setValidationMessages(string $key, array $messages): static
     {
         $this->validationMessages[$key] = $messages;
 
@@ -404,9 +391,9 @@ trait HasFieldValidator
     /**
      * Get validation messages for the field.
      *
-     * @return array|mixed
+     * @return array
      */
-    public function getValidationMessages()
+    public function getValidationMessages(): array
     {
         // Default validation message.
         $messages = $this->validationMessages['default'] ?? [];
@@ -446,12 +433,12 @@ trait HasFieldValidator
      * @see http://1000hz.github.io/bootstrap-validator/
      *
      * @param  string  $error
-     * @param  string  $key
+     * @param  string|null  $key
      * @return $this
      */
-    public function setClientValidationError(string $error, string $key = null)
+    public function setClientValidationError(string $error, string $key = null): static
     {
-        $key = $key ? "{$key}-" : '';
+        $key = $key ? "$key-" : '';
 
         return $this->attribute("data-{$key}error", $error);
     }
@@ -460,7 +447,7 @@ trait HasFieldValidator
      * @param  MessageBag  $messageBag
      * @return MessageBag
      */
-    public function formatValidatorMessages($messageBag)
+    public function formatValidatorMessages(MessageBag $messageBag): MessageBag
     {
         return $messageBag;
     }

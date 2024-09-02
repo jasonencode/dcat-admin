@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\Checkbox as WidgetCheckbox;
@@ -9,13 +10,13 @@ use Illuminate\Contracts\Support\Arrayable;
 
 class Tree extends Field
 {
-    protected $options = [
+    protected array $options = [
         'plugins' => ['checkbox', 'types'],
-        'core'    => [
+        'core' => [
             'check_callback' => true,
 
             'themes' => [
-                'name'       => 'proton',
+                'name' => 'proton',
                 'responsive' => true,
             ],
         ],
@@ -24,32 +25,32 @@ class Tree extends Field
             'three_state' => true,
         ],
         'types' => [
-            'default'  => [
+            'default' => [
                 'icon' => false,
             ],
         ],
     ];
 
-    protected $nodes = [];
+    protected array $nodes = [];
 
-    protected $parents = [];
+    protected array $parents = [];
 
-    protected $expand = true;
+    protected bool $expand = true;
 
-    protected $columnNames = [
-        'id'     => 'id',
-        'text'   => 'name',
+    protected array $columnNames = [
+        'id' => 'id',
+        'text' => 'name',
         'parent' => 'parent_id',
     ];
 
-    protected $exceptParents = true;
+    protected bool $exceptParents = true;
 
-    protected $readOnly = false;
+    protected bool $readOnly = false;
 
-    protected $rootParentId = 0;
+    protected int $rootParentId = 0;
 
     /**
-     * @param  array|Arrayable|\Closure  $data  exp:
+     * @param  array|Closure|Arrayable  $data  exp:
      *                                          {
      *                                          "id": "1",
      *                                          "parent": "#",
@@ -58,7 +59,7 @@ class Tree extends Field
      *                                          }
      * @return $this
      */
-    public function nodes($data)
+    public function nodes(array|Closure|Arrayable $data): static
     {
         if ($data instanceof Arrayable) {
             $data = $data->toArray();
@@ -75,7 +76,7 @@ class Tree extends Field
      * @param  bool  $value
      * @return $this
      */
-    public function treeState(bool $value = true)
+    public function treeState(bool $value = true): static
     {
         $this->options['checkbox']['three_state'] = $value;
 
@@ -88,14 +89,14 @@ class Tree extends Field
      * @param  bool  $value
      * @return $this
      */
-    public function exceptParentNode(bool $value = true)
+    public function exceptParentNode(bool $value = true): static
     {
         $this->exceptParents = $value;
 
         return $this;
     }
 
-    public function rootParentId($id)
+    public function rootParentId($id): static
     {
         $this->rootParentId = $id;
 
@@ -105,45 +106,45 @@ class Tree extends Field
     /**
      * {@inheritDoc}
      */
-    public function readOnly(bool $value = true)
+    public function readOnly(bool $value = true): static
     {
         $this->readOnly = true;
 
         return $this;
     }
 
-    public function setIdColumn(string $name)
+    public function setIdColumn(string $name): static
     {
         $this->columnNames['id'] = $name;
 
         return $this;
     }
 
-    public function setTitleColumn(string $name)
+    public function setTitleColumn(string $name): static
     {
         $this->columnNames['text'] = $name;
 
         return $this;
     }
 
-    public function setParentColumn(string $name)
+    public function setParentColumn(string $name): static
     {
         $this->columnNames['parent'] = $name;
 
         return $this;
     }
 
-    protected function formatNodes()
+    protected function formatNodes(): void
     {
         $value = Helper::array($this->value());
 
         $this->value = &$value;
 
-        if ($this->nodes instanceof \Closure) {
+        if ($this->nodes instanceof Closure) {
             $this->nodes = Helper::array($this->nodes->call($this->values(), $value, $this));
         }
 
-        if (! $this->nodes) {
+        if (!$this->nodes) {
             return;
         }
 
@@ -176,10 +177,10 @@ class Tree extends Field
             }
 
             $nodes[] = [
-                'id'     => $v[$idColumn],
-                'text'   => $v[$textColumn] ?? null,
+                'id' => $v[$idColumn],
+                'text' => $v[$textColumn] ?? null,
                 'parent' => $parentId,
-                'state'  => $v['state'],
+                'state' => $v['state'],
             ];
         }
 
@@ -197,7 +198,7 @@ class Tree extends Field
      * @param  array  $value
      * @return $this
      */
-    public function type(array $value)
+    public function type(array $value): static
     {
         $this->options['types'] = array_merge($this->options['types'], $value);
 
@@ -210,7 +211,7 @@ class Tree extends Field
      * @param  array  $value
      * @return $this
      */
-    public function plugins(array $value)
+    public function plugins(array $value): static
     {
         $this->options['plugins'] = $value;
 
@@ -221,21 +222,21 @@ class Tree extends Field
      * @param  bool  $value
      * @return $this
      */
-    public function expand(bool $value = true)
+    public function expand(bool $value = true): static
     {
         $this->expand = $value;
 
         return $this;
     }
 
-    protected function formatFieldData($data)
+    protected function formatFieldData(array $data): array
     {
-        return Helper::array($this->getValueFromData($data), true);
+        return Helper::array($this->getValueFromData($data));
     }
 
-    protected function prepareInputValue($value)
+    protected function prepareInputValue(mixed $value): array
     {
-        return Helper::array($value, true);
+        return Helper::array($value);
     }
 
     public function render(): string
@@ -261,10 +262,10 @@ class Tree extends Field
 
         $this->addVariables([
             'checkboxes' => $checkboxes,
-            'nodes'      => $this->nodes,
-            'expand'     => $this->expand,
-            'disabled'   => empty($this->attributes['disabled']) ? '' : 'disabled',
-            'parents'    => $this->parents,
+            'nodes' => $this->nodes,
+            'expand' => $this->expand,
+            'disabled' => empty($this->attributes['disabled']) ? '' : 'disabled',
+            'parents' => $this->parents,
         ]);
 
         return parent::render();

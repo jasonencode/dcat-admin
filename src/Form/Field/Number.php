@@ -4,9 +4,9 @@ namespace Dcat\Admin\Form\Field;
 
 class Number extends Text
 {
-    protected $view = 'admin::form.number';
+    protected string $view = 'admin::form.number';
 
-    protected $options = [
+    protected array $options = [
         'upClass'   => 'primary shadow-0',
         'downClass' => 'light shadow-0',
         'center'    => true,
@@ -57,7 +57,7 @@ class Number extends Text
     /**
      * {@inheritDoc}
      */
-    protected function prepareInputValue($value)
+    protected function prepareInputValue(mixed $value): mixed
     {
         return empty($value) ? 0 : $value;
     }
@@ -65,7 +65,7 @@ class Number extends Text
     /**
      * {@inheritDoc}
      */
-    public function value($value = null)
+    public function value(mixed $value = null): null|static
     {
         if (is_null($value)) {
             return (int) parent::value();

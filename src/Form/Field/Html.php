@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Arr;
@@ -11,19 +12,19 @@ class Html extends Field
     /**
      * Htmlable.
      *
-     * @var string|\Closure
+     * @var string|Closure
      */
-    protected $html = '';
+    protected mixed $html = '';
 
     /**
      * @var string
      */
-    protected $label = '';
+    protected string $label = '';
 
     /**
      * @var bool
      */
-    protected $plain = false;
+    protected bool $plain = false;
 
     /**
      * Create a new Html instance.
@@ -31,7 +32,7 @@ class Html extends Field
      * @param  mixed  $html
      * @param  array  $arguments
      */
-    public function __construct($html, $arguments)
+    public function __construct($html, array $arguments)
     {
         $this->html = $html;
 
@@ -41,7 +42,7 @@ class Html extends Field
     /**
      * @return $this
      */
-    public function plain()
+    public function plain(): static
     {
         $this->plain = true;
 
@@ -55,7 +56,7 @@ class Html extends Field
      */
     public function render(): string
     {
-        if ($this->html instanceof \Closure) {
+        if ($this->html instanceof Closure) {
             $this->html = Helper::render(
                 $this->html->call($this->values(), $this->form)
             );
@@ -69,9 +70,9 @@ class Html extends Field
 
         return <<<EOT
 <div class="{$viewClass['form-group']}">
-    <label  class="{$viewClass['label']} control-label">{$this->label}</label>
+    <label  class="{$viewClass['label']} control-label">$this->label</label>
     <div class="{$viewClass['field']}">
-        <div class="{$this->getElementClassString()}">{$this->html}</div>
+        <div class="{$this->getElementClassString()}">$this->html</div>
     </div>
 </div>
 EOT;

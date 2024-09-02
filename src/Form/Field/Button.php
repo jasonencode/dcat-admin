@@ -24,10 +24,10 @@ class Button extends Field
     public function on($event, $callback): static
     {
         $this->script = <<<JS
-$('{$this->getElementClassSelector()}').on('$event', function() {
-    $callback
-});
-JS;
+            $('{$this->getElementClassSelector()}').on('$event', function() {
+                $callback
+            });
+            JS;
 
         return $this;
     }

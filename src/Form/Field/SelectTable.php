@@ -118,7 +118,7 @@ class SelectTable extends Field
      * @param  array  $options
      * @return $this
      */
-    public function options($options = []): static
+    public function options(array $options = []): static
     {
         $this->options = $options;
 

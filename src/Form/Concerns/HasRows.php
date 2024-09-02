@@ -30,7 +30,7 @@ trait HasRows
     /**
      * @return Row[]
      */
-    public function rows()
+    public function rows(): array
     {
         return $this->rows;
     }

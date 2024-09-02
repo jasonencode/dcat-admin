@@ -6,7 +6,7 @@ use DateTimeZone;
 
 class Timezone extends Select
 {
-    protected $view = 'admin::form.select';
+    protected string $view = 'admin::form.select';
 
     public function render(): string
     {

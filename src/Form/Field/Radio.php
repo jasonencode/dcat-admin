@@ -20,10 +20,10 @@ class Radio extends Field
     protected bool $inline = true;
 
     /**
-     * @param  array|\Closure|string  $options
+     * @param  array  $options
      * @return $this
      */
-    public function options($options = []): static
+    public function options(array $options = []): static
     {
         if ($options instanceof Closure) {
             $this->options = $options;

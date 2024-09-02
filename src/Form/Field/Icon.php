@@ -18,7 +18,7 @@ class Icon extends Text
         return parent::render();
     }
 
-    protected function addScript()
+    protected function addScript(): void
     {
         $this->script = <<<JS
 setTimeout(function () {
@@ -27,22 +27,22 @@ setTimeout(function () {
         showIcon = function (icon) {
             parent.find('.input-group-prepend .input-group-text').html('<i class="' + icon + '"></i>');
         };
-    
+
     field.iconpicker({placement:'bottomLeft', animation: false});
-    
+
     parent.find('.iconpicker-item').on('click', function (e) {
        showIcon($(this).find('i').attr('class'));
     });
-    
+
     field.on('keyup', function (e) {
         var val = $(this).val();
-        
+
         if (val.indexOf('fa-') !== -1) {
             if (val.indexOf('fa ') === -1) {
                 val = 'fa ' + val;
             }
         }
-        
+
         showIcon(val);
     })
 }, 1);

@@ -54,7 +54,7 @@ class ListField extends Field
     /**
      * {@inheritdoc}
      */
-    public function formatFieldData($data)
+    public function formatFieldData(array $data): mixed
     {
         $this->data = $data;
 
@@ -133,7 +133,7 @@ class ListField extends Field
     /**
      * {@inheritdoc}
      */
-    protected function prepareInputValue($value)
+    protected function prepareInputValue(mixed $value): mixed
     {
         unset($value['values'][static::DEFAULT_FLAG_NAME]);
 

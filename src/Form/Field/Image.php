@@ -2,13 +2,15 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
+use Exception;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Image extends File
 {
     use ImageField;
 
-    protected $rules = ['nullable', 'image'];
+    protected Closure|array $rules = ['nullable', 'image'];
 
     public function __construct($column, $arguments = [])
     {
@@ -72,7 +74,7 @@ class Image extends File
 
     /**
      * @param  UploadedFile  $file
-     * @throws \Exception
+     * @throws Exception
      */
     protected function prepareFile(UploadedFile $file): void
     {

@@ -6,6 +6,7 @@ use Dcat\Admin\Contracts\UploadField as UploadFieldInterface;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Support\JavaScript;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,12 +15,12 @@ class File extends Field implements UploadFieldInterface
     use WebUploader,
         UploadField;
 
-    protected $view = 'admin::form.file';
+    protected string $view = 'admin::form.file';
 
     /**
      * @var array
      */
-    protected $options = [
+    protected array $options = [
         'events'   => [],
         'override' => false,
     ];
@@ -31,7 +32,7 @@ class File extends Field implements UploadFieldInterface
         $this->setUpDefaultOptions();
     }
 
-    public function setElementName($name): File
+    public function setElementName(array|string $name): static
     {
         $this->mergeOptions(['elementName' => $name]);
 
@@ -84,8 +85,9 @@ class File extends Field implements UploadFieldInterface
 
     /**
      * {@inheritDoc}
+     * @throws Exception
      */
-    protected function prepareInputValue($value)
+    protected function prepareInputValue(mixed $value): mixed
     {
         if (request()->has(static::FILE_DELETE_FLAG)) {
             $this->destroy();
@@ -100,7 +102,7 @@ class File extends Field implements UploadFieldInterface
     /**
      * {@inheritDoc}
      */
-    public function setRelation(array $options = []): File|Field|static
+    public function setRelation(array $options = []): static
     {
         $this->options['formData']['_relation'] = [$options['relation'], $options['key'] ?? null];
 
@@ -110,21 +112,21 @@ class File extends Field implements UploadFieldInterface
     /**
      * {@inheritDoc}
      */
-    public function disable(bool $value = true): File|Field|static
+    public function disable(bool $value = true): static
     {
         $this->options['disabled'] = $value;
 
         return $this;
     }
 
-    protected function formatFieldData($data)
+    protected function formatFieldData(array $data): array
     {
         return Helper::array($this->getValueFromData($data));
     }
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     protected function initialPreviewConfig(): array
     {

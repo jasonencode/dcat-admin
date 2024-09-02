@@ -2,13 +2,16 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
 use Dcat\Admin\Form;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\NestedForm;
 use Dcat\Admin\Support\Helper;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Throwable;
 
 /**
  * Class HasMany.
@@ -44,7 +47,7 @@ class HasMany extends Field
     /**
      * Form builder.
      *
-     * @var \Closure
+     * @var Closure
      */
     protected $builder = null;
 
@@ -80,7 +83,7 @@ class HasMany extends Field
      *
      * @var array
      */
-    protected $options = [
+    protected array $options = [
         'allowCreate' => true,
         'allowDelete' => true,
     ];
@@ -111,7 +114,7 @@ class HasMany extends Field
         }
     }
 
-    protected function formatClass(string $column)
+    protected function formatClass(string $column): array|string
     {
         return str_replace('.', '-', $column);
     }
@@ -122,7 +125,7 @@ class HasMany extends Field
      * @param  array  $input
      * @return bool|Validator
      */
-    public function getValidator(array $input)
+    public function getValidator(array $input): Validator|bool
     {
         if (! Arr::has($input, $this->column)) {
             return false;
@@ -348,15 +351,15 @@ class HasMany extends Field
     /**
      * Prepare input data for insert or update.
      *
-     * @param  array  $input
+     * @param  mixed  $value
      * @return array
      */
-    protected function prepareInputValue($input)
+    protected function prepareInputValue(mixed $value): mixed
     {
         $form = $this->buildNestedForm();
 
         return array_values(
-            $form->setOriginal($this->original, $this->getKeyName())->prepare($input)
+            $form->setOriginal($this->original, $this->getKeyName())->prepare($value)
         );
     }
 
@@ -486,7 +489,7 @@ class HasMany extends Field
      *
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function buildRelatedForms()
     {
@@ -518,7 +521,7 @@ class HasMany extends Field
      *
      * @return $this
      */
-    public function disableCreate()
+    public function disableCreate(): static
     {
         $this->options['allowCreate'] = false;
 
@@ -530,14 +533,14 @@ class HasMany extends Field
      *
      * @return $this
      */
-    public function disableDelete()
+    public function disableDelete(): static
     {
         $this->options['allowDelete'] = false;
 
         return $this;
     }
 
-    public function value($value = null)
+    public function value(mixed $value = null): null|static
     {
         if ($value === null) {
             return Helper::array(parent::value($value));
@@ -551,7 +554,8 @@ class HasMany extends Field
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
+     * @throws Throwable
      */
     public function render(): string
     {
@@ -581,11 +585,12 @@ class HasMany extends Field
     /**
      * Render the `HasMany` field for table style.
      *
-     * @return mixed
+     * @return string
      *
-     * @throws \Exception
+     * @throws Exception
+     * @throws Throwable
      */
-    protected function renderTable()
+    protected function renderTable(): string
     {
         $headers = [];
         $fields = [];
@@ -606,7 +611,7 @@ class HasMany extends Field
 
         /* Build row elements */
         $template = array_reduce($fields, function ($all, $field) {
-            $all .= "<td>{$field}</td>";
+            $all .= "<td>$field</td>";
 
             return $all;
         }, '');

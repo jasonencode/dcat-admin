@@ -4,6 +4,7 @@ namespace Dcat\Admin\Form\Field;
 
 use Dcat\Admin\Form;
 use Dcat\Admin\Support\WebUploader as WebUploaderHelper;
+use Exception;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
@@ -17,7 +18,7 @@ trait WebUploader
      * @param  string|null  $mimeTypes  exp. image/*
      * @return $this
      */
-    public function accept(string $extensions, string $mimeTypes = null)
+    public function accept(string $extensions, string $mimeTypes = null): static
     {
         $this->options['accept'] = [
             'extensions' => $extensions,
@@ -34,7 +35,7 @@ trait WebUploader
      * @param  string  $mimeTypes  exp. image/*
      * @return $this
      */
-    public function mimeTypes(string $mimeTypes)
+    public function mimeTypes(string $mimeTypes): static
     {
         $this->options['accept']['mimeTypes'] = $mimeTypes;
 
@@ -45,22 +46,9 @@ trait WebUploader
      * @param  bool  $value
      * @return $this
      */
-    public function chunked(bool $value = true)
+    public function chunked(bool $value = true): static
     {
         $this->options['chunked'] = $value;
-
-        return $this;
-    }
-
-    /**
-     * @param  int|null  $size  kb
-     * @return $this
-     */
-    public function chunkSize(int $size)
-    {
-        $this->options['chunkSize'] = $size * 1024;
-
-        $this->chunked(true);
 
         return $this;
     }
@@ -69,7 +57,20 @@ trait WebUploader
      * @param  int  $size  kb
      * @return $this
      */
-    public function maxSize(int $size)
+    public function chunkSize(int $size): static
+    {
+        $this->options['chunkSize'] = $size * 1024;
+
+        $this->chunked();
+
+        return $this;
+    }
+
+    /**
+     * @param  int  $size  kb
+     * @return $this
+     */
+    public function maxSize(int $size): static
     {
         $this->rules('max:'.$size);
         $this->options['fileSingleSizeLimit'] = $size * 1024;
@@ -81,7 +82,7 @@ trait WebUploader
      * @param  int  $num
      * @return $this
      */
-    public function threads(int $num)
+    public function threads(int $num): static
     {
         $this->options['threads'] = $num;
 
@@ -94,7 +95,7 @@ trait WebUploader
      * @param  string  $server
      * @return $this
      */
-    public function url(string $server)
+    public function url(string $server): static
     {
         $this->options['server'] = admin_url($server);
 
@@ -109,7 +110,7 @@ trait WebUploader
      * @param  bool  $value
      * @return $this
      */
-    public function autoSave(bool $value = true)
+    public function autoSave(bool $value = true): static
     {
         $this->options['autoUpdateColumn'] = $value;
 
@@ -122,9 +123,9 @@ trait WebUploader
      * @param  bool  $value
      * @return $this
      */
-    public function removable(bool $value = true)
+    public function removable(bool $value = true): static
     {
-        $this->options['removable'] = ! $value;
+        $this->options['removable'] = !$value;
 
         return $this;
     }
@@ -135,7 +136,7 @@ trait WebUploader
      * @param  string  $server
      * @return $this
      */
-    public function deleteUrl(string $server)
+    public function deleteUrl(string $server): static
     {
         $this->options['deleteUrl'] = admin_url($server);
 
@@ -148,7 +149,7 @@ trait WebUploader
      * @param  array  $data
      * @return $this
      */
-    public function withFormData(array $data)
+    public function withFormData(array $data): static
     {
         $this->options['formData'] = array_merge($this->options['formData'], $data);
 
@@ -161,7 +162,7 @@ trait WebUploader
      * @param  array  $data
      * @return $this
      */
-    public function withDeleteData(array $data)
+    public function withDeleteData(array $data): static
     {
         $this->options['deleteData'] = array_merge($this->options['deleteData'], $data);
 
@@ -174,7 +175,7 @@ trait WebUploader
      * @param  bool  $value
      * @return $this
      */
-    public function autoUpload(bool $value = true)
+    public function autoUpload(bool $value = true): static
     {
         $this->options['autoUpload'] = $value;
 
@@ -187,7 +188,7 @@ trait WebUploader
      * @param  bool|array  $compress
      * @return $this
      */
-    public function compress($compress = true)
+    public function compress(bool|array $compress = true): static
     {
         $this->options['compress'] = $compress;
 
@@ -200,7 +201,7 @@ trait WebUploader
      * @param  bool  $value
      * @return $this
      */
-    public function downloadable(bool $value = true)
+    public function downloadable(bool $value = true): static
     {
         $this->options['downloadable'] = $value;
 
@@ -212,43 +213,43 @@ trait WebUploader
      *
      * @return void
      */
-    protected function setUpDefaultOptions()
+    protected function setUpDefaultOptions(): void
     {
         $key = optional($this->form)->getKey();
 
         $defaultOptions = [
-            'name'                => WebUploaderHelper::FILE_NAME,
-            'fileVal'             => WebUploaderHelper::FILE_NAME,
-            'isImage'             => false,
-            'removable'           => false,
-            'chunked'             => false,
-            'fileNumLimit'        => 10,
+            'name' => WebUploaderHelper::FILE_NAME,
+            'fileVal' => WebUploaderHelper::FILE_NAME,
+            'isImage' => false,
+            'removable' => false,
+            'chunked' => false,
+            'fileNumLimit' => 10,
             // 禁掉全局的拖拽功能。这样不会出现图片拖进页面的时候，把图片打开。
-            'disableGlobalDnd'    => true,
-            'fileSizeLimit'       => 20971520000, // 20000M
-            'fileSingleSizeLimit' => 10485760, // 10M
-            'elementName'         => $this->getElementName(), // 字段name属性值
-            'lang'                => trans('admin.uploader'),
-            'compress'            => false,
-            'accept'              => [],
+            'disableGlobalDnd' => true,
+            'fileSizeLimit' => 20971520000,           // 20000M
+            'fileSingleSizeLimit' => 10485760,        // 10M
+            'elementName' => $this->getElementName(), // 字段name属性值
+            'lang' => trans('admin.uploader'),
+            'compress' => false,
+            'accept' => [],
             'deleteData' => [
                 static::FILE_DELETE_FLAG => '',
-                'primary_key'            => $key,
+                'primary_key' => $key,
             ],
             'formData' => [
-                '_id'           => Str::random(),
-                '_token'        => csrf_token(),
+                '_id' => Str::random(),
+                '_token' => csrf_token(),
                 'upload_column' => $this->column(),
-                'primary_key'   => $key,
+                'primary_key' => $key,
             ],
         ];
 
         $this->options($this->options += $defaultOptions);
     }
 
-    protected function setDefaultServer()
+    protected function setDefaultServer(): void
     {
-        if (! $this->form || ! method_exists($this->form, 'action')) {
+        if (!$this->form || !method_exists($this->form, 'action')) {
             return;
         }
 
@@ -269,7 +270,7 @@ trait WebUploader
         ) {
             $this->options['formData']['_method'] = 'PUT';
             $this->options['deleteData']['_method'] = 'PUT';
-            if (! isset($this->options['autoUpdateColumn'])) {
+            if (!isset($this->options['autoUpdateColumn'])) {
                 $this->options['autoUpdateColumn'] = true;
             }
         }
@@ -280,7 +281,7 @@ trait WebUploader
      *
      * @return string
      */
-    public function getCreateUrl()
+    public function getCreateUrl(): string
     {
         return str_replace('/create', '', URL::full());
     }
@@ -289,8 +290,9 @@ trait WebUploader
      * 图片预览设置.
      *
      * @return void
+     * @throws Exception
      */
-    protected function setupPreviewOptions()
+    protected function setupPreviewOptions(): void
     {
         $this->options['preview'] = $this->initialPreviewConfig();
     }

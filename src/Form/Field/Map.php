@@ -13,7 +13,7 @@ class Map extends Field
      *
      * @var array
      */
-    protected $column = [];
+    protected string|array $column = [];
 
     /**
      * @var string
@@ -25,7 +25,7 @@ class Map extends Field
      *
      * @return void
      */
-    public static function requireAssets()
+    public static function requireAssets(): void
     {
         $keys = config('admin.map.keys');
 
@@ -119,7 +119,7 @@ class Map extends Field
         return $this->addVariables(['type' => 'amap', 'searchId' => 'amap'.Str::random()]);
     }
 
-    protected function getDefaultElementClass()
+    protected function getDefaultElementClass(): array
     {
         $class = $this->normalizeElementClass($this->column['lat']).$this->normalizeElementClass($this->column['lng']);
 
@@ -136,11 +136,11 @@ class Map extends Field
     /**
      * Set element class.
      *
-     * @param  string|array  $class
+     * @param  array|string  $class
      * @param  bool  $normalize
      * @return $this
      */
-    public function setElementClass($class, bool $normalize = true)
+    public function setElementClass(array|string $class, bool $normalize = true): static
     {
         if ($normalize) {
             $class = $this->normalizeElementClass($class);

@@ -13,11 +13,11 @@ trait HasLayout
     protected ?Layout $layout = null;
 
     /**
-     * @param  int|float  $width
+     * @param  float|int  $width
      * @param  Closure  $callback
      * @return $this
      */
-    public function column($width, Closure $callback)
+    public function column(float|int $width, Closure $callback): static
     {
         $this->layout()->onlyColumn($width, function () use ($callback) {
             $callback($this);
@@ -29,7 +29,7 @@ trait HasLayout
     /**
      * @return Layout
      */
-    public function layout()
+    public function layout(): Layout
     {
         return $this->layout ?: ($this->layout = new Layout($this));
     }

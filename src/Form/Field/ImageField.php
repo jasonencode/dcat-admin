@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Exception;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -34,7 +35,7 @@ trait ImageField
      */
     public function callInterventionMethods(string $target, string $mime): string
     {
-        if (! empty($this->interventionCalls)) {
+        if (!empty($this->interventionCalls)) {
             $image = app('image')->read($target);
 
             $mime = $mime ?: finfo_file(finfo_open(FILEINFO_MIME_TYPE), $target);
@@ -57,7 +58,7 @@ trait ImageField
      * @param  array  $arguments
      * @return $this
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __call($method, $arguments)
     {
@@ -66,7 +67,7 @@ trait ImageField
         }
 
         $this->interventionCalls[] = [
-            'method'    => static::$interventionAlias[$method] ?? $method,
+            'method' => static::$interventionAlias[$method] ?? $method,
             'arguments' => $arguments,
         ];
 
@@ -100,16 +101,16 @@ trait ImageField
      * @param  null  $file
      * @param  bool  $force
      * @return void.
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroyThumbnail($file = null, bool $force = false): void
     {
-        if ($this->retainable && ! $force) {
+        if ($this->retainable && !$force) {
             return;
         }
 
         $file = $file ?: $this->original;
-        if (! $file) {
+        if (!$file) {
             return;
         }
 
@@ -122,7 +123,7 @@ trait ImageField
         }
 
         foreach ($this->thumbnails as $name => $_) {
-            $ext  = pathinfo($file, PATHINFO_EXTENSION);
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
             $path = Str::replaceLast('.'.$ext, '', $file);
             $path = $path.'-'.$name.'.'.$ext;
 
@@ -137,19 +138,19 @@ trait ImageField
      *
      * @param  UploadedFile  $file
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     protected function uploadAndDeleteOriginalThumbnail(UploadedFile $file): static
     {
         foreach ($this->thumbnails as $name => $size) {
-            $ext    = pathinfo($this->name, PATHINFO_EXTENSION);
-            $path   = Str::replaceLast('.'.$ext, '', $this->name);
-            $path   = $path.'-'.$name.'.'.$ext;
-            $image  = app('image')->read($file);
+            $ext = pathinfo($this->name, PATHINFO_EXTENSION);
+            $path = Str::replaceLast('.'.$ext, '', $this->name);
+            $path = $path.'-'.$name.'.'.$ext;
+            $image = app('image')->read($file);
             $action = $size[2] ?? 'scale';
             $image->$action($size[0], $size[1]);
 
-            if (! is_null($this->storagePermission)) {
+            if (!is_null($this->storagePermission)) {
                 $this->getStorage()->put(
                     "{$this->getDirectory()}/$path",
                     $image->encodeByExtension($ext),
@@ -163,7 +164,7 @@ trait ImageField
             }
         }
 
-        if (! is_array($this->original)) {
+        if (!is_array($this->original)) {
             $this->destroyThumbnail();
         }
 

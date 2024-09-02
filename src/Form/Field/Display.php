@@ -7,9 +7,9 @@ use Dcat\Admin\Form\Field;
 
 class Display extends Field
 {
-    protected $callback;
+    protected ?Closure $callback = null;
 
-    public function with(Closure $callback)
+    public function with(Closure $callback): void
     {
         $this->callback = $callback;
     }

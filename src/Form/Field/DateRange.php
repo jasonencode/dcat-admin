@@ -8,7 +8,7 @@ class DateRange extends Field
 {
     protected string $format = 'YYYY-MM-DD';
 
-    protected $column = [];
+    protected string|array $column = [];
 
     public function __construct($column, $arguments)
     {
@@ -21,7 +21,7 @@ class DateRange extends Field
         $this->options(['format' => $this->format]);
     }
 
-    protected function prepareInputValue($value)
+    protected function prepareInputValue(mixed $value): mixed
     {
         if ($value === '') {
             $value = null;
@@ -42,7 +42,7 @@ class DateRange extends Field
     /**
      * {@inheritDoc}
      */
-    public function getValidationMessages()
+    public function getValidationMessages(): array
     {
         // Default validation message.
         $messages = parent::getValidationMessages();

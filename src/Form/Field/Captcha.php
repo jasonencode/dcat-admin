@@ -2,17 +2,22 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
 use Dcat\Admin\Exception\AdminException;
+use Dcat\Admin\Widgets\Form;
 
 class Captcha extends Text
 {
-    protected $rules = ['required', 'captcha'];
+    protected Closure|array $rules = ['required', 'captcha'];
 
-    protected $view = 'admin::form.captcha';
+    protected string $view = 'admin::form.captcha';
 
+    /**
+     * @throws AdminException
+     */
     public function __construct()
     {
-        if (! class_exists(\Mews\Captcha\Captcha::class)) {
+        if (!class_exists(\Mews\Captcha\Captcha::class)) {
             throw new AdminException('To use captcha field, please install [mews/captcha] first.');
         }
 
@@ -20,7 +25,7 @@ class Captcha extends Text
         $this->label = trans('admin.captcha');
     }
 
-    public function setForm($form = null): static
+    public function setForm(Form|\Dcat\Admin\Form $form = null): static
     {
         parent::setForm($form);
 

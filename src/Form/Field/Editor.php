@@ -4,6 +4,7 @@ namespace Dcat\Admin\Form\Field;
 
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Support\Helper;
+use Throwable;
 
 /**
  * TinyMCE editor.
@@ -13,7 +14,7 @@ use Dcat\Admin\Support\Helper;
  */
 class Editor extends Field
 {
-    protected $options = [
+    protected array $options = [
         'plugins' => [
             'advlist',
             'autolink',
@@ -38,9 +39,9 @@ class Editor extends Field
         'convert_urls' => false,
     ];
 
-    protected $disk;
+    protected string $disk;
 
-    protected $imageUploadDirectory = 'tinymce/images';
+    protected string $imageUploadDirectory = 'tinymce/images';
 
     /**
      * 设置文件上传存储配置.
@@ -48,7 +49,7 @@ class Editor extends Field
      * @param  string  $disk
      * @return $this
      */
-    public function disk(string $disk)
+    public function disk(string $disk): static
     {
         $this->disk = $disk;
 
@@ -61,7 +62,7 @@ class Editor extends Field
      * @param  string  $dir
      * @return $this
      */
-    public function imageDirectory(string $dir)
+    public function imageDirectory(string $dir): static
     {
         $this->imageUploadDirectory = $dir;
 
@@ -74,7 +75,7 @@ class Editor extends Field
      * @param  string  $url
      * @return $this
      */
-    public function imageUrl(string $url)
+    public function imageUrl(string $url): static
     {
         return $this->mergeOptions(['images_upload_url' => $this->formatUrl(admin_url($url))]);
     }
@@ -85,7 +86,7 @@ class Editor extends Field
      * @param  string  $url
      * @return $this
      */
-    public function languageUrl(string $url)
+    public function languageUrl(string $url): static
     {
         return $this->mergeOptions(['language_url' => $url]);
     }
@@ -96,7 +97,7 @@ class Editor extends Field
      * @param  int  $height
      * @return $this
      */
-    public function height(int $height)
+    public function height(int $height): static
     {
         return $this->mergeOptions(['min_height' => $height]);
     }
@@ -104,10 +105,10 @@ class Editor extends Field
     /**
      * @return array
      */
-    protected function formatOptions()
+    protected function formatOptions(): array
     {
         $this->options['language'] = config('app.locale');
-        $this->options['readonly'] = ! empty($this->attributes['readonly']) || ! empty($this->attributes['disabled']);
+        $this->options['readonly'] = !empty($this->attributes['readonly']) || !empty($this->attributes['disabled']);
 
         if (empty($this->options['images_upload_url'])) {
             $this->options['images_upload_url'] = $this->defaultImageUploadUrl();
@@ -119,7 +120,7 @@ class Editor extends Field
     /**
      * @return string
      */
-    protected function defaultImageUploadUrl()
+    protected function defaultImageUploadUrl(): string
     {
         return $this->formatUrl(route(admin_api_route_name('tinymce.upload')));
     }
@@ -128,20 +129,21 @@ class Editor extends Field
      * @param  string  $url
      * @return string
      */
-    protected function formatUrl(string $url)
+    protected function formatUrl(string $url): string
     {
         return Helper::urlWithQuery(
             $url,
             [
                 '_token' => csrf_token(),
-                'disk'   => $this->disk,
-                'dir'    => $this->imageUploadDirectory,
+                'disk' => $this->disk,
+                'dir' => $this->imageUploadDirectory,
             ]
         );
     }
 
     /**
      * @return string
+     * @throws Throwable
      */
     public function render(): string
     {

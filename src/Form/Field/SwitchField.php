@@ -7,37 +7,37 @@ use Dcat\Admin\Form\Field;
 
 class SwitchField extends Field
 {
-    public function primary()
+    public function primary(): static
     {
         return $this->color(Admin::color()->primary());
     }
 
-    public function green()
+    public function green(): static
     {
         return $this->color(Admin::color()->success());
     }
 
-    public function custom()
+    public function custom(): static
     {
         return $this->color(Admin::color()->custom());
     }
 
-    public function yellow()
+    public function yellow(): static
     {
         return $this->color(Admin::color()->warning());
     }
 
-    public function red()
+    public function red(): static
     {
         return $this->color(Admin::color()->danger());
     }
 
-    public function purple()
+    public function purple(): static
     {
         return $this->color(Admin::color()->purple());
     }
 
-    public function blue()
+    public function blue(): static
     {
         return $this->color(Admin::color()->blue());
     }
@@ -48,7 +48,7 @@ class SwitchField extends Field
      * @param  string  $color
      * @return $this
      */
-    public function color($color)
+    public function color(string $color): static
     {
         return $this->attribute('data-color', $color);
     }
@@ -57,7 +57,7 @@ class SwitchField extends Field
      * @param  string  $color
      * @return $this
      */
-    public function secondary($color)
+    public function secondary(string $color): static
     {
         return $this->attribute('data-secondary-color', $color);
     }
@@ -65,7 +65,7 @@ class SwitchField extends Field
     /**
      * @return $this
      */
-    public function small()
+    public function small(): static
     {
         return $this->attribute('data-size', 'small');
     }
@@ -73,7 +73,7 @@ class SwitchField extends Field
     /**
      * @return $this
      */
-    public function large()
+    public function large(): static
     {
         return $this->attribute('data-size', 'large');
     }
@@ -82,7 +82,7 @@ class SwitchField extends Field
      * @param  mixed  $value
      * @return int
      */
-    protected function prepareInputValue($value)
+    protected function prepareInputValue(mixed $value): int
     {
         return $value ? 1 : 0;
     }

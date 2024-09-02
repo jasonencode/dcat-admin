@@ -2,9 +2,11 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
+
 class Url extends Text
 {
-    protected $rules = ['nullable', 'url'];
+    protected Closure|array $rules = ['nullable', 'url'];
 
     public function render(): string
     {

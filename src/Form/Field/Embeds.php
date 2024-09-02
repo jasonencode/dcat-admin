@@ -9,15 +9,18 @@ use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\ResolveField;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
+use Throwable;
 
 class Embeds extends Field implements FieldsCollection
 {
     use ResolveField;
 
     /**
-     * @var Closure
+     * @var Closure|null
      */
     protected ?Closure $builder = null;
 
@@ -27,7 +30,7 @@ class Embeds extends Field implements FieldsCollection
      * @param  string  $column
      * @param  array  $arguments
      */
-    public function __construct($column, $arguments = [])
+    public function __construct($column, array $arguments = [])
     {
         $this->column = $column;
 
@@ -44,14 +47,14 @@ class Embeds extends Field implements FieldsCollection
     /**
      * Prepare input data for insert or update.
      *
-     * @param  array  $input
+     * @param  mixed  $value
      * @return array
      */
-    protected function prepareInputValue($input)
+    protected function prepareInputValue(mixed $value): mixed
     {
         $form = $this->buildEmbeddedForm();
 
-        return $form->setOriginal($this->original)->prepare($input);
+        return $form->setOriginal($this->original)->prepare($value);
     }
 
     /**
@@ -59,7 +62,7 @@ class Embeds extends Field implements FieldsCollection
      */
     public function getValidator(array $input)
     {
-        if (! Arr::has($input, $this->column)) {
+        if (!Arr::has($input, $this->column)) {
             return false;
         }
 
@@ -69,7 +72,7 @@ class Embeds extends Field implements FieldsCollection
 
         /** @var Field $field */
         foreach ($this->buildEmbeddedForm()->fields() as $field) {
-            if (! $fieldRules = $field->getRules()) {
+            if (!$fieldRules = $field->getRules()) {
                 continue;
             }
 
@@ -99,12 +102,12 @@ class Embeds extends Field implements FieldsCollection
              */
             if (is_array($column)) {
                 foreach ($column as $key => $name) {
-                    $rules["{$this->column}.$name$key"] = $fieldRules;
+                    $rules["$this->column.$name$key"] = $fieldRules;
                 }
 
                 $this->resetInputKey($input, $column);
             } else {
-                $rules["{$this->column}.$column"] = $fieldRules;
+                $rules["$this->column.$column"] = $fieldRules;
             }
 
             /**
@@ -151,7 +154,7 @@ class Embeds extends Field implements FieldsCollection
      * @param  array  $messages
      * @return array
      */
-    protected function formatValidationMessages(array $input, array $messages)
+    protected function formatValidationMessages(array $input, array $messages): array
     {
         $result = [];
         foreach ($messages as $k => $message) {
@@ -169,7 +172,7 @@ class Embeds extends Field implements FieldsCollection
      * @param  string  $column
      * @return array
      */
-    protected function formatValidationAttribute($input, $label, $column)
+    protected function formatValidationAttribute(array $input, string $label, string $column): array
     {
         $new = $attributes = [];
 
@@ -203,12 +206,12 @@ class Embeds extends Field implements FieldsCollection
      * @param  array  $column  $column is the column name array set
      * @return void.
      */
-    public function resetInputKey(array &$input, array $column)
+    public function resetInputKey(array &$input, array $column): void
     {
         $column = array_flip($column);
 
         foreach (Arr::get($input, $this->column) as $key => $value) {
-            if (! array_key_exists($key, $column)) {
+            if (!array_key_exists($key, $column)) {
                 continue;
             }
 
@@ -217,11 +220,11 @@ class Embeds extends Field implements FieldsCollection
             /*
              * set new key
              */
-            Arr::set($input, "{$this->column}.$newKey", $value);
+            Arr::set($input, "$this->column.$newKey", $value);
             /*
              * forget the old key and value
              */
-            Arr::forget($input, "{$this->column}.$key");
+            Arr::forget($input, "$this->column.$key");
         }
     }
 
@@ -234,7 +237,7 @@ class Embeds extends Field implements FieldsCollection
      *
      * @return array
      */
-    protected function getEmbeddedData()
+    protected function getEmbeddedData(): array
     {
         return Helper::array($this->value);
     }
@@ -244,7 +247,7 @@ class Embeds extends Field implements FieldsCollection
      *
      * @return EmbeddedForm
      */
-    protected function buildEmbeddedForm()
+    protected function buildEmbeddedForm(): EmbeddedForm
     {
         $form = new EmbeddedForm($this->column);
 
@@ -262,7 +265,8 @@ class Embeds extends Field implements FieldsCollection
     /**
      * Render the form.
      *
-     * @return \Illuminate\View\View
+     * @return View
+     * @throws Throwable
      */
     public function render(): string
     {
@@ -274,10 +278,10 @@ class Embeds extends Field implements FieldsCollection
     /**
      * 根据字段名称查找字段.
      *
-     * @param  string  $column
+     * @param  string|Field  $name
      * @return Field|null
      */
-    public function field(string|Field $name)
+    public function field(string|Field $name): ?Field
     {
         return $this->buildEmbeddedForm()->fields()->first(function (Field $field) use ($name) {
             return $field->column() == $name;
@@ -287,9 +291,9 @@ class Embeds extends Field implements FieldsCollection
     /**
      * 获取所有字段.
      *
-     * @return void
+     * @return Collection
      */
-    public function fields()
+    public function fields(): Collection
     {
         return $this->buildEmbeddedForm()->fields();
     }

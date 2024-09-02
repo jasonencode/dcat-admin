@@ -3,6 +3,7 @@
 namespace Dcat\Admin\Form\Field;
 
 use Dcat\Admin\Support\Helper;
+use Exception;
 
 class MultipleFile extends File
 {
@@ -38,11 +39,11 @@ class MultipleFile extends File
     /**
      * Prepare for saving.
      *
-     * @param  string|array  $value
+     * @param  mixed  $value
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function prepareInputValue($value): array
+    protected function prepareInputValue(mixed $value): array
     {
         if ($path = request(static::FILE_DELETE_FLAG)) {
             $this->deleteFile($path);
@@ -50,7 +51,7 @@ class MultipleFile extends File
             return array_values(array_diff($this->original, [$path]));
         }
 
-        $value = Helper::array($value, true);
+        $value = Helper::array($value);
 
         $this->destroyIfChanged($value);
 

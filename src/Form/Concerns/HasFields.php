@@ -19,14 +19,14 @@ trait HasFields
     /**
      * @var Collection|Field[]
      */
-    private $fields;
+    private Collection|array $fields;
 
     /**
      * Get fields of this builder.
      *
      * @return Collection
      */
-    public function fields()
+    public function fields(): Collection
     {
         if (! $this->fields) {
             $this->resetFields();
@@ -41,7 +41,7 @@ trait HasFields
      * @param  string|Field  $name
      * @return Field|null
      */
-    public function field(string|Field $name)
+    public function field(string|Field $name): ?Field
     {
         return $this->fields()->first(function (Field $field) use ($name) {
             if (is_array($field->column())) {
@@ -62,7 +62,7 @@ trait HasFields
      * @param $column
      * @return void
      */
-    public function removeField($column)
+    public function removeField($column): void
     {
         $this->fields = $this->fields()->filter(function (Field $field) use ($column) {
             return $field->column() != $column;
@@ -73,9 +73,9 @@ trait HasFields
      * Push Field.
      *
      * @param  Field  $field
-     * @return Collection
+     * @return void
      */
-    public function pushField(Field $field)
+    public function pushField(Field $field): void
     {
         $this->fields()->push($field);
     }
@@ -85,7 +85,7 @@ trait HasFields
      *
      * @return void
      */
-    public function resetFields()
+    public function resetFields(): void
     {
         $this->fields = new Collection();
     }
@@ -96,7 +96,7 @@ trait HasFields
      * @param [type] $reject
      * @return void
      */
-    public function rejectFields($reject)
+    public function rejectFields($reject): void
     {
         $this->fields = $this->fields()->reject($reject);
     }
@@ -107,7 +107,7 @@ trait HasFields
      * @param  Collection  $fields
      * @return void
      */
-    public function setFields(Collection $fields)
+    public function setFields(Collection $fields): void
     {
         $this->fields = $fields;
     }
@@ -117,7 +117,7 @@ trait HasFields
      *
      * @return array
      */
-    protected function mergedFields()
+    protected function mergedFields(): array
     {
         $fields = [];
         foreach ($this->fields() as $field) {

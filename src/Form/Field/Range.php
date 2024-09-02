@@ -9,9 +9,9 @@ class Range extends Field
     /**
      * Column name.
      *
-     * @var array
+     * @var string|array
      */
-    protected $column = [];
+    protected string|array $column = [];
 
     public function __construct($column, $arguments)
     {
@@ -22,7 +22,7 @@ class Range extends Field
         $this->label = $this->formatLabel($arguments);
     }
 
-    protected function prepareInputValue($value)
+    protected function prepareInputValue(mixed $value): mixed
     {
         if ($value === '') {
             $value = null;
@@ -34,7 +34,7 @@ class Range extends Field
     /**
      * {@inheritdoc}
      */
-    public function getValidationMessages()
+    public function getValidationMessages(): array
     {
         // Default validation message.
         $messages = parent::getValidationMessages();

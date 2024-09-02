@@ -8,6 +8,7 @@ use Dcat\Admin\Form\Builder;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\NestedForm;
 use Dcat\Admin\Support\WebUploader;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +24,7 @@ trait HasFiles
      * @param  array  $data
      * @return Response|void
      */
-    protected function handleUploadFile($data)
+    protected function handleUploadFile(array $data)
     {
         $column = $data['upload_column'] ?? null;
         $file = app('admin.web-uploader')->getUploadedFile() ?: ($data[WebUploader::FILE_NAME] ?? null);
@@ -64,7 +65,7 @@ trait HasFiles
      * @param  string|null  $column
      * @return Field|null
      */
-    public function findFieldByName(?string $column)
+    public function findFieldByName(?string $column): ?Field
     {
         if ($field = $this->builder->field($column)) {
             return $field;
@@ -85,12 +86,12 @@ trait HasFiles
      * 新增页面删除文件.
      *
      * @param  array  $input
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse|null
      */
-    protected function deleteFileWhenCreating(array $input)
+    protected function deleteFileWhenCreating(array $input): JsonResponse|null
     {
         if (! array_key_exists(Field::FILE_DELETE_FLAG, $input)) {
-            return;
+            return null;
         }
 
         $column = $input['_column'] ?? null;
@@ -98,7 +99,7 @@ trait HasFiles
         $relation = $input['_relation'] ?? null;
 
         if (! $column && ! $filePath) {
-            return;
+            return null;
         }
 
         if (empty($relation)) {
@@ -115,15 +116,17 @@ trait HasFiles
                 ->status(true)
                 ->send();
         }
+
+        return null;
     }
 
     /**
      * 删除文件.
      *
-     * @param  UploadFieldInterface|Field  $field
-     * @param  array  $input
+     * @param  UploadFieldInterface  $field
+     * @param  array|null  $input
      */
-    protected function deleteFile(UploadFieldInterface $field, $input = null)
+    protected function deleteFile(UploadFieldInterface $field, array $input = null): void
     {
         if ($input) {
             if (
@@ -152,7 +155,7 @@ trait HasFiles
      * @param  string  $column
      * @return mixed
      */
-    public function getFieldByRelationName($relation, $column)
+    public function getFieldByRelationName(string $relation, string $column): mixed
     {
         $relation = $this->findFieldByName($relation);
         if ($relation) {
@@ -164,6 +167,8 @@ trait HasFiles
                 return $relation->field($column);
             }
         }
+
+        return null;
     }
 
     /**
@@ -172,7 +177,7 @@ trait HasFiles
      * @param  array  $input
      * @param  bool  $forceDelete
      */
-    public function deleteFiles($input, $forceDelete = false)
+    public function deleteFiles(array $input, bool $forceDelete = false): void
     {
         // If it's a soft delete, the files in the data will not be deleted.
         if (! $forceDelete && $this->isSoftDeletes) {
@@ -193,7 +198,7 @@ trait HasFiles
      * @param  array  $input
      * @return array
      */
-    protected function handleFileDelete(array $input = [])
+    protected function handleFileDelete(array $input = []): array
     {
         if (! array_key_exists(Field::FILE_DELETE_FLAG, $input)) {
             return $input;

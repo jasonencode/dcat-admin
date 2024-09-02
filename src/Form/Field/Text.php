@@ -5,6 +5,7 @@ namespace Dcat\Admin\Form\Field;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form\Field;
 use Illuminate\Support\Str;
+use Throwable;
 
 class Text extends Field
 {
@@ -24,6 +25,7 @@ class Text extends Field
      * Render this filed.
      *
      * @return string
+     * @throws Throwable
      */
     public function render(): string
     {
@@ -38,7 +40,7 @@ class Text extends Field
 
         $this->addVariables([
             'prepend' => $this->prepend,
-            'append'  => $this->append,
+            'append' => $this->append,
         ]);
 
         return parent::render();
@@ -50,7 +52,7 @@ class Text extends Field
      * @param  string  $type
      * @return $this
      */
-    public function type(string $type)
+    public function type(string $type): static
     {
         return $this->attribute('type', $type);
     }
@@ -61,10 +63,10 @@ class Text extends Field
      * @see http://1000hz.github.io/bootstrap-validator/
      *
      * @param  string|Field  $field
-     * @param  string  $error
+     * @param  string|null  $error
      * @return $this
      */
-    public function same($field, ?string $error = null)
+    public function same(string|Field $field, ?string $error = null): static
     {
         $field = $field instanceof Field ? $field : $this->form->field($field);
         $name = $field->column();
@@ -76,7 +78,7 @@ class Text extends Field
         }
 
         $attributes = [
-            'data-match'       => $field->getElementClassSelector(),
+            'data-match' => $field->getElementClassSelector(),
             'data-match-error' => str_replace(
                 [':attribute', ':other'],
                 [$field->label(), $this->label()],
@@ -92,12 +94,12 @@ class Text extends Field
      * @param  string|null  $error
      * @return $this
      */
-    public function minLength(int $length, ?string $error = null)
+    public function minLength(int $length, ?string $error = null): static
     {
         $this->rules('nullable|min:'.$length);
 
         return $this->attribute([
-            'data-minlength'       => $length,
+            'data-minlength' => $length,
             'data-minlength-error' => str_replace(
                 [':attribute', ':min'],
                 [$this->label, $length],
@@ -111,20 +113,20 @@ class Text extends Field
      * @param  string|null  $error
      * @return $this
      */
-    public function maxLength(int $length, ?string $error = null)
+    public function maxLength(int $length, ?string $error = null): static
     {
         Admin::script(
             <<<'JS'
-Dcat.validator.extend('maxlength', function ($el) {
-    return $el.val().length > $el.attr('data-maxlength');
-});
-JS
+                Dcat.validator.extend('maxlength', function ($el) {
+                    return $el.val().length > $el.attr('data-maxlength');
+                });
+                JS
         );
 
         $this->rules('max:'.$length);
 
         return $this->attribute([
-            'data-maxlength'       => $length,
+            'data-maxlength' => $length,
             'data-maxlength-error' => str_replace(
                 [':attribute', ':max'],
                 [$this->label, $length],
@@ -139,7 +141,7 @@ JS
      * @param  array  $options
      * @return $this
      */
-    public function inputmask($options)
+    public function inputmask(array $options): static
     {
         Admin::js('@jquery.inputmask');
 
@@ -156,7 +158,7 @@ JS
      * @param  array  $options
      * @return array
      */
-    protected function formatOptions($options)
+    protected function formatOptions(array $options): array
     {
         $original = [];
         $toReplace = [];
@@ -169,8 +171,8 @@ JS
                 $toReplace = array_merge($toReplace, $subArray['toReplace']);
             } elseif (preg_match('/function.*?/', $value)) {
                 $original[] = $value;
-                $value = "%{$key}%";
-                $toReplace[] = "\"{$value}\"";
+                $value = "%$key%";
+                $toReplace[] = "\"$value\"";
             }
         }
 
@@ -183,21 +185,21 @@ JS
      * @param  array  $entries
      * @return $this
      */
-    public function datalist($entries = [])
+    public function datalist(array $entries = []): static
     {
         $id = Str::random(8);
 
-        $this->defaultAttribute('list', "list-{$id}");
+        $this->defaultAttribute('list', "list-$id");
 
-        $datalist = "<datalist id=\"list-{$id}\">";
+        $datalist = "<datalist id=\"list-$id\">";
         foreach ($entries as $k => $v) {
-            $value = is_string($k) ? "value=\"{$k}\"" : '';
+            $value = is_string($k) ? "value=\"$k\"" : '';
 
-            $datalist .= "<option {$value}>{$v}</option>";
+            $datalist .= "<option $value>$v</option>";
         }
         $datalist .= '</datalist>';
 
-        Admin::script("$('#list-{$id}').parent().hide()");
+        Admin::script("$('#list-$id').parent().hide()");
 
         return $this->append($datalist);
     }

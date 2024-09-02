@@ -21,7 +21,7 @@ class Date extends Text
         return $this;
     }
 
-    protected function prepareInputValue($value)
+    protected function prepareInputValue(mixed $value): mixed
     {
         if ($value === '') {
             $value = null;
@@ -39,10 +39,10 @@ class Date extends Text
         $options = admin_javascript_json($this->options);
 
         $this->script = <<<JS
-Dcat.init('{$this->getElementClassSelector()}', function (self) {
-    self.datetimepicker($options)
-});
-JS;
+            Dcat.init('{$this->getElementClassSelector()}', function (self) {
+                self.datetimepicker($options)
+            });
+            JS;
 
         $this->prepend('<i class="fa fa-calendar fa-fw"></i>')
             ->defaultAttribute('style', 'width: 200px;flex:none');

@@ -13,14 +13,14 @@ class Divide extends Field
 
     public function render(): string
     {
-        if (! $this->label) {
+        if (!$this->label) {
             return '<hr/>';
         }
 
         return <<<HTML
-<div class="mt-2 text-center mb-2 form-divider">
-  <span>{$this->label}</span>
-</div>
-HTML;
+            <div class="mt-2 text-center mb-2 form-divider">
+              <span>$this->label</span>
+            </div>
+            HTML;
     }
 }

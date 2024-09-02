@@ -2,6 +2,8 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
+use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\Checkbox as WidgetCheckbox;
 
@@ -11,21 +13,21 @@ class Checkbox extends MultipleSelect
     use CanLoadFields;
     use Sizeable;
 
-    protected $style = 'primary';
+    protected string $style = 'primary';
 
     protected string $cascadeEvent = 'change';
 
-    protected $canCheckAll = false;
+    protected bool $canCheckAll = false;
 
-    protected $inline = true;
+    protected bool $inline = true;
 
     /**
-     * @param  array|\Closure|string  $options
-     * @return $this|mixed
+     * @param  array  $options
+     * @return Checkbox
      */
-    public function options($options = [])
+    public function options(array $options = []): static
     {
-        if ($options instanceof \Closure) {
+        if ($options instanceof Closure) {
             $this->options = $options;
 
             return $this;
@@ -42,7 +44,7 @@ class Checkbox extends MultipleSelect
      * @param  string  $style
      * @return $this
      */
-    public function style(string $style)
+    public function style(string $style): static
     {
         $this->style = $style;
 
@@ -54,14 +56,14 @@ class Checkbox extends MultipleSelect
      *
      * @return $this
      */
-    public function canCheckAll()
+    public function canCheckAll(): static
     {
         $this->canCheckAll = true;
 
         return $this;
     }
 
-    public function inline(bool $inline)
+    public function inline(bool $inline): static
     {
         $this->inline = $inline;
 
@@ -70,10 +72,11 @@ class Checkbox extends MultipleSelect
 
     /**
      * {@inheritdoc}
+     * @throws RuntimeException
      */
     public function render(): string
     {
-        if ($this->options instanceof \Closure) {
+        if ($this->options instanceof Closure) {
             $this->options(
                 $this->options->call($this->values(), $this->value(), $this)
             );

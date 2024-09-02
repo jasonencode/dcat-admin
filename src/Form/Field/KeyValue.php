@@ -40,7 +40,7 @@ class KeyValue extends Field
     /**
      * {@inheritdoc}
      */
-    public function formatFieldData($data)
+    public function formatFieldData(array $data): array
     {
         $this->data = $data;
 
@@ -74,7 +74,7 @@ class KeyValue extends Field
             return false;
         }
 
-        $rules["{$this->column}.keys.*"] = 'distinct';
+        $rules["$this->column.keys.*"] = 'distinct';
         $rules["{$this->column}.values.*"] = $fieldRules;
         $attributes["{$this->column}.keys.*"] = $this->getKeyLabel();
         $attributes["{$this->column}.values.*"] = $this->getValueLabel();
@@ -91,7 +91,7 @@ class KeyValue extends Field
         return $input;
     }
 
-    protected function prepareInputValue($value)
+    protected function prepareInputValue(mixed $value): array
     {
         unset($value[static::DEFAULT_FLAG_NAME]);
 

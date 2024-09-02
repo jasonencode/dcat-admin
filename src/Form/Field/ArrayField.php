@@ -40,9 +40,9 @@ class ArrayField extends HasMany
         return $forms;
     }
 
-    protected function prepareInputValue($input)
+    protected function prepareInputValue(mixed $value)
     {
-        return collect($this->buildNestedForm()->prepare($input))
+        return collect($this->buildNestedForm()->prepare($value))
             ->filter(function ($item) {
                 return empty($item[NestedForm::REMOVE_FLAG_NAME]);
             })

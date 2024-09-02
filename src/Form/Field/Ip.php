@@ -2,16 +2,18 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
+
 class Ip extends Text
 {
-    protected $rules = ['nullable', 'ip'];
+    protected Closure|array $rules = ['nullable', 'ip'];
 
     /**
      * @see https://github.com/RobinHerbots/Inputmask#options
      *
      * @var array
      */
-    protected $options = [
+    protected array $options = [
         'alias' => 'ip',
     ];
 

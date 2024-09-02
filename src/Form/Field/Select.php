@@ -31,10 +31,10 @@ class Select extends Field
      * Set options.
      *
      * @param  array  $options
-     * @return $this|\Dcat\Admin\Form\Field\Checkbox
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @return Select
+     * @throws RuntimeException
      */
-    public function options($options = [])
+    public function options(array $options = []): static
     {
         if ($options instanceof Closure) {
             $this->options = $options;
@@ -92,12 +92,12 @@ class Select extends Field
      * @param  string  $idField
      * @param  string  $textField
      * @return $this
-     * @throws \Dcat\Admin\Exception\RuntimeException
+     * @throws RuntimeException
      */
-    public function model($model, string $idField = 'id', string $textField = 'name')
+    public function model(string $model, string $idField = 'id', string $textField = 'name'): static
     {
-        if (! class_exists($model)
-            || ! in_array(Model::class, class_parents($model))
+        if (!class_exists($model)
+            || !in_array(Model::class, class_parents($model))
         ) {
             throw new RuntimeException("[$model] must be a valid model class");
         }
@@ -133,7 +133,7 @@ class Select extends Field
      * @param  array  $options
      * @return $this
      */
-    protected function loadRemoteOptions(string $url, array $parameters = [], array $options = [])
+    protected function loadRemoteOptions(string $url, array $parameters = [], array $options = []): static
     {
         $ajaxOptions = [
             'url' => admin_url($url.'?'.http_build_query($parameters)),
@@ -145,11 +145,11 @@ class Select extends Field
     }
 
     /**
-     * @param  string|array  $key
-     * @param  mixed  $value
+     * @param  array|string  $key
+     * @param  mixed|null  $value
      * @return $this
      */
-    public function addDefaultConfig($key, $value = null)
+    public function addDefaultConfig(array|string $key, mixed $value = null): static
     {
         if (is_array($key)) {
             foreach ($key as $k => $v) {
@@ -159,7 +159,7 @@ class Select extends Field
             return $this;
         }
 
-        if (! isset($this->config[$key])) {
+        if (!isset($this->config[$key])) {
             $this->config[$key] = $value;
         }
 
@@ -174,7 +174,7 @@ class Select extends Field
      * @param  string  $textField
      * @return $this
      */
-    public function ajax(string $url, string $idField = 'id', string $textField = 'text')
+    public function ajax(string $url, string $idField = 'id', string $textField = 'text'): static
     {
         $this->addDefaultConfig([
             'minimumInputLength' => 1,
@@ -194,7 +194,7 @@ class Select extends Field
      * @param  mixed  $val
      * @return $this
      */
-    public function config(string $key, mixed $val)
+    public function config(string $key, mixed $val): static
     {
         $this->config[$key] = $val;
 
@@ -213,13 +213,14 @@ class Select extends Field
 
     /**
      * {@inheritdoc}
+     * @throws RuntimeException
      */
     public function render(): string
     {
         $this->addDefaultConfig([
-            'allowClear'  => true,
+            'allowClear' => true,
             'placeholder' => [
-                'id'   => '',
+                'id' => '',
                 'text' => $this->placeholder(),
             ],
         ]);
@@ -227,9 +228,9 @@ class Select extends Field
         $this->formatOptions();
 
         $this->addVariables([
-            'options'       => $this->options,
-            'groups'        => $this->groups,
-            'configs'       => $this->config,
+            'options' => $this->options,
+            'groups' => $this->groups,
+            'configs' => $this->config,
             'cascadeScript' => $this->getCascadeScript(),
         ]);
 
@@ -240,6 +241,9 @@ class Select extends Field
         return parent::render();
     }
 
+    /**
+     * @throws RuntimeException
+     */
     protected function formatOptions(): void
     {
         if ($this->options instanceof Closure) {
@@ -254,7 +258,7 @@ class Select extends Field
     /**
      * {@inheritdoc}
      */
-    public function placeholder($placeholder = null)
+    public function placeholder(string $placeholder = null): array|string|static
     {
         if ($placeholder === null) {
             return $this->placeholder ?: $this->label;

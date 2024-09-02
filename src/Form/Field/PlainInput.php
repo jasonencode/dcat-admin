@@ -4,25 +4,25 @@ namespace Dcat\Admin\Form\Field;
 
 trait PlainInput
 {
-    protected $prepend;
+    protected string $prepend = '';
 
-    protected $append;
+    protected string $append = '';
 
-    public function prepend($string)
+    public function prepend(string $string): static
     {
         $this->prepend = $string;
 
         return $this;
     }
 
-    public function append($string)
+    public function append(string $string): static
     {
         $this->append = $string;
 
         return $this;
     }
 
-    protected function initPlainInput()
+    protected function initPlainInput(): void
     {
         if (empty($this->view)) {
             $this->view = 'admin::form.input';

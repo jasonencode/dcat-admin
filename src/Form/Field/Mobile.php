@@ -9,7 +9,7 @@ class Mobile extends Text
      *
      * @var array
      */
-    protected $options = [
+    protected array $options = [
         'mask' => '99999999999',
     ];
 

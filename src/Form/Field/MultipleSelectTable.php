@@ -10,7 +10,7 @@ class MultipleSelectTable extends SelectTable
         '@select2',
     ];
 
-    protected $view = 'admin::form.selecttable';
+    protected string $view = 'admin::form.selecttable';
 
     /**
      * @var int
@@ -36,7 +36,7 @@ class MultipleSelectTable extends SelectTable
      * @param  mixed  $value
      * @return array
      */
-    public function prepareInputValue($value): array
+    public function prepareInputValue(mixed $value): array
     {
         return Helper::array($value);
     }

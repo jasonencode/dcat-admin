@@ -7,7 +7,7 @@ trait Sizeable
     /**
      * @var string
      */
-    protected $size = '';
+    protected string $size = '';
 
     /**
      * 设置为小尺寸.

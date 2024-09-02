@@ -11,12 +11,12 @@ class Currency extends Text
      *
      * @var array
      */
-    protected $options = [
-        'alias'              => 'currency',
-        'radixPoint'         => '.',
-        'prefix'             => '',
+    protected array $options = [
+        'alias' => 'currency',
+        'radixPoint' => '.',
+        'prefix' => '',
         'removeMaskOnSubmit' => true,
-        'rightAlign'         => false,
+        'rightAlign' => false,
     ];
 
     /**
@@ -47,7 +47,7 @@ class Currency extends Text
      * @param  mixed  $value
      * @return mixed
      */
-    protected function prepareInputValue($value): mixed
+    protected function prepareInputValue(mixed $value): mixed
     {
         return is_string($value) ? str_replace(',', '', $value) : $value;
     }

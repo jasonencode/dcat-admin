@@ -21,16 +21,16 @@ trait HasTabs
      * @param  string|null  $id
      * @return $this
      */
-    public function tab($title, Closure $content, $active = false, ?string $id = null)
+    public function tab(string $title, Closure $content, bool $active = false, ?string $id = null): static
     {
         $this->getTab()->append($title, $content, $active, $id);
 
         return $this;
     }
 
-    public function hasTab()
+    public function hasTab(): bool
     {
-        return $this->tab ? true : false;
+        return (bool) $this->tab;
     }
 
     /**
@@ -38,7 +38,7 @@ trait HasTabs
      *
      * @return Tab
      */
-    public function getTab()
+    public function getTab(): Tab
     {
         if (is_null($this->tab)) {
             $this->tab = new Tab($this);
