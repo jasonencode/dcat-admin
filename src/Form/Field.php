@@ -42,7 +42,7 @@ class Field implements Renderable
      *
      * @var mixed
      */
-    protected $value;
+    protected $value = null;
 
     /**
      * Data of all original columns of value.
@@ -143,9 +143,9 @@ class Field implements Renderable
     /**
      * Parent form.
      *
-     * @var Form|WidgetForm
+     * @var Form|WidgetForm|null
      */
-    protected Form|WidgetForm $form;
+    protected Form|WidgetForm|null $form = null;
 
     /**
      * @var WidgetForm|null
