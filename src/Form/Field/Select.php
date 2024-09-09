@@ -8,6 +8,7 @@ use Dcat\Admin\Form\Field;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 class Select extends Field
 {
@@ -30,11 +31,11 @@ class Select extends Field
     /**
      * Set options.
      *
-     * @param  array  $options
+     * @param  array|Collection|Closure  $options
      * @return Select
      * @throws RuntimeException
      */
-    public function options(array $options = []): static
+    public function options(array|Collection|Closure $options = []): static
     {
         if ($options instanceof Closure) {
             $this->options = $options;

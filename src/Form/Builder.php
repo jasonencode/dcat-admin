@@ -40,7 +40,7 @@ class Builder implements FieldsCollection
     /**
      * @var mixed
      */
-    protected mixed $id;
+    protected mixed $id = '';
 
     /**
      * @var Form
@@ -55,19 +55,19 @@ class Builder implements FieldsCollection
     /**
      * @var array
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * Form action mode, could be create|view|edit.
      *
      * @var string
      */
-    protected $mode = self::MODE_CREATE;
+    protected string $mode = self::MODE_CREATE;
 
     /**
      * @var Field[]
      */
-    protected $hiddenFields = [];
+    protected array $hiddenFields = [];
 
     /**
      * @var Tools
@@ -84,7 +84,7 @@ class Builder implements FieldsCollection
      *
      * @var array
      */
-    protected $width = [
+    protected array $width = [
         'label' => 2,
         'field' => 8,
     ];
@@ -94,7 +94,7 @@ class Builder implements FieldsCollection
      *
      * @var string
      */
-    protected $view = 'admin::form.container';
+    protected string $view = 'admin::form.container';
 
     /**
      * Form title.

@@ -19,7 +19,7 @@ trait HasFields
     /**
      * @var Collection|Field[]
      */
-    private Collection|array $fields;
+    private Collection|array $fields = [];
 
     /**
      * Get fields of this builder.

@@ -6,6 +6,7 @@ use Closure;
 use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\Checkbox as WidgetCheckbox;
+use Illuminate\Support\Collection;
 
 class Checkbox extends MultipleSelect
 {
@@ -22,10 +23,10 @@ class Checkbox extends MultipleSelect
     protected bool $inline = true;
 
     /**
-     * @param  array  $options
+     * @param  array|Closure|Collection  $options
      * @return Checkbox
      */
-    public function options(array $options = []): static
+    public function options(array|Closure|Collection $options = []): static
     {
         if ($options instanceof Closure) {
             $this->options = $options;

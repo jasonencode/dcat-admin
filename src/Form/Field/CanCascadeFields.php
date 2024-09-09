@@ -16,12 +16,12 @@ trait CanCascadeFields
     /**
      * @var array
      */
-    protected $conditions = [];
+    protected array $conditions = [];
 
     /**
      * @var array
      */
-    protected $cascadeGroups = [];
+    protected array $cascadeGroups = [];
 
     /**
      * @param  mixed  $value
@@ -37,7 +37,7 @@ trait CanCascadeFields
 
         $this->formatValues($callback, $callback);
 
-        $this->addDependents($callback, $callback, $closure);
+        $this->addDependents($callback, $value, $closure);
 
         return $this;
     }
@@ -235,10 +235,10 @@ trait CanCascadeFields
                 var checked = $(this).closest('.form-group').find(':checked').val();
                 JS,
             Checkbox::class => <<<'JS'
-var checked = $this.closest('.form-group').find(':checked').map(function(){
-  return $(this).val();
-}).get();
-JS,
+                var checked = $this.closest('.form-group').find(':checked').map(function(){
+                  return $(this).val();
+                }).get();
+                JS,
             default => throw new RuntimeException('Invalid form field type'),
         };
     }

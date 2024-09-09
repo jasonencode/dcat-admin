@@ -7,10 +7,11 @@ use Dcat\Admin\Form\Field;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\Checkbox as WidgetCheckbox;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Collection;
 
 class Tree extends Field
 {
-    protected array $options = [
+    protected Collection|Closure|array $options = [
         'plugins' => ['checkbox', 'types'],
         'core' => [
             'check_callback' => true,
@@ -31,7 +32,7 @@ class Tree extends Field
         ],
     ];
 
-    protected array $nodes = [];
+    protected array|Closure $nodes = [];
 
     protected array $parents = [];
 

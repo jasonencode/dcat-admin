@@ -37,9 +37,9 @@ trait HasFieldValidator
     protected Closure|array $rules = [];
 
     /**
-     * @var Closure
+     * @var Closure|null
      */
-    protected Closure $validator;
+    protected ?Closure $validator = null;
 
     /**
      * Validation messages.
@@ -115,9 +115,9 @@ trait HasFieldValidator
     /**
      * Get field validation rules.
      *
-     * @return string
+     * @return string|array
      */
-    protected function getRules(): string
+    protected function getRules(): array|string
     {
         if ($this->isCreating()) {
             $rules = $this->creationRules ?: $this->rules;
@@ -334,9 +334,9 @@ trait HasFieldValidator
      * Get validator for this field.
      *
      * @param  array  $input
-     * @return bool|Validator
+     * @return false|\Illuminate\Validation\Validator|mixed
      */
-    public function getValidator(array $input): Validator|bool
+    public function getValidator(array $input): mixed
     {
         if ($this->validator) {
             return $this->validator->call($this, $input);

@@ -186,40 +186,32 @@ trait HasEvents
 
     /**
      * 触发创建页访问事件.
-     *
-     * @return RedirectResponse|\Illuminate\Http\Response|null
      */
-    protected function callCreating(): RedirectResponse|null|\Illuminate\Http\Response
+    protected function callCreating(): \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
     {
         return $this->fire(Events\Creating::class);
     }
 
     /**
      * 触发编辑页访问事件.
-     *
-     * @return \Illuminate\Http\Response|RedirectResponse|null
      */
-    protected function callEditing(): \Illuminate\Http\Response|RedirectResponse|null
+    protected function callEditing(): \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
     {
         return $this->fire(Events\Editing::class);
     }
 
     /**
      * 触发表单提交事件.
-     *
-     * @return RedirectResponse|\Illuminate\Http\Response|null
      */
-    protected function callSubmitted(): RedirectResponse|null|\Illuminate\Http\Response
+    protected function callSubmitted(): \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
     {
         return $this->fire(Events\Submitted::class);
     }
 
     /**
      * 触发表单保存事件.
-     *
-     * @return RedirectResponse|\Illuminate\Http\Response|null
      */
-    protected function callSaving(): RedirectResponse|null|\Illuminate\Http\Response
+    protected function callSaving(): \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
     {
         return $this->fire(Events\Saving::class);
     }
@@ -228,19 +220,17 @@ trait HasEvents
      * 触发表单保存完成事件.
      *
      * @param  mixed  $result
-     * @return \Illuminate\Http\Response|RedirectResponse|null
+     * @return \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
      */
-    protected function callSaved(mixed $result): \Illuminate\Http\Response|RedirectResponse|null
+    protected function callSaved(mixed $result): \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
     {
         return $this->fire(Events\Saved::class, [$result]);
     }
 
     /**
      * 触发数据删除事件.
-     *
-     * @return RedirectResponse|\Illuminate\Http\Response|null
      */
-    protected function callDeleting(): RedirectResponse|null|\Illuminate\Http\Response
+    protected function callDeleting(): \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
     {
         return $this->fire(Events\Deleting::class);
     }
@@ -249,9 +239,9 @@ trait HasEvents
      * 触发数据删除完成事件.
      *
      * @param  mixed  $result
-     * @return \Illuminate\Http\Response|RedirectResponse|null
+     * @return \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
      */
-    protected function callDeleted(mixed $result): \Illuminate\Http\Response|RedirectResponse|null
+    protected function callDeleted(mixed $result): \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
     {
         return $this->fire(Events\Deleted::class, [$result]);
     }
@@ -261,9 +251,9 @@ trait HasEvents
      *
      * @param  Field|UploadFieldInterface  $field
      * @param  UploadedFile  $file
-     * @return RedirectResponse|\Illuminate\Http\Response|null
+     * @return \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
      */
-    protected function callUploading(UploadFieldInterface|Field $field, UploadedFile $file): RedirectResponse|null|\Illuminate\Http\Response
+    protected function callUploading(UploadFieldInterface|Field $field, UploadedFile $file): \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
     {
         return $this->fire(Events\Uploading::class, [$field, $file]);
     }
@@ -274,9 +264,9 @@ trait HasEvents
      * @param  Field|UploadFieldInterface  $field
      * @param  UploadedFile  $file
      * @param  Response  $response
-     * @return \Illuminate\Http\Response|RedirectResponse
+     * @return \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
      */
-    protected function callUploaded(UploadFieldInterface|Field $field, UploadedFile $file, Response $response): \Illuminate\Http\Response|RedirectResponse
+    protected function callUploaded(UploadFieldInterface|Field $field, UploadedFile $file, Response $response): \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
     {
         return $this->fire(Events\Uploaded::class, [$field, $file, $response]);
     }
@@ -285,9 +275,9 @@ trait HasEvents
      * 触发文件删除事件.
      *
      * @param  Field|UploadFieldInterface  $field
-     * @return \Illuminate\Http\Response|RedirectResponse
+     * @return \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
      */
-    protected function callFileDeleting(UploadFieldInterface|Field $field): \Illuminate\Http\Response|RedirectResponse
+    protected function callFileDeleting(UploadFieldInterface|Field $field): \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
     {
         return $this->fire(Events\FileDeleting::class, [$field]);
     }
@@ -296,9 +286,9 @@ trait HasEvents
      * 触发文件删除完成事件.
      *
      * @param  Field|UploadFieldInterface  $field
-     * @return \Illuminate\Http\Response|RedirectResponse
+     * @return \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
      */
-    protected function callFileDeleted(UploadFieldInterface|Field $field): \Illuminate\Http\Response|RedirectResponse
+    protected function callFileDeleted(UploadFieldInterface|Field $field): \Illuminate\Http\Response|RedirectResponse|JsonResponse|null
     {
         return $this->fire(Events\FileDeleted::class, [$field]);
     }
@@ -306,7 +296,7 @@ trait HasEvents
     /**
      * @param  string  $name
      * @param  array  $payload
-     * @return RedirectResponse|\Illuminate\Http\Response|void
+     * @return RedirectResponse|\Illuminate\Http\Response|void|JsonResponse
      */
     protected function fire(string $name, array $payload = [])
     {

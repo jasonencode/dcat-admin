@@ -13,6 +13,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
@@ -48,21 +49,21 @@ class Field implements Renderable
      *
      * @var mixed
      */
-    protected mixed $data;
+    protected mixed $data = [];
 
     /**
      * Field original value.
      *
      * @var mixed
      */
-    protected mixed $original;
+    protected mixed $original = null;
 
     /**
      * Field default value.
      *
      * @var mixed
      */
-    protected mixed $default;
+    protected mixed $default = null;
 
     /**
      * @var bool
@@ -72,9 +73,9 @@ class Field implements Renderable
     /**
      * Element label.
      *
-     * @var string
+     * @var ?string
      */
-    protected string $label = '';
+    protected ?string $label = '';
 
     /**
      * Column name.
@@ -100,9 +101,9 @@ class Field implements Renderable
     /**
      * Options for specify elements.
      *
-     * @var array
+     * @var array|Closure|Collection
      */
-    protected array $options = [];
+    protected array|Collection|Closure $options = [];
 
     /**
      * Checked for specify elements.
@@ -147,9 +148,9 @@ class Field implements Renderable
     protected Form|WidgetForm $form;
 
     /**
-     * @var WidgetForm
+     * @var WidgetForm|null
      */
-    protected WidgetForm $parent;
+    protected ?WidgetForm $parent = null;
 
     /**
      * View for field to render.
@@ -170,14 +171,14 @@ class Field implements Renderable
      *
      * @var string|array
      */
-    protected string|array $errorKey;
+    protected string|array $errorKey = '';
 
     /**
      * Placeholder for this field.
      *
      * @var string|array
      */
-    protected string|array $placeholder;
+    protected string|array $placeholder = '';
 
     /**
      * Width for label and field.
@@ -541,9 +542,9 @@ class Field implements Renderable
      * Set or get value of the field.
      *
      * @param  mixed|null  $value
-     * @return null|$this
+     * @return Field|string|null
      */
-    public function value(mixed $value = null): null|static
+    public function value(mixed $value = null): null|static|string
     {
         if (is_null($value)) {
             if (
@@ -587,9 +588,9 @@ class Field implements Renderable
      *
      * @param  mixed|null  $default
      * @param  bool  $edit
-     * @return $this|null
+     * @return string|Field|null
      */
-    public function default(mixed $default = null, bool $edit = false): null|static
+    public function default(mixed $default = null, bool $edit = false): null|string|static
     {
         if ($default === null) {
             if (

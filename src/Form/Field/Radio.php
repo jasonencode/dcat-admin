@@ -6,6 +6,7 @@ use Closure;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\Radio as WidgetRadio;
+use Illuminate\Support\Collection;
 
 class Radio extends Field
 {
@@ -20,10 +21,10 @@ class Radio extends Field
     protected bool $inline = true;
 
     /**
-     * @param  array  $options
+     * @param  array|Collection|Closure  $options
      * @return $this
      */
-    public function options(array $options = []): static
+    public function options(array|Collection|Closure $options = []): static
     {
         if ($options instanceof Closure) {
             $this->options = $options;

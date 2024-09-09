@@ -17,9 +17,9 @@ class Html extends Field
     protected mixed $html = '';
 
     /**
-     * @var string
+     * @var ?string
      */
-    protected string $label = '';
+    protected ?string $label = '';
 
     /**
      * @var bool
