@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Response;
 
 trait UploadField
 {
@@ -180,13 +181,12 @@ trait UploadField
      * Upload File.
      *
      * @param  UploadedFile  $file
-     * @return JsonResponse
-     * @throws UploadException
+     * @return Response
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws Exception
+     * @throws UploadException
      */
-    public function upload(UploadedFile $file): JsonResponse
+    public function upload(UploadedFile $file): Response
     {
         $request = request();
 

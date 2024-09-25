@@ -2,8 +2,10 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Support\Collection;
 use Throwable;
 
 /**
@@ -14,7 +16,7 @@ use Throwable;
  */
 class Editor extends Field
 {
-    protected array $options = [
+    protected Collection|Closure|array $options = [
         'plugins' => [
             'advlist',
             'autolink',
@@ -39,7 +41,7 @@ class Editor extends Field
         'convert_urls' => false,
     ];
 
-    protected string $disk;
+    protected string $disk = '';
 
     protected string $imageUploadDirectory = 'tinymce/images';
 

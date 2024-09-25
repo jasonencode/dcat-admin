@@ -2,11 +2,14 @@
 
 namespace Dcat\Admin\Form\Field;
 
+use Closure;
+use Illuminate\Support\Collection;
+
 class Number extends Text
 {
     protected string $view = 'admin::form.number';
 
-    protected array $options = [
+    protected Collection|Closure|array $options = [
         'upClass'   => 'primary shadow-0',
         'downClass' => 'light shadow-0',
         'center'    => true,
@@ -65,10 +68,10 @@ class Number extends Text
     /**
      * {@inheritDoc}
      */
-    public function value(mixed $value = null): null|static
+    public function value(mixed $value = null): string|null|static
     {
         if (is_null($value)) {
-            return (int) parent::value();
+            return (string) parent::value();
         }
 
         return parent::value($value);
