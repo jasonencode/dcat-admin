@@ -36,9 +36,9 @@ class Chart extends Widget
      * 设置或获取图表容器选择器.
      *
      * @param  string|null  $selector
-     * @return $this
+     * @return Chart|null
      */
-    public function selector(?string $selector = null): static
+    public function selector(?string $selector = null): ?static
     {
         if ($selector === null) {
             return $this->containerSelector;
