@@ -27,8 +27,7 @@
         "dcat/easy-excel": "^1.1",
         "dcat/laravel-wherehasin": "^0.8",
         "doctrine/dbal": "^3.8",
-        "laravel/framework": "^10.0|^11.0|^12.0|^13.0",
-        "mews/captcha": "^3.4",
+        "laravel/framework": "^10.0|^11.0|^12.0|^13.0"
         "spatie/eloquent-sortable": "^4.4"
     },
     "autoload": {
