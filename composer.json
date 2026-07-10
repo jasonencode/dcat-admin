@@ -22,16 +22,11 @@
   "require": {
     "php": "^8.2",
     "ext-fileinfo": "*",
-    "ext-pcntl": "*",
     "ext-zip": "*",
     "dcat/easy-excel": "^1.1",
     "dcat/laravel-wherehasin": "^0.8",
     "doctrine/dbal": "^2.6|^3.8",
-    "intervention/image": "^2.7|^3.7|^4.0",
     "laravel/framework": "^10.0|^11.0|^12.0|^13.0",
-    "laravel/horizon": "^5.23",
-    "livewire/livewire": "^3.4",
-    "mews/captcha": "^3.3",
     "spatie/eloquent-sortable": "^3.0|^4.2"
   },
   "autoload": {
