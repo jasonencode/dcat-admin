@@ -158,7 +158,7 @@ if (! function_exists('admin_trans')) {
      * @param  string|null  $locale
      * @return \Illuminate\Contracts\Translation\Translator|string|array|null
      */
-    function admin_trans(string $key, array $replace = [], string $locale = null): array|string|Translator|null
+    function admin_trans(string $key, array $replace = [], ?string $locale = null): array|string|Translator|null
     {
         return app('admin.translator')->trans($key, $replace, $locale);
     }
@@ -212,7 +212,7 @@ if (! function_exists('admin_url')) {
      * @param  bool|null  $secure
      * @return string
      */
-    function admin_url(string $path = '', mixed $parameters = [], bool $secure = null): string
+    function admin_url(string $path = '', mixed $parameters = [], ?bool $secure = null): string
     {
         if (url()->isValidUrl($path)) {
             return $path;
@@ -312,9 +312,7 @@ if (! function_exists('admin_info')) {
      */
     function admin_info(string $title, string $message = '', string $type = 'info'): void
     {
-        $message = new MessageBag(get_defined_vars());
-
-        session()->flash($type, $message);
+        session()->flash($type, new MessageBag(get_defined_vars()));
     }
 }
 
@@ -505,7 +503,7 @@ if (! function_exists('admin_redirect')) {
     function admin_redirect(
         string $to,
         int $statusCode = 302,
-        Request $request = null
+        ?Request $request = null
     ): \Illuminate\Http\Response|JsonResponse|Redirector|Application|RedirectResponse|ResponseFactory {
         return Helper::redirect($to, $statusCode, $request);
     }
