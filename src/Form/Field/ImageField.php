@@ -4,9 +4,8 @@ namespace Dcat\Admin\Form\Field;
 
 use Dcat\Admin\Exception\AdminException;
 use Illuminate\Support\Str;
-use Intervention\Image\Constraint;
-use Intervention\Image\Facades\Image as InterventionImage;
-use Intervention\Image\ImageManagerStatic;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 trait ImageField
@@ -39,16 +38,17 @@ trait ImageField
     public function callInterventionMethods(string $target, string $mime): string
     {
         if (! empty($this->interventionCalls)) {
-            $image = ImageManagerStatic::make($target);
-
-            $mime = $mime ?: finfo_file(finfo_open(FILEINFO_MIME_TYPE), $target);
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($target);
 
             foreach ($this->interventionCalls as $call) {
-                call_user_func_array(
+                $image = call_user_func_array(
                     [$image, $call['method']],
                     $call['arguments']
-                )->save($target, null, $mime);
+                );
             }
+
+            $image->save($target);
         }
 
         return $target;
@@ -69,7 +69,7 @@ trait ImageField
             return parent::__call($method, $arguments);
         }
 
-        if (! class_exists(ImageManagerStatic::class)) {
+        if (! class_exists(ImageManager::class)) {
             throw new AdminException('To use image handling and manipulation, please install [intervention/image] first.');
         }
 
@@ -149,21 +149,21 @@ trait ImageField
      */
     protected function uploadAndDeleteOriginalThumbnail(UploadedFile $file): static
     {
+        $manager = new ImageManager(new Driver());
+
         foreach ($this->thumbnails as $name => $size) {
             $ext    = pathinfo($this->name, PATHINFO_EXTENSION);
             $path   = Str::replaceLast('.'.$ext, '', $this->name);
             $path   = $path.'-'.$name.'.'.$ext;
-            $image  = InterventionImage::make($file);
-            $action = $size[2] ?? 'resize';
-            $image->$action($size[0], $size[1], function (Constraint $constraint) {
-                $constraint->aspectRatio();
-            });
+            $image  = $manager->read($file);
+            $action = $size[2] ?? 'scale';
+            $image->$action($size[0], $size[1]);
 
             if (! is_null($this->storagePermission)) {
-                $this->getStorage()->put("{$this->getDirectory()}/$path", $image->encode()->stream(),
+                $this->getStorage()->put("{$this->getDirectory()}/$path", (string) $image->encode(),
                     $this->storagePermission);
             } else {
-                $this->getStorage()->put("{$this->getDirectory()}/$path", $image->encode()->stream());
+                $this->getStorage()->put("{$this->getDirectory()}/$path", (string) $image->encode());
             }
         }
 
